@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cahoi_barbershop/home_screen.dart';
+import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 
 void main() {
@@ -12,8 +13,19 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    setupLocator();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +39,11 @@ class MyApp extends StatelessWidget {
           headline1: TextStyle(
               color: headerColor1,
               fontSize: 36,
+              fontWeight: FontWeight.w700,
+              fontFamily: "Classique_Saigon"),
+          headline2: TextStyle(
+              color: textColorLight2,
+              fontSize: 24,
               fontWeight: FontWeight.w700,
               fontFamily: "Classique_Saigon"),
           headline3: TextStyle(
