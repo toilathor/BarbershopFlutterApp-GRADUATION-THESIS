@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/booking_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/avatar.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/slider_image.dart';
 
 class HomeView extends StatefulWidget {
@@ -64,12 +65,10 @@ class _HomeViewState extends State<HomeView> {
       ),
       body: Column(
         children: [
+          SizedBox(
+              height: size.height * 0.255,
+              child: _buildHeaderHomeView(size, context)),
           Expanded(
-            flex: 4,
-            child: _buildHeaderHomeView(size, context),
-          ),
-          Expanded(
-            flex: 9,
             child: _buildBody(context, size),
           ),
         ],
@@ -83,7 +82,7 @@ class _HomeViewState extends State<HomeView> {
         Positioned(
           top: 0,
           child: SizedBox(
-            height: 150,
+            height: size.height * 0.188,
             width: size.width,
             child: Image.asset("assets/bg_cahoibarbershop.jpg",
                 fit: BoxFit.fitWidth,
@@ -97,13 +96,9 @@ class _HomeViewState extends State<HomeView> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(80.0),
-                child: Container(
-                  width: 70,
-                  height: 70,
-                  color: Colors.white,
-                ),
+              Avatar(
+                height: size.width * 0.18,
+                src: "https://bit.ly/3FMV625",
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -134,7 +129,7 @@ class _HomeViewState extends State<HomeView> {
           child: Card(
             child: SizedBox(
               width: size.width,
-              height: 90,
+              height: size.height * 0.1,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -180,7 +175,7 @@ class _HomeViewState extends State<HomeView> {
       child: Column(
         children: [
           SliderImage(
-            height: 200,
+            height: size.height * 0.23,
             width: size.width,
             items: items,
           ),
@@ -236,7 +231,7 @@ class _HomeViewState extends State<HomeView> {
         ),
         SizedBox(
           width: size.width,
-          height: 200,
+          height: size.height * 0.25,
           child: ListView.builder(
             physics: const ClampingScrollPhysics(),
             scrollDirection: Axis.horizontal,
@@ -253,8 +248,11 @@ class _HomeViewState extends State<HomeView> {
   Widget _buildItemChanelYoutube(Size size) {
     return Card(
       child: Container(
-        color: Colors.white,
         width: size.width * 0.8,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.0),
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -272,9 +270,12 @@ class _HomeViewState extends State<HomeView> {
             itemBuilder: (context, index) {
               return Card(
                 child: Container(
-                  color: Colors.white,
                   width: size.width,
-                  height: 200,
+                  height: size.height * 0.25,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    color: Colors.white,
+                  ),
                 ),
               );
             },

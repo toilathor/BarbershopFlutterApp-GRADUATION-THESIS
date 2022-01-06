@@ -58,7 +58,11 @@ class _MyAppState extends State<MyApp> {
               fontFamily: "Classique_Saigon"),
           subtitle1: TextStyle(
               color: backgroundColor,
-              fontSize: 18,
+              fontSize: 12,
+              fontFamily: "Classique_Saigon"),
+          subtitle2: TextStyle(
+              color: Colors.black,
+              fontSize: 12,
               fontFamily: "Classique_Saigon"),
         ),
         iconTheme: const IconThemeData(
