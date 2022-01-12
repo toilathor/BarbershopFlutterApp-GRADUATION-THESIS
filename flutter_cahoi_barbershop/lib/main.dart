@@ -1,11 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_cahoi_barbershop/home_screen.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/login/login_view.dart';
 
-void main() {
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,
     DeviceOrientation.portraitUp,
@@ -39,31 +41,27 @@ class _MyAppState extends State<MyApp> {
           headline1: TextStyle(
               color: headerColor1,
               fontSize: 36,
-              fontWeight: FontWeight.w700,
-              fontFamily: "Classique_Saigon"),
+              fontWeight: FontWeight.w500,
+              fontFamily: "Jaapokki"),
           headline2: TextStyle(
               color: textColorLight2,
               fontSize: 24,
-              fontWeight: FontWeight.w700,
-              fontFamily: "Classique_Saigon"),
+              fontWeight: FontWeight.w500,
+              fontFamily: "Jaapokki"),
           headline3: TextStyle(
               color: textColorLight1,
               fontSize: 18,
-              fontWeight: FontWeight.w700,
-              fontFamily: "Classique_Saigon"),
+              fontWeight: FontWeight.w500,
+              fontFamily: "Jaapokki"),
           bodyText1: TextStyle(
               color: primaryColor,
               fontSize: 12,
-              fontWeight: FontWeight.w700,
-              fontFamily: "Classique_Saigon"),
+              fontWeight: FontWeight.w500,
+              fontFamily: "Jaapokki"),
           subtitle1: TextStyle(
-              color: backgroundColor,
-              fontSize: 12,
-              fontFamily: "Classique_Saigon"),
+              color: backgroundColor, fontSize: 12, fontFamily: "Jaapokki"),
           subtitle2: TextStyle(
-              color: Colors.black,
-              fontSize: 12,
-              fontFamily: "Classique_Saigon"),
+              color: Colors.black, fontSize: 12, fontFamily: "Jaapokki"),
         ),
         iconTheme: const IconThemeData(
           size: 32,
@@ -81,9 +79,7 @@ class _MyAppState extends State<MyApp> {
           ),
           centerTitle: true,
           titleTextStyle: TextStyle(
-              color: backgroundColor,
-              fontSize: 24,
-              fontFamily: "Classique_Saigon"),
+              color: backgroundColor, fontSize: 24, fontFamily: "Jaapokki"),
         ),
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: acceptColor,
@@ -92,7 +88,7 @@ class _MyAppState extends State<MyApp> {
           elevation: 8,
         ),
       ),
-      home: const HomeScreen(),
+      home: const LoginView(),
     );
   }
 }

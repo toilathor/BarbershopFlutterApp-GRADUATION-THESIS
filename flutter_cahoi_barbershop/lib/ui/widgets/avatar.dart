@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Avatar extends StatefulWidget {
-  double height;
-  String src;
+  final double height;
+  final String src;
 
-  Avatar({
+  const Avatar({
     Key? key,
     required this.height,
     required this.src,
@@ -29,7 +29,7 @@ class _AvatarState extends State<Avatar> {
               widget.src,
             ),
             onError: (exception, stackTrace) {
-              print(exception);
+              debugPrint(exception.toString());
             },
             fit: BoxFit.cover),
       ),

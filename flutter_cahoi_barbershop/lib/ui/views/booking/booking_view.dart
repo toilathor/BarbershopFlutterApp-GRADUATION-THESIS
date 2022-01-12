@@ -13,7 +13,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class BookingView extends StatefulWidget {
-  BookingView({Key? key}) : super(key: key);
+  const BookingView({Key? key}) : super(key: key);
 
   @override
   _BookingViewState createState() => _BookingViewState();

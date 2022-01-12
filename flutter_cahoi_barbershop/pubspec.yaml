@@ -47,6 +47,10 @@ dependencies:
   date_picker_timeline: ^1.2.3
   flutter_rating_bar: ^4.0.0
   extended_image: ^6.0.1
+  pin_code_fields: ^7.3.0
+  phone_numbers_parser: ^4.2.0
+  firebase_auth: ^3.3.5
+  firebase_core: ^1.11.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -92,9 +96,13 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Classique_Saigon
+    # - family: Classique_Saigon
+    #   fonts:
+    #     - asset: fonts/Classique_Saigon.ttf
+        
+    - family: Jaapokki
       fonts:
-        - asset: fonts/Classique_Saigon.ttf
+        - asset: fonts/Jaapokki-Regular.otf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

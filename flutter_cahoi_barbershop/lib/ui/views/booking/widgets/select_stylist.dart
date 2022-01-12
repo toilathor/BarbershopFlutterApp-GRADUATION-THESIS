@@ -1,19 +1,17 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/stylist/stylist.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/avatar.dart';
 
 class SelectStylist extends StatefulWidget {
-  Function(int index) onTap;
-  List<Stylist> stylists;
-  int currentIndex = 0;
+  final Function(int index) onTap;
+  final List<Stylist> stylists;
+  final int currentIndex;
 
-  SelectStylist({
+  const SelectStylist({
     Key? key,
     required this.onTap,
     required this.stylists,
-    required this.currentIndex,
+    this.currentIndex = 0,
   }) : super(key: key);
 
   @override

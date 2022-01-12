@@ -6,10 +6,10 @@ import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:provider/provider.dart';
 
 class ShowPhotoView extends StatefulWidget {
-  int currentPhoto = 0;
-  ShowPhotoView({
+  final int currentPhoto ;
+  const ShowPhotoView({
     Key? key,
-    required this.currentPhoto,
+    this.currentPhoto = 0,
   }) : super(key: key);
 
   @override

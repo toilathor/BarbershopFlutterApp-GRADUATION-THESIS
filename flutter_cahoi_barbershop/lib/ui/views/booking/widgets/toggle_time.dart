@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class ToggleTime extends StatefulWidget {
-  DateTime timeStart;
-  DateTime timeEnd;
-  int duration;
-  int currentIndex = 0;
-  Function(DateTime time, int index) onPressed;
+  final DateTime timeStart;
+  final DateTime timeEnd;
+  final int duration;
+  final int currentIndex;
+  final Function(DateTime time, int index) onPressed;
 
-  ToggleTime({
+  const ToggleTime({
     Key? key,
-    required this.timeEnd,
     required this.timeStart,
+    required this.timeEnd,
     required this.duration,
-    required this.currentIndex,
+    this.currentIndex = 0,
     required this.onPressed,
   }) : super(key: key);
 

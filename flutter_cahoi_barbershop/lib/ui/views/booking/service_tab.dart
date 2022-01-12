@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/service_cut/service_cut.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-class ServiceTab extends StatefulWidget {
-  List<ServiceCut> serviceCuts;
-  Function() onPress;
-  bool isSelected = false;
 
-  ServiceTab({
+class ServiceTab extends StatefulWidget {
+  final List<ServiceCut> serviceCuts;
+  final Function() onPress;
+  final bool isSelected ;
+
+  const ServiceTab({
     Key? key,
     required this.serviceCuts,
     required this.onPress,
+    this.isSelected = false,
   }) : super(key: key);
 
   @override
@@ -71,7 +73,7 @@ class _ServiceTabState extends State<ServiceTab> {
                     ),
                     Expanded(
                       flex: 2,
-                      child: Container(
+                      child: SizedBox(
                         width: width,
                         child: widget.isSelected
                             ? ElevatedButton.icon(
