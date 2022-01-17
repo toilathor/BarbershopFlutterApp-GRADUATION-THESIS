@@ -34,8 +34,8 @@ class _HomeViewState extends State<HomeView> {
           backgroundColor:
               Theme.of(context).floatingActionButtonTheme.backgroundColor,
           onPressed: () async {
-            if (await canLaunch("tel:$phoneNumber")) {
-              await launch("tel:$phoneNumber");
+            if (await canLaunch("tel:$hostLine")) {
+              await launch("tel:$hostLine");
             }
           },
           tooltip: 'Hotline',

@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/apis/auth_api.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/login/create_user_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/login/enter_pin_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/login/register_view.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+
+import '../../ui/views/login/reset_password_view.dart';
 
 class EnterPinModel extends ChangeNotifier {
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -16,7 +19,7 @@ class EnterPinModel extends ChangeNotifier {
   TextEditingController textEditingController = TextEditingController();
   StreamController<ErrorAnimationType> errorController =
       StreamController<ErrorAnimationType>();
-  final authAPI = locator<AuthAPI>();
+  final _authAPI = locator<AuthAPI>();
 
   bool hasError = false;
   late Timer timer;
@@ -76,7 +79,7 @@ class EnterPinModel extends ChangeNotifier {
   }
 
   resendOTP() async {
-    authAPI.verifyPhoneNumber(
+    _authAPI.verifyPhoneNumber(
       phoneNumber:
           PhoneNumber.fromIsoCode(countryCode!, currentPhone).international,
       verificationCompleted: (phoneAuthCredential) =>
@@ -96,13 +99,16 @@ class EnterPinModel extends ChangeNotifier {
 
     // Sign the user in (or link) with the auto-generated credential
 
-    authAPI.firebaseAuth.signInWithCredential(phoneAuthCredential);
-    if (authAPI.firebaseAuth.currentUser != null) {
+    _authAPI.firebaseAuth.signInWithCredential(phoneAuthCredential);
+    if (_authAPI.firebaseAuth.currentUser != null) {
       Navigator.of(scaffoldKey.currentContext!).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => const CreateUserView(),
+        MaterialPageRoute(
+          builder: (context) => RegisterView(
+            phoneNumber: currentPhone,
           ),
-          (Route<dynamic> route) => false);
+        ),
+        (Route<dynamic> route) => route.isFirst,
+      );
     }
   }
 
@@ -120,18 +126,26 @@ class EnterPinModel extends ChangeNotifier {
 
   codeAutoRetrievalTimeout(String verificationId) {}
 
-  verifyOTP() async {
+  verifyOTPRegiter(TypeOTP typeOTP) async {
     try {
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
           verificationId: _verificationId, smsCode: currentPin);
-      await authAPI.firebaseAuth.signInWithCredential(credential);
+      await _authAPI.firebaseAuth.signInWithCredential(credential);
 
-      if (authAPI.firebaseAuth.currentUser != null) {
+      if (_authAPI.firebaseAuth.currentUser != null) {
         Navigator.of(scaffoldKey.currentContext!).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => const CreateUserView(),
-            ),
-            (Route<dynamic> route) => false);
+            MaterialPageRoute(builder: (context) {
+          if (typeOTP == TypeOTP.register) {
+            return RegisterView(
+              phoneNumber: currentPhone,
+            );
+            // } else if (typeOTP == TypeOTP.resetPassword) {
+          } else {
+            return ResetPasswordView(
+              phoneNumber: currentPhone,
+            );
+          }
+        }), (Route<dynamic> route) => route.isFirst);
       } else {
         messageValidate = '*Please fill up all the cells properly';
         changeHasError();
@@ -141,5 +155,35 @@ class EnterPinModel extends ChangeNotifier {
       messageValidate = '*Please fill up all the cells properly';
       changeHasError();
     }
+  }
+
+  verifyResetPassword() async {
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: _verificationId, smsCode: currentPin);
+      await _authAPI.firebaseAuth.signInWithCredential(credential);
+
+      if (_authAPI.firebaseAuth.currentUser != null) {
+        Navigator.of(scaffoldKey.currentContext!).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => ResetPasswordView(
+                      phoneNumber: currentPhone,
+                    )),
+            (route) => route.isFirst);
+      } else {
+        messageValidate = '*Please fill up all the cells properly';
+        changeHasError();
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      messageValidate = '*Please fill up all the cells properly';
+      changeHasError();
+    }
+  }
+
+  @override
+  void dispose() {
+    _authAPI.resetFirebaseAuth();
+    super.dispose();
   }
 }

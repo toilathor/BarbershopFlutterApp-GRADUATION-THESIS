@@ -2,7 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/view_models/login_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
-import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/button_login.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -14,12 +15,10 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  late TextEditingController controller;
   final model = locator<LoginModel>();
 
   @override
   void initState() {
-    controller = TextEditingController();
     super.initState();
   }
 
@@ -45,12 +44,27 @@ class _LoginViewState extends State<LoginView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Hello,",
-                        style: Theme.of(context).textTheme.headline1,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        child: Text(
+                          "Hello,",
+                          style: Theme.of(context).textTheme.headline1,
+                        ),
                       ),
-                      Text("Login or Register",
-                          style: Theme.of(context).textTheme.subtitle2),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        child: Text(
+                          "Login or Register",
+                          style: TextStyle(
+                            color: Colors.black.withOpacity(0.5),
+                            fontSize: 18,
+                            fontFamily: Theme.of(context)
+                                .textTheme
+                                .subtitle1!
+                                .fontFamily,
+                          ),
+                        ),
+                      ),
                       _buildPhoneField(),
                     ],
                   ),
@@ -137,60 +151,55 @@ class _LoginViewState extends State<LoginView> {
 
   Widget _buildButtonContinue(Size size, BuildContext context) =>
       Consumer<LoginModel>(
-        builder: (context, value, child) => SizedBox(
-          height: size.width * 0.1,
-          width: size.width * 0.9,
-          child: Theme(
-            data: Theme.of(context).copyWith(
-                colorScheme: const ColorScheme.light(primary: textColorLight2)),
-            child: ElevatedButton(
-              onPressed: model.messageValidatePhoneNumber == null
-                  ? () async {
-                      model.changeCurrentPhone(controller.text.trim());
-                      await model.checkUserExisted();
-                    }
-                  : null,
-              child: Text(
-                "Continue",
-                style: TextStyle(
-                  fontFamily: Theme.of(context).textTheme.subtitle1!.fontFamily,
-                  color: Theme.of(context).textTheme.subtitle1!.color,
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          ),
-        ),
+        builder: (context, value, child) => ButtonLogin(
+            height: size.height * 0.06,
+            width: size.width * 0.9,
+            onPressed: model.isValidatePhoneNumber
+                ? () async {
+                    await model.checkUserExisted();
+                  }
+                : null,
+            title: "Continue"),
       );
 
-  Widget _buildSocials(Size size) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          FloatingActionButton(
-            heroTag: "facebook",
-            onPressed: () {},
-            backgroundColor: Colors.transparent,
-            child: Image.asset("assets/ic_facebook.png"),
-          ),
-          SizedBox(
-            width: size.width * 0.03,
-          ),
-          FloatingActionButton(
-            heroTag: "google",
-            backgroundColor: Colors.transparent,
-            onPressed: () {},
-            child: Image.asset("assets/ic_google.png"),
-          ),
-          SizedBox(
-            width: size.width * 0.03,
-          ),
-          FloatingActionButton(
-            heroTag: "zalo",
-            backgroundColor: Colors.transparent,
-            onPressed: () {},
-            child: Image.asset("assets/ic_zalo.png"),
-          ),
-        ],
+  Widget _buildSocials(Size size) => Consumer<LoginModel>(
+        builder: (context, value, child) => Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FloatingActionButton(
+              heroTag: "facebook",
+              onPressed: () async {
+                await model.loginWithFacebook();
+              },
+              backgroundColor: Colors.transparent,
+              child: Image.asset("assets/ic_facebook.png"),
+            ),
+            SizedBox(
+              width: size.width * 0.03,
+            ),
+            FloatingActionButton(
+              heroTag: "google",
+              backgroundColor: Colors.transparent,
+              onPressed: () async {
+                await model.loginWithGoogle();
+              },
+              child: Image.asset("assets/ic_google.png"),
+            ),
+            SizedBox(
+              width: size.width * 0.03,
+            ),
+            FloatingActionButton(
+              heroTag: "zalo",
+              backgroundColor: Colors.transparent,
+              onPressed: () async {
+                Fluttertoast.showToast(
+                  msg: 'We will connect with Zalo soon in the future!',
+                );
+              },
+              child: Image.asset("assets/ic_zalo.png"),
+            ),
+          ],
+        ),
       );
 
   _buildPhoneField() => Consumer<LoginModel>(
@@ -206,13 +215,16 @@ class _LoginViewState extends State<LoginView> {
               // autofillHints: const [AutofillHints.],
               textInputAction: TextInputAction.send,
               validator: (value) {
-                return model.messageValidatePhoneNumber;
+                return model.validatePhoneNumber();
               },
               cursorColor: Colors.black,
-              controller: controller,
+              controller: model.textEditingController,
               keyboardType: TextInputType.phone,
-              onChanged: (value) {
-                model.changeCurrentPhone(value);
+              onChanged: (_) {
+                model.changeCurrentPhone();
+              },
+              onFieldSubmitted: (value) async {
+                await model.checkUserExisted();
               },
               maxLength: 15,
               autocorrect: true,

@@ -4,14 +4,22 @@ import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 
+enum TypeOTP {
+  resetPassword,
+  register,
+  verifyEmail,
+}
+
 class EnterPinView extends StatefulWidget {
   final String phoneNumber;
   final String verificationId;
+  final TypeOTP typeOTP;
 
   const EnterPinView({
     Key? key,
     required this.phoneNumber,
     required this.verificationId,
+    required this.typeOTP,
   }) : super(key: key);
 
   @override
@@ -127,7 +135,7 @@ class _EnterPinViewState extends State<EnterPinView> {
                       keyboardType: TextInputType.number,
                       onCompleted: (v) {
                         debugPrint("Completed");
-                        model.verifyOTP();
+                        model.verifyOTPRegiter(widget.typeOTP);
                       },
                       onChanged: (_) {
                         model.changeCurrentPin();
@@ -210,7 +218,7 @@ class _EnterPinViewState extends State<EnterPinView> {
             builder: (context, value, child) => TextButton(
               onPressed: model.isEnableButtonVerify
                   ? () {
-                      model.verifyOTP();
+                      model.verifyOTPRegiter(widget.typeOTP);
                     }
                   : null,
               child: Center(
