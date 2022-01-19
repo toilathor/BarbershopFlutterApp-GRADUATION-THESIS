@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/apis/auth_api.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/login/enter_pin_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/login/reset_password_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/login/change_password_view.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
@@ -16,6 +15,7 @@ class ForgotPasswordModel extends ChangeNotifier {
   String currrentPhoneNumber = '';
   bool isValidatePhoneNumber = false;
   bool isSendOTP = false;
+  String verificationId = '';
 
   String? validatePhoneNumber() {
     if (PhoneNumber.fromIsoCode(countryCode!, currrentPhoneNumber).validate()) {
@@ -61,22 +61,18 @@ class ForgotPasswordModel extends ChangeNotifier {
 
               Navigator.of(scaffoldKey.currentContext!).pushAndRemoveUntil(
                   MaterialPageRoute(
-                      builder: (context) => ResetPasswordView(phoneNumber: currrentPhoneNumber,)),
+                      builder: (context) => ChangePasswordView(
+                            phoneNumber: currrentPhoneNumber,
+                          )),
                   (route) => route.isFirst);
             },
             verificationFailed: (error) {
               debugPrint(error.message);
             },
-            codeSent: (verificationId, forceResendingToken) {
-              Navigator.of(scaffoldKey.currentContext!).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                    builder: (context) => EnterPinView(
-                        phoneNumber: currrentPhoneNumber,
-                        verificationId: verificationId,
-                        typeOTP: TypeOTP.resetPassword),
-                  ),
-                  (route) => route.isFirst);
+            codeSent: (verifiId, forceResendingToken) {
+              verificationId = verifiId;
               isSendOTP = true;
+              notifyListeners();
             },
             codeAutoRetrievalTimeout: (verificationId) {});
       }

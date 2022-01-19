@@ -16,6 +16,7 @@ import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
 class LoginModel extends ChangeNotifier {
   final _authAPI = locator<AuthAPI>();
+  final _storeSecure = locator<StoreSecure>();
   final _prefs = locator<SharedPreferencesService>();
   final formGlobalKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -142,9 +143,9 @@ class LoginModel extends ChangeNotifier {
       Fluttertoast.showToast(msg: "Error login with google!");
     } else {
       //Lưu thông tin User vào Store
-      await StoreSecure.setUser(response.keys.toString());
+      await _storeSecure.setUser(response.keys.first);
       //Lưu thông tin Token vào Store
-      await StoreSecure.setToken(response.values.toString());
+      await _storeSecure.setToken(response.values.first);
 
       //Lưu social
       _prefs.setSocial(TypeSocial.google);
@@ -192,9 +193,9 @@ class LoginModel extends ChangeNotifier {
       Fluttertoast.showToast(msg: "Error login with facebook!");
     } else {
       //Lưu thông tin User vào Store
-      await StoreSecure.setUser(response.keys.toString());
+      await _storeSecure.setUser(response.keys.first);
       //Lưu thông tin Token vào Store
-      await StoreSecure.setToken(response.values.toString());
+      await _storeSecure.setToken(response.values.first);
       //Lưu social
       _prefs.setSocial(TypeSocial.facebook);
 

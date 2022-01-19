@@ -27,6 +27,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  # system
   flutter:
     sdk: flutter
   provider: ^6.0.1
@@ -34,28 +35,39 @@ dependencies:
   flutter_svg: ^1.0.0
   fluttertoast: ^8.0.8
   get_it: ^7.2.0
-  shared_preferences: ^2.0.11
-  sqflite: ^2.0.1
   http: ^0.13.4
-  carousel_slider: ^4.0.0
+  url_launcher: ^6.0.17
+  permission_handler: ^8.3.0
+  date_format: ^2.0.5
+  awesome_dialog: ^2.1.2
   json_serializable: ^6.1.3
   json_annotation: ^4.4.0
-  smooth_page_indicator: ^1.0.0+2
-  url_launcher: ^6.0.17
-  flutter_local_notifications: ^9.1.5
   flutter_staggered_grid_view: ^0.5.0
+
+  # storage
+  flutter_secure_storage: ^5.0.2
+  shared_preferences: ^2.0.11
+  sqflite: ^2.0.1
+
+  # plugin helper
+  carousel_slider: ^4.0.0
+  smooth_page_indicator: ^1.0.0+2
+  flutter_local_notifications: ^9.1.5
   date_picker_timeline: ^1.2.3
   flutter_rating_bar: ^4.0.0
   extended_image: ^6.0.1
   pin_code_fields: ^7.3.0
   phone_numbers_parser: ^4.2.0
+  video_player: ^2.2.11
+  # youtube_player_flutter: ^8.0.0
+
+  #firebase
   firebase_auth: ^3.3.5
   firebase_core: ^1.11.0
-  awesome_dialog: ^2.1.2
-  flutter_secure_storage: ^5.0.2
+
+  # Social
   flutter_facebook_auth: ^4.0.0
   google_sign_in: ^5.2.2
-  permission_handler: ^8.3.0
   # flutter_zalo_login: ^0.1.9+1
   
 

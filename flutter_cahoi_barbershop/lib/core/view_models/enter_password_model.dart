@@ -11,6 +11,7 @@ class EnterPasswordModel extends ChangeNotifier {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController textEditingController = TextEditingController();
   final _authAPI = locator<AuthAPI>();
+  final _storeSecure = locator<StoreSecure>();
   final _prefs = locator<SharedPreferencesService>();
   final formGlobalKey = GlobalKey<FormState>();
 
@@ -42,9 +43,9 @@ class EnterPasswordModel extends ChangeNotifier {
       Fluttertoast.showToast(msg: "Wrong password!");
     } else {
       //Lưu thông tin User vào Store
-      await StoreSecure.setUser(response.keys.toString());
+      await _storeSecure.setUser(response.keys.first);
       //Lưu thông tin Token vào Store
-      await StoreSecure.setToken(response.values.toString());
+      await _storeSecure.setToken(response.values.first);
       //Lưu social
       _prefs.setSocial(TypeSocial.none);
 
@@ -120,11 +121,10 @@ class EnterPasswordModel extends ChangeNotifier {
   }
 
   forgotPassword() {
-    Navigator.of(scaffoldKey.currentContext!).
-    push(MaterialPageRoute(builder: (context) => const ForgotPasswordView(),));
+    Navigator.of(scaffoldKey.currentContext!).push(MaterialPageRoute(
+      builder: (context) => const ForgotPasswordView(),
+    ));
   }
 
-  loginWithSMS(){
-    
-  }
+  loginWithSMS() {}
 }

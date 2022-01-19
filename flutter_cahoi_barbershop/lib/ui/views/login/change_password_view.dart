@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/view_models/reset_password_model.dart';
+import 'package:flutter_cahoi_barbershop/core/view_models/change_password_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/button_login.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/text_regex.dart';
 import 'package:provider/provider.dart';
 
-class ResetPasswordView extends StatefulWidget {
+class ChangePasswordView extends StatefulWidget {
   final String phoneNumber;
-  const ResetPasswordView({Key? key, required this.phoneNumber})
+  const ChangePasswordView({Key? key, required this.phoneNumber})
       : super(key: key);
 
   @override
-  _ResetPasswordViewState createState() => _ResetPasswordViewState();
+  _ChangePasswordViewState createState() => _ChangePasswordViewState();
 }
 
-class _ResetPasswordViewState extends State<ResetPasswordView> {
-  final model = locator<ResetPasswordModel>();
+class _ChangePasswordViewState extends State<ChangePasswordView> {
+  final model = locator<ChangePasswordModel>();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return ChangeNotifierProvider<ResetPasswordModel>(
+    return ChangeNotifierProvider<ChangePasswordModel>(
       create: (context) => model,
       child: Scaffold(
         key: model.scaffoldKey,
@@ -52,7 +52,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
         textAlign: TextAlign.left,
       );
 
-  _buildNewPasswordField() => Consumer<ResetPasswordModel>(
+  _buildNewPasswordField() => Consumer<ChangePasswordModel>(
         builder: (context, value, child) => Form(
           key: model.formKey,
           child: Padding(
@@ -75,6 +75,9 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
               onChanged: (value) {
                 model.changeCurrentPassword();
                 model.formKey.currentState?.validate();
+              },
+              onFieldSubmitted: (_) async {
+                await model.changePassword(widget.phoneNumber);
               },
               maxLength: 250,
               autocorrect: true,
@@ -122,7 +125,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
         ),
       );
 
-  _buildButtonChangePass(Size size) => Consumer<ResetPasswordModel>(
+  _buildButtonChangePass(Size size) => Consumer<ChangePasswordModel>(
         builder: (context, value, child) => Positioned(
           bottom: size.height * 0.02,
           child: ButtonLogin(
@@ -140,7 +143,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
   _buildRegex(
     Size size,
   ) =>
-      Consumer<ResetPasswordModel>(
+      Consumer<ChangePasswordModel>(
         builder: (context, value, child) => Padding(
           padding: const EdgeInsets.all(12.0),
           child:

@@ -11,7 +11,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-import '../../ui/views/login/reset_password_view.dart';
+import '../../ui/views/login/change_password_view.dart';
 
 class EnterPinModel extends ChangeNotifier {
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -141,7 +141,7 @@ class EnterPinModel extends ChangeNotifier {
             );
             // } else if (typeOTP == TypeOTP.resetPassword) {
           } else {
-            return ResetPasswordView(
+            return ChangePasswordView(
               phoneNumber: currentPhone,
             );
           }
@@ -166,7 +166,7 @@ class EnterPinModel extends ChangeNotifier {
       if (_authAPI.firebaseAuth.currentUser != null) {
         Navigator.of(scaffoldKey.currentContext!).pushAndRemoveUntil(
             MaterialPageRoute(
-                builder: (context) => ResetPasswordView(
+                builder: (context) => ChangePasswordView(
                       phoneNumber: currentPhone,
                     )),
             (route) => route.isFirst);

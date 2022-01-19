@@ -111,6 +111,9 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
               },
               maxLength: 250,
               autocorrect: true,
+              onFieldSubmitted: (_) async {
+                await model.login(widget.phoneNumber);
+              },
               decoration: InputDecoration(
                   hintText: "Password",
                   counterText: "",

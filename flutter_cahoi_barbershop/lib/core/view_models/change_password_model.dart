@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/apis/auth_api.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 
-class ResetPasswordModel extends ChangeNotifier {
+class ChangePasswordModel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final passEditingController = TextEditingController();

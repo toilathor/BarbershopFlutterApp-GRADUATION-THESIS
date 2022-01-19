@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/account_page_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/discover_page_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/home_page_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/shop_page_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/style_master_page_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/pages/account_page_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/pages/discover_page_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/pages/home_page_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/pages/shop_page_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/pages/style_master_page_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeView extends StatefulWidget {

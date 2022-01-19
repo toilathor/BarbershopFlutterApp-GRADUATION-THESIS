@@ -7,6 +7,7 @@ import 'package:flutter_cahoi_barbershop/ui/utils/store_secure.dart';
 
 class RegisterModel extends ChangeNotifier {
   final _authAPI = locator<AuthAPI>();
+  final _storeSecure = locator<StoreSecure>();
   final _prefs = locator<SharedPreferencesService>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final formPassKey = GlobalKey<FormState>();
@@ -45,9 +46,9 @@ class RegisterModel extends ChangeNotifier {
       debugPrint("Lỗi đăng ký!");
     } else {
       //Lưu thông tin User vào Store
-      await StoreSecure.setUser(response.keys.toString());
+      await _storeSecure.setUser(response.keys.first);
       //Lưu thông tin Token vào Store
-      await StoreSecure.setToken(response.values.toString());
+      await _storeSecure.setToken(response.values.first);
       //Lưu social
       _prefs.setSocial(TypeSocial.facebook);
 
