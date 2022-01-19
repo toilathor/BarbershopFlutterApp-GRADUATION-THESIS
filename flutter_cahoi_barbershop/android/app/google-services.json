@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1080033438397",
+    "project_id": "cahoibarbershop",
+    "storage_bucket": "cahoibarbershop.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1080033438397:android:d2f28e745dc2849b71e5d4",
+        "android_client_info": {
+          "package_name": "com.example.flutter_cahoi_barbershop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1080033438397-lcuuoht2vdhhep57jqmjj2cdnb00uag6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutter_cahoi_barbershop",
+            "certificate_hash": "a0e6de8dfd5bc08880812457039193cd837eae64"
+          }
+        },
+        {
+          "client_id": "1080033438397-v165t45os21ku2n0slks1olj9lk9j15n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCEpua1dud7Ccly0r69RiCD5YvVhCI0Qg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1080033438397-v165t45os21ku2n0slks1olj9lk9j15n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,52 @@
+:: [L I C E N C J A] :: 
+
+prawa autorskie do wszystkich fontów umieszczonych na tej stronie nale¿¹ do mnie czyli do bartka nowaka.
+to ¿e wyra¿am zgode na bezp³atne u¿ywanie moich czcionek NIE oznacza ¿e mo¿esz robiæ z nimi wszystko co ci siê podoba. Moje czcionki NIE s¹ oparte na Powszechnej Licencji Publicznej GNU.
+
+mo¿esz :
+
+--> tworzyæ dowoln¹ iloœæ kopii fonta
+--> instalowaæ fonta na dowolnej liczbie komputerów
+--> wykorzystywaæ go na stronach www i w publikacjach papierowych i elektronicznych pod warunkiem, ¿e nie maj¹ one charakteru komercyjnego [tzn. przygotowujesz je na swój w³asny u¿ytek a nie w celu zarobienia pieniêdzy]
+--> udostêpniaæ fonta na stronie www ale pod warunkiem, ¿e zachowasz plik z czcionk¹ bez zmian, w widocznym miejscu poinformujesz kto jest autorem fonta oraz umieœcisz link do mojej strony
+
+bez zgody autora NIE mo¿esz :
+
+--> modyfikowaæ pliku z fontem, a szczególnie zmieniaæ nazwy fonta, usuwaæ informacji o autorze, usuwaæ pliku z licencj¹
+--> u¿ywaæ fonta do dzia³añ komercyjnych
+--> udostêpniaæ fonta na p³ytach cd i jako sk³adnik oprogramowania
+--> sprzedawaæ fonta albo udostêpniaæ go na p³atnych stronach www
+
+
+:: wszelkie uwagi proszê kierowaæ na adres : barme@czcionki.com 
+
+:: najnowsze wersje fontów znajdziesz zawsze na stronie : http://www.nowak.tv/fontoholic
+
+01022006
+::BARME:: 
+
+------------------------------english version-------------------------------
+
+:: [L I C E N C E] :: 
+
+ all the copyrights for the presented fonts belong to bartek nowak. the fact that i agree to use my fonts for free, doesn't mean that you can do anything you like with them. my copyrights are NOT based on GNU General Public License.
+
+you may:
+
+--> install and use an unlimited number of copies of the fonts.
+--> use the fonts on websites and in paper or electronic publications on the condition that these publications are not commercial [which means that they are meant for your personal use only and not for earning money]
+--> redistribute the fonts via website on the conditions that the font file remains unchanged, there is information about the author of the font and a link to my website
+
+without my permission, you mustn't: :
+
+--> modify the font file, change its name, delete information about its author or the licence file
+--> use the font commercially
+--> distribute copies of the font for profit either on a standalone basis or included as part of your own product.
+
+
+:: please send all questions to : barme@czcionki.com 
+
+:: you can find latest versions of fonts at : http://www.nowak.tv/fontoholic
+
+01022006
+::BARME:: 

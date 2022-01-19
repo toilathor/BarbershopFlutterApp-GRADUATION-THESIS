@@ -1,0 +1,10 @@
+- link: https://www.ngoisaoso.vn/blog/cac-buoc-tao-color-palette-bang-mau-trong-thiet-ke-ui-cho-giao-dien-website-3633.html
+
+#0C4648
+#3a6061
+#d76145
+#b29577
+#c9b7a1
+#ab3833
+#88a764
+#448d7a
