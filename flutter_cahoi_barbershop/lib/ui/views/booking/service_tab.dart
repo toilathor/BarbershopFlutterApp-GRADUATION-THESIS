@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/service_cut/service_cut.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-
 class ServiceTab extends StatefulWidget {
   final List<ServiceCut> serviceCuts;
   final Function() onPress;
-  final bool isSelected ;
+  final bool isSelected;
 
   const ServiceTab({
     Key? key,
@@ -25,12 +24,13 @@ class _ServiceTabState extends State<ServiceTab> {
     Size size = MediaQuery.of(context).size;
     return Tab(
       child: MasonryGridView.builder(
+        padding: EdgeInsets.only(bottom: size.height * 0.08),
         itemCount: widget.serviceCuts.length,
         gridDelegate: const SliverMasonryGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
         ),
         itemBuilder: (context, index) => _buildItemService(
-            width: size.width / 2, height: size.height / 4, index: index),
+            width: size.width / 2, height: size.height / 3, index: index),
       ),
     );
   }

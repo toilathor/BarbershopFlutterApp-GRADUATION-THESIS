@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/pages/account_page_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/pages/discover_page_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/pages/home_page_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/pages/shop_page_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/pages/style_master_page_view.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/pages/account_page/account_page_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/pages/discover_page/discover_page_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/pages/home_page/home_page_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/pages/shop_page/shop_page_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/pages/style_master_page/style_master_page_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -30,20 +28,6 @@ class _HomeViewState extends State<HomeView> {
     return SafeArea(
       child: Scaffold(
         body: _listPage[_currentIndex],
-        floatingActionButton: FloatingActionButton(
-          backgroundColor:
-              Theme.of(context).floatingActionButtonTheme.backgroundColor,
-          onPressed: () async {
-            if (await canLaunch("tel:$hostLine")) {
-              await launch("tel:$hostLine");
-            }
-          },
-          tooltip: 'Hotline',
-          child: Icon(
-            Icons.call,
-            color: Theme.of(context).backgroundColor,
-          ),
-        ),
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: Theme.of(context).primaryColor,
           type: BottomNavigationBarType.fixed,

@@ -58,6 +58,24 @@ class BookingModel extends ChangeNotifier {
         fullDescription: "Kieu toc cuc ki dep",
         imagesDemo: "6",
         idCategory: "1"),
+    ServiceCut(
+        id: "1",
+        name: "Combo cat goi 100k nhe anh em",
+        price: "100000",
+        duration: "45",
+        sortDescription: "Cat toc dep",
+        fullDescription: "Kieu toc cuc ki dep",
+        imagesDemo: "6",
+        idCategory: "1"),
+    ServiceCut(
+        id: "1",
+        name: "Combo cat goi 100k nhe anh em",
+        price: "100000",
+        duration: "45",
+        sortDescription: "Cat toc dep",
+        fullDescription: "Kieu toc cuc ki dep",
+        imagesDemo: "6",
+        idCategory: "1"),
   ];
 
   List<CategorySevice> categoryServices = [

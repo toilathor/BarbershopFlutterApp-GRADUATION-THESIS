@@ -5,6 +5,8 @@ import 'package:flutter_cahoi_barbershop/core/view_models/booking_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/booking/select_barbershop_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/booking/select_service_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/service_tab.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/widgets/select_stylist.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/widgets/toggle_time.dart';
@@ -69,7 +71,8 @@ class _BookingViewState extends State<BookingView>
           body: Consumer<BookingModel>(
             builder: (context, value, child) => Theme(
               data: Theme.of(context).copyWith(
-                  colorScheme: const ColorScheme.light(primary: headerColor1)),
+                  colorScheme: ColorScheme.light(
+                      primary: Theme.of(context).secondaryHeaderColor)),
               child: SizedBox(
                 height: size.height,
                 child: Stepper(
@@ -77,33 +80,41 @@ class _BookingViewState extends State<BookingView>
                   onStepTapped: (value) =>
                       model.changeCurrentStep(StepBooking.values[value]),
                   controlsBuilder: (context, details) {
-                    return Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            child: const Text("Next"),
-                          ),
-                        )
-                      ],
-                    );
+                    return Container();
                   },
                   steps: [
                     Step(
                         isActive:
                             model.currentStep == StepBooking.selectService,
                         title: Text(
-                          "Select Service",
+                          "Select Barbershop",
                           style: Theme.of(context).textTheme.headline2,
                         ),
-                        content: _buildStepSelectService()),
+                        content: TextButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const SelectBarbershopView(),
+                                ),
+                              );
+                            },
+                            child: const Text('Select Barbershop'))),
                     Step(
                       isActive: model.currentStep == StepBooking.selectDateTime,
                       title: Text(
-                        "Select Date/Time",
+                        "Select Service",
                         style: Theme.of(context).textTheme.headline2,
                       ),
-                      content: _buildStepSelectDateTime(),
+                      content: TextButton(
+                          child: const Text('Select Service'),
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const SelectServiceView(),
+                              ),
+                            );
+                          }),
                     ),
                     Step(
                         isActive:
@@ -112,7 +123,7 @@ class _BookingViewState extends State<BookingView>
                           "Select Stylist",
                           style: Theme.of(context).textTheme.headline2,
                         ),
-                        content: _buildStepSelectStylist(size)),
+                        content: _buildStepSelectDateAndStylist(size)),
                   ],
                 ),
               ),
@@ -121,54 +132,6 @@ class _BookingViewState extends State<BookingView>
         ),
       ),
     );
-  }
-
-  Widget _buildStepSelectService() {
-    return DefaultTabController(
-      length: model.categoryServices.length,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TabBar(
-            controller: controller,
-            indicatorColor: textColorLight2,
-            tabs: _buildTabBar(),
-            isScrollable: true,
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.6,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.grey,
-            child: TabBarView(
-              controller: controller,
-              children: _buildTabBarView(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  List<Widget> _buildTabBar() {
-    List<Tab> tabs = [];
-    for (int i = 0; i < model.categoryServices.length; i++) {
-      tabs.add(Tab(
-        child: Text(model.categoryServices[i].name,
-            style: Theme.of(context).textTheme.headline3),
-      ));
-    }
-    return tabs;
-  }
-
-  List<Widget> _buildTabBarView() {
-    List<ServiceTab> tabViews = [];
-    for (int i = 0; i < model.categoryServices.length; i++) {
-      tabViews.add(ServiceTab(
-        serviceCuts: model.serviceCuts,
-        onPress: () {},
-      ));
-    }
-    return tabViews;
   }
 
   _buildDescriptionStylist({required Stylist stylist}) => Column(
@@ -245,42 +208,51 @@ class _BookingViewState extends State<BookingView>
         ],
       );
 
-  _buildStepSelectDateTime() => Column(
-        children: [
-          DatePicker(
-            DateTime.now(),
-            dateTextStyle: Theme.of(context).textTheme.headline2!,
-            monthTextStyle: Theme.of(context).textTheme.bodyText1!,
-            dayTextStyle: Theme.of(context).textTheme.bodyText1!,
-            daysCount: 7,
-            selectionColor:
-                Theme.of(context).floatingActionButtonTheme.backgroundColor!,
-            onDateChange: (selectedDate) {},
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 4,
-            child: ToggleTime(
-              timeStart: timeStart,
-              timeEnd: timeEnd,
-              duration: 45,
-              currentIndex: model.currentIndexTime,
-              onPressed: (time, index) {
-                model.changeCurrentTime(index, time);
-              },
+  Widget _buildSelectDateTime(Size size) => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: DatePicker(
+                DateTime.now(),
+                dateTextStyle: Theme.of(context).textTheme.headline2!,
+                monthTextStyle: Theme.of(context).textTheme.bodyText1!,
+                dayTextStyle: Theme.of(context).textTheme.bodyText1!,
+                daysCount: 7,
+                height: size.height * 0.112,
+                width: size.width * 0.2,
+                selectionColor: Theme.of(context)
+                    .floatingActionButtonTheme
+                    .backgroundColor!,
+                onDateChange: (selectedDate) {},
+              ),
             ),
-          ),
-        ],
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height / 4,
+              child: ToggleTime(
+                timeStart: timeStart,
+                timeEnd: timeEnd,
+                duration: 45,
+                currentIndex: model.currentIndexTime,
+                onPressed: (time, index) {
+                  model.changeCurrentTime(index, time);
+                },
+              ),
+            ),
+          ],
+        ),
       );
 
-  _buildStepSelectStylist(Size size) => Column(
+  _buildStepSelectDateAndStylist(Size size) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
               Container(
                 padding: const EdgeInsets.all(8.0),
                 margin: const EdgeInsets.only(bottom: 8.0),
                 width: size.width,
-                height: size.width * 0.23,
+                // height: size.width * 0.26,
                 child: model.currentStylist == 0
                     ? Center(
                         child: Text(
@@ -296,8 +268,9 @@ class _BookingViewState extends State<BookingView>
                     : _buildDescriptionStylist(
                         stylist: model.stylists[model.currentStylist - 1]),
                 decoration: BoxDecoration(
-                    border: Border.all(),
-                    borderRadius: BorderRadius.circular(8.0)),
+                  border: Border.all(),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
               ),
               SelectStylist(
                 currentIndex: model.currentStylist,
@@ -306,6 +279,7 @@ class _BookingViewState extends State<BookingView>
                   model.changeCurrentStylist(index);
                 },
               ),
+              _buildSelectDateTime(size),
             ] +
             _buildOptionMore(size, context),
       );
