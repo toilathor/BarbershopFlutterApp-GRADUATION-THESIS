@@ -6,7 +6,7 @@ import 'package:flutter_cahoi_barbershop/ui/views/login/change_password_view.dar
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
-class ForgotPasswordModel extends ChangeNotifier {
+class ForgotPasswordProvider extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final phoneEditingController = TextEditingController();

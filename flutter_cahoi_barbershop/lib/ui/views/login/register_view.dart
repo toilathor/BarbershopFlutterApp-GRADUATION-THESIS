@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/view_models/register_model.dart';
+import 'package:flutter_cahoi_barbershop/core/providers/register_provider.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/button_login.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/text_regex.dart';
@@ -18,12 +18,12 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  final model = locator<RegisterModel>();
+  final model = locator<RegisterProvider>();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return ChangeNotifierProvider<RegisterModel>(
+    return ChangeNotifierProvider<RegisterProvider>(
       create: (context) => model,
       child: Scaffold(
         key: model.scaffoldKey,
@@ -65,7 +65,7 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
-  _buildNameField() => Consumer<RegisterModel>(
+  Widget _buildNameField() => Consumer<RegisterProvider>(
         builder: (context, value, child) => Form(
           key: model.formNameKey,
           child: Padding(
@@ -108,7 +108,7 @@ class _RegisterViewState extends State<RegisterView> {
         ),
       );
 
-  _buildPasswordField() => Consumer<RegisterModel>(
+  Widget _buildPasswordField() => Consumer<RegisterProvider>(
         builder: (context, value, child) => Form(
           key: model.formPassKey,
           child: Padding(
@@ -178,7 +178,7 @@ class _RegisterViewState extends State<RegisterView> {
         ),
       );
 
-  _buildRegex(Size size, BuildContext context) => Consumer<RegisterModel>(
+  Widget _buildRegex(Size size, BuildContext context) => Consumer<RegisterProvider>(
         builder: (context, value, child) => Padding(
           padding: const EdgeInsets.all(12.0),
           child:
@@ -199,7 +199,7 @@ class _RegisterViewState extends State<RegisterView> {
         ),
       );
 
-  _buildButtonLogin(Size size) => Consumer<RegisterModel>(
+  Widget _buildButtonLogin(Size size) => Consumer<RegisterProvider>(
         builder: (context, value, child) => Positioned(
           bottom: size.height * 0.02,
           child: SizedBox(

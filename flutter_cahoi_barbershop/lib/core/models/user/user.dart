@@ -3,8 +3,8 @@ part 'user.g.dart';
 
 @JsonSerializable()
 class MUser {
-  @JsonKey(name: 'user_id')
-  final String userId;
+  @JsonKey(name: 'id')
+  final String id;
   @JsonKey(name: 'name')
   final String name;
   @JsonKey(name: 'phone_number')
@@ -18,7 +18,7 @@ class MUser {
   @JsonKey(name: 'work_address')
   final String? workAddress;
   MUser({
-    required this.userId,
+    required this.id,
     required this.name,
     required this.phoneNumber,
     this.email,
@@ -28,7 +28,7 @@ class MUser {
   });
 
   factory MUser.defaultUser() => MUser(
-        userId: '',
+        id: '',
         name: '',
         phoneNumber: '',
         email: '',

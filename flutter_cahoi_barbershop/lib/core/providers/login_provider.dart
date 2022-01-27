@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/apis/auth_api.dart';
@@ -14,7 +16,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
-class LoginModel extends ChangeNotifier {
+class LoginProvider extends ChangeNotifier {
   final _authAPI = locator<AuthAPI>();
   final _storeSecure = locator<StoreSecure>();
   final _prefs = locator<SharedPreferencesService>();
@@ -128,7 +130,7 @@ class LoginModel extends ChangeNotifier {
 
   loginWithGoogle() async {
     googleAccount = await _googleAuth.signIn();
-    Map<String?, String?>? response = await _authAPI.loginWithSocials({
+    Map<dynamic, dynamic>? response = await _authAPI.loginWithSocials({
       'name': googleAccount!.displayName.toString(),
       'phone_number': '',
       'email': googleAccount!.email,
@@ -138,14 +140,16 @@ class LoginModel extends ChangeNotifier {
     if (response == null) {
       //Có lỗi HTTP
       Fluttertoast.showToast(msg: "Can't connected!");
-    } else if (response.values.isEmpty && response.keys.isNotEmpty) {
+      return;
+    } else if (response.values.first == null || response.keys.first == null) {
       //Sai password
       Fluttertoast.showToast(msg: "Error login with google!");
+      return;
     } else {
       //Lưu thông tin User vào Store
-      await _storeSecure.setUser(response.keys.first);
+      await _storeSecure.setUser(jsonEncode(response.keys.first));
       //Lưu thông tin Token vào Store
-      await _storeSecure.setToken(response.values.first);
+      await _storeSecure.setToken(jsonEncode(response.values.first));
 
       //Lưu social
       _prefs.setSocial(TypeSocial.google);
@@ -178,7 +182,7 @@ class LoginModel extends ChangeNotifier {
       userData = requestData;
     }
 
-    Map<String?, String?>? response = await _authAPI.loginWithSocials({
+    Map<dynamic, dynamic>? response = await _authAPI.loginWithSocials({
       'name': userData!['name'],
       'phone_number': '',
       'email': userData['email'],
@@ -188,14 +192,16 @@ class LoginModel extends ChangeNotifier {
     if (response == null) {
       //Có lỗi HTTP
       Fluttertoast.showToast(msg: "Can't connected!");
-    } else if (response.values.isEmpty && response.keys.isNotEmpty) {
+      return;
+    } else if (response.values.first == null || response.keys.first == null) {
       //Sai password
       Fluttertoast.showToast(msg: "Error login with facebook!");
+      return;
     } else {
       //Lưu thông tin User vào Store
-      await _storeSecure.setUser(response.keys.first);
+      await _storeSecure.setUser(jsonEncode(response.keys.first));
       //Lưu thông tin Token vào Store
-      await _storeSecure.setToken(response.values.first);
+      await _storeSecure.setToken(jsonEncode(response.values.first));
       //Lưu social
       _prefs.setSocial(TypeSocial.facebook);
 

@@ -1,14 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/apis/youtube_api.dart';
+import 'package:flutter_cahoi_barbershop/core/services/youtube_service.dart';
 import 'package:flutter_cahoi_barbershop/core/models/user/user.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/store_secure.dart';
 
-class HomePageModel extends ChangeNotifier {
+class HomePageProvider extends ChangeNotifier {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _youtubeApi = locator<YoutubeApi>();
+  final _youtubeApi = locator<YoutubeService>();
   final _storeSecure = locator<StoreSecure>();
 
   bool _disposed = false;
@@ -77,6 +77,11 @@ class HomePageModel extends ChangeNotifier {
     if (!_disposed) {
       super.notifyListeners();
     }
+  }
+
+  initHomePage() {
+    changeUser();
+    changeClipIdList();
   }
 }
 

@@ -4,24 +4,26 @@ part 'service_cut.g.dart';
 
 @JsonSerializable()
 class ServiceCut {
-  String id;
+  @JsonKey(name: 'id')
+  int id;
   String name;
-  String price;
-  String duration;
-  String sortDescription;
+  int price;
+  int duration;
+  @JsonKey(name: 'short_description')
+  String shortDescription;
+  @JsonKey(name: 'full_description')
   String fullDescription;
-  String imagesDemo;
-  String idCategory;
+  @JsonKey(name: 'category_service_id')
+  int categoryServiceId;
 
   ServiceCut({
     required this.id,
     required this.name,
     required this.price,
     required this.duration,
-    required this.sortDescription,
+    required this.shortDescription,
     required this.fullDescription,
-    required this.imagesDemo,
-    required this.idCategory,
+    required this.categoryServiceId,
   });
 
   factory ServiceCut.fromJson(Map<String, dynamic> json) =>

@@ -1,12 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/view_models/discover_model.dart';
+import 'package:flutter_cahoi_barbershop/core/providers/discover_provider.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:provider/provider.dart';
 
 class ShowPhotoView extends StatefulWidget {
-  final int currentPhoto ;
+  final int currentPhoto;
   const ShowPhotoView({
     Key? key,
     this.currentPhoto = 0,
@@ -17,11 +17,11 @@ class ShowPhotoView extends StatefulWidget {
 }
 
 class _ShowPhotoViewState extends State<ShowPhotoView> {
-  DiscoverModel model = locator<DiscoverModel>();
+  DiscoverProvider model = locator<DiscoverProvider>();
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<DiscoverModel>(
+    return ChangeNotifierProvider<DiscoverProvider>(
       create: (context) => model,
       child: Consumer(
         builder: (context, value, child) => Scaffold(

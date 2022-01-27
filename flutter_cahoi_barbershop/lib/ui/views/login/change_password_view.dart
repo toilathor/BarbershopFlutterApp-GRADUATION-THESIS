@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/view_models/change_password_model.dart';
+import 'package:flutter_cahoi_barbershop/core/providers/change_password_provider.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/button_login.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/text_regex.dart';
@@ -15,12 +15,12 @@ class ChangePasswordView extends StatefulWidget {
 }
 
 class _ChangePasswordViewState extends State<ChangePasswordView> {
-  final model = locator<ChangePasswordModel>();
+  final model = locator<ChangePasswordProvider>();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return ChangeNotifierProvider<ChangePasswordModel>(
+    return ChangeNotifierProvider<ChangePasswordProvider>(
       create: (context) => model,
       child: Scaffold(
         key: model.scaffoldKey,
@@ -46,13 +46,13 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     );
   }
 
-  _buildHeader() => Text(
+  Widget _buildHeader() => Text(
         'Create New Password',
         style: Theme.of(context).textTheme.headline1,
         textAlign: TextAlign.left,
       );
 
-  _buildNewPasswordField() => Consumer<ChangePasswordModel>(
+  Widget _buildNewPasswordField() => Consumer<ChangePasswordProvider>(
         builder: (context, value, child) => Form(
           key: model.formKey,
           child: Padding(
@@ -125,7 +125,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
         ),
       );
 
-  _buildButtonChangePass(Size size) => Consumer<ChangePasswordModel>(
+  Widget _buildButtonChangePass(Size size) => Consumer<ChangePasswordProvider>(
         builder: (context, value, child) => Positioned(
           bottom: size.height * 0.02,
           child: ButtonLogin(
@@ -140,10 +140,10 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
         ),
       );
 
-  _buildRegex(
+  Widget _buildRegex(
     Size size,
   ) =>
-      Consumer<ChangePasswordModel>(
+      Consumer<ChangePasswordProvider>(
         builder: (context, value, child) => Padding(
           padding: const EdgeInsets.all(12.0),
           child:

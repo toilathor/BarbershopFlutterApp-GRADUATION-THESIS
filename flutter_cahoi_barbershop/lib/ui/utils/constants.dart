@@ -15,5 +15,6 @@ final fullFormatTime = [hh, ':', mm, ':', ss];
 
 final countryCode = WidgetsBinding.instance!.window.locale.countryCode;
 
-const apiKey = 'AIzaSyA8wTEYb57gCtFs2bu41CKoTrXZm6f7LnI';
+const apiKeyFirebase = 'AIzaSyA8wTEYb57gCtFs2bu41CKoTrXZm6f7LnI';
 const playlistId = 'PLbplMzmYtClBFL_513hKHQNGS1nmvM3Zj';
+const apiKeyMap = 'AIzaSyDVr-0LtOAAbSRRbgQHNuQcWtxw0MeUlvs';

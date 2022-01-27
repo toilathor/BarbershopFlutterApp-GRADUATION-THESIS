@@ -7,14 +7,13 @@ part of 'service_cut.dart';
 // **************************************************************************
 
 ServiceCut _$ServiceCutFromJson(Map<String, dynamic> json) => ServiceCut(
-      id: json['id'] as String,
+      id: json['id'] as int,
       name: json['name'] as String,
-      price: json['price'] as String,
-      duration: json['duration'] as String,
-      sortDescription: json['sortDescription'] as String,
-      fullDescription: json['fullDescription'] as String,
-      imagesDemo: json['imagesDemo'] as String,
-      idCategory: json['idCategory'] as String,
+      price: json['price'] as int,
+      duration: json['duration'] as int,
+      shortDescription: json['short_description'] as String,
+      fullDescription: json['full_description'] as String,
+      categoryServiceId: json['category_service_id'] as int,
     );
 
 Map<String, dynamic> _$ServiceCutToJson(ServiceCut instance) =>
@@ -23,8 +22,7 @@ Map<String, dynamic> _$ServiceCutToJson(ServiceCut instance) =>
       'name': instance.name,
       'price': instance.price,
       'duration': instance.duration,
-      'sortDescription': instance.sortDescription,
-      'fullDescription': instance.fullDescription,
-      'imagesDemo': instance.imagesDemo,
-      'idCategory': instance.idCategory,
+      'short_description': instance.shortDescription,
+      'full_description': instance.fullDescription,
+      'category_service_id': instance.categoryServiceId,
     };

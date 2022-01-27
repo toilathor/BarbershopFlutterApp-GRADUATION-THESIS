@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/pages/account_page/account_page_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/pages/discover_page/discover_page_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/pages/home_page/home_page_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/pages/shop_page/shop_page_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/pages/style_master_page/style_master_page_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/pages/account_page_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/pages/discover_page_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/pages/home_page_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/pages/shop_page_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/pages/style_master_page_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -27,7 +27,10 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: _listPage[_currentIndex],
+        body: IndexedStack(
+          children: _listPage,
+          index: _currentIndex,
+        ),
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: Theme.of(context).primaryColor,
           type: BottomNavigationBarType.fixed,

@@ -7,7 +7,7 @@ part of 'user.dart';
 // **************************************************************************
 
 MUser _$MUserFromJson(Map<String, dynamic> json) => MUser(
-      userId: json['user_id'] as String,
+      id: json['id'] as String,
       name: json['name'] as String,
       phoneNumber: json['phone_number'] as String,
       email: json['email'] as String?,
@@ -17,7 +17,7 @@ MUser _$MUserFromJson(Map<String, dynamic> json) => MUser(
     );
 
 Map<String, dynamic> _$MUserToJson(MUser instance) => <String, dynamic>{
-      'user_id': instance.userId,
+      'id': instance.id,
       'name': instance.name,
       'phone_number': instance.phoneNumber,
       'email': instance.email,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/discover/discover.dart';
 
-class DiscoverModel extends ChangeNotifier {
+class DiscoverProvider extends ChangeNotifier {
   List<Discover> photos = [
     Discover(
         id: "1", src: "https://bit.ly/3pUp3I5", name: 'Side Part - Nâu khói'),

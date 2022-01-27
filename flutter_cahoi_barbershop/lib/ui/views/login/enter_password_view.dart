@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/view_models/enter_password_model.dart';
+import 'package:flutter_cahoi_barbershop/core/providers/enter_password_provider.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/button_login.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/text_regex.dart';
@@ -15,13 +15,13 @@ class EnterPasswordView extends StatefulWidget {
 }
 
 class _EnterPasswordViewState extends State<EnterPasswordView> {
-  final model = locator<EnterPasswordModel>();
+  final model = locator<EnterPasswordProvider>();
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return ChangeNotifierProvider<EnterPasswordModel>(
+    return ChangeNotifierProvider<EnterPasswordProvider>(
       create: (context) => model,
       child: Scaffold(
         key: model.scaffoldKey,
@@ -85,7 +85,7 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
     );
   }
 
-  _buildPasswordField() => Consumer<EnterPasswordModel>(
+  Widget _buildPasswordField() => Consumer<EnterPasswordProvider>(
         builder: (context, value, child) => Form(
           key: model.formGlobalKey,
           child: Padding(
@@ -151,7 +151,7 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
         ),
       );
 
-  _buildBottomLogin(Size size) => Consumer<EnterPasswordModel>(
+  Widget _buildBottomLogin(Size size) => Consumer<EnterPasswordProvider>(
         builder: (context, value, child) => Positioned(
           bottom: size.height * 0.02,
           child: SizedBox(
@@ -197,7 +197,7 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
         ),
       );
 
-  _buildRegex(Size size) => Consumer<EnterPasswordModel>(
+  Widget _buildRegex(Size size) => Consumer<EnterPasswordProvider>(
         builder: (context, value, child) => Padding(
           padding: const EdgeInsets.all(12.0),
           child:

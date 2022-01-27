@@ -1,29 +1,28 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/apis/auth_api.dart';
 import 'package:flutter_cahoi_barbershop/core/services/shared_preferences_service.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/store_secure.dart';
 import 'package:flutter_cahoi_barbershop/home_view.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
-import 'package:flutter_cahoi_barbershop/ui/utils/store_secure.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/login/forgot_password_view.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-class RegisterModel extends ChangeNotifier {
+class EnterPasswordProvider extends ChangeNotifier {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final TextEditingController textEditingController = TextEditingController();
   final _authAPI = locator<AuthAPI>();
   final _storeSecure = locator<StoreSecure>();
   final _prefs = locator<SharedPreferencesService>();
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-  final formPassKey = GlobalKey<FormState>();
-  final formNameKey = GlobalKey<FormState>();
-  final nameEditingController = TextEditingController();
-  final passEditingController = TextEditingController();
+  final formGlobalKey = GlobalKey<FormState>();
 
   bool isHidePassword = true;
   String currentPassword = '';
-  String currentName = '';
   String? messageValidatePassword;
-  String? messageValidateName;
   bool isUppercase = false;
   bool isNumeric = false;
   bool isLength = false;
-  bool isValidatedName = false;
   bool isAllReady = false;
 
   changeHidePassword() {
@@ -31,26 +30,29 @@ class RegisterModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  register(String phoneNumber) async {
+  login(String phoneNumber) async {
     if (!isAllReady) {
       return;
     }
-    Map<String?, String?>? response = await _authAPI.register(
-        phoneNumber, currentName.trim(), currentPassword.trim());
+    Map<dynamic, dynamic>? response = await _authAPI.loginWithPhoneNumber(
+        phoneNumber, currentPassword.trim());
 
+    debugPrint(response.toString());
     if (response == null) {
       //Có lỗi HTTP
-      debugPrint("Can't connected");
-    } else if (response.values.isEmpty && response.keys.isNotEmpty) {
-      //Lỗi server
-      debugPrint("Lỗi đăng ký!");
+      Fluttertoast.showToast(msg: "Connection errors!");
+      return;
+    } else if (response.values.first == null || response.keys.first == null) {
+      //Sai password
+      Fluttertoast.showToast(msg: "Wrong password!");
+      return;
     } else {
       //Lưu thông tin User vào Store
-      await _storeSecure.setUser(response.keys.first);
+      await _storeSecure.setUser(jsonEncode(response.keys.first));
       //Lưu thông tin Token vào Store
-      await _storeSecure.setToken(response.values.first);
+      await _storeSecure.setToken(jsonEncode(response.values.first));
       //Lưu social
-      _prefs.setSocial(TypeSocial.facebook);
+      _prefs.setSocial(TypeSocial.none);
 
       Navigator.of(scaffoldKey.currentContext!).pushAndRemoveUntil(
           MaterialPageRoute(
@@ -101,24 +103,11 @@ class RegisterModel extends ChangeNotifier {
     }
   }
 
-  String? validateName() {
-    if (currentName.length > 30 || currentName.isEmpty) {
-      isValidatedName = false;
-      return 'Name is too long';
-    } else if (currentName.split(" ").length < 2) {
-      isValidatedName = false;
-      return 'Name must have at least 2 words';
-    } else {
-      isValidatedName = true;
-      return null;
-    }
-  }
-
   changeCurrentPassword({String? value}) {
     if (value == null) {
-      currentPassword = passEditingController.text.trim();
+      currentPassword = textEditingController.text.trim();
     } else {
-      passEditingController.text = '';
+      textEditingController.text = '';
       currentPassword = '';
     }
     validateUppercase();
@@ -129,22 +118,18 @@ class RegisterModel extends ChangeNotifier {
   }
 
   changeAllReady() {
-    if (isUppercase && isNumeric && isLength && isValidatedName) {
+    if (isUppercase && isNumeric && isLength) {
       isAllReady = true;
     } else {
       isAllReady = false;
     }
   }
 
-  void changeCurrentName({String? value}) {
-    if (value == null) {
-      currentName = nameEditingController.text.trim();
-    } else {
-      nameEditingController.text = '';
-      currentName = '';
-    }
-    validateName();
-    changeAllReady();
-    notifyListeners();
+  forgotPassword() {
+    Navigator.of(scaffoldKey.currentContext!).push(MaterialPageRoute(
+      builder: (context) => const ForgotPasswordView(),
+    ));
   }
+
+  loginWithSMS() {}
 }

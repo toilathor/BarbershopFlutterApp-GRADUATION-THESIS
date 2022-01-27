@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/view_models/login_model.dart';
+import 'package:flutter_cahoi_barbershop/core/providers/login_provider.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/button_login.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,7 +15,7 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final model = locator<LoginModel>();
+  final model = locator<LoginProvider>();
 
   @override
   void initState() {
@@ -26,7 +26,7 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return ChangeNotifierProvider<LoginModel>(
+    return ChangeNotifierProvider<LoginProvider>(
       create: (context) => model,
       child: Scaffold(
         key: model.scaffoldKey,
@@ -150,7 +150,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   Widget _buildButtonContinue(Size size, BuildContext context) =>
-      Consumer<LoginModel>(
+      Consumer<LoginProvider>(
         builder: (context, value, child) => ButtonLogin(
             height: size.height * 0.06,
             width: size.width * 0.9,
@@ -162,7 +162,7 @@ class _LoginViewState extends State<LoginView> {
             title: "Continue"),
       );
 
-  Widget _buildSocials(Size size) => Consumer<LoginModel>(
+  Widget _buildSocials(Size size) => Consumer<LoginProvider>(
         builder: (context, value, child) => Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -202,7 +202,7 @@ class _LoginViewState extends State<LoginView> {
         ),
       );
 
-  _buildPhoneField() => Consumer<LoginModel>(
+  Widget _buildPhoneField() => Consumer<LoginProvider>(
         builder: (context, value, child) => Form(
           key: model.formGlobalKey,
           child: Padding(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/view_models/discover_model.dart';
+import 'package:flutter_cahoi_barbershop/core/providers/discover_provider.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/discover/show_photo_view.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -13,11 +13,11 @@ class DiscoverPageView extends StatefulWidget {
 }
 
 class _DiscoverPageViewState extends State<DiscoverPageView> {
-  DiscoverModel model = locator<DiscoverModel>();
+  DiscoverProvider model = locator<DiscoverProvider>();
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<DiscoverModel>(
+    return ChangeNotifierProvider<DiscoverProvider>(
       create: (context) => model,
       child: Scaffold(
         appBar: AppBar(
@@ -34,7 +34,7 @@ class _DiscoverPageViewState extends State<DiscoverPageView> {
                 textAlign: TextAlign.center,
               ),
             ),
-            Consumer<DiscoverModel>(
+            Consumer<DiscoverProvider>(
               builder: (context, value, child) => Expanded(
                 child: MasonryGridView.builder(
                   physics: const BouncingScrollPhysics(),

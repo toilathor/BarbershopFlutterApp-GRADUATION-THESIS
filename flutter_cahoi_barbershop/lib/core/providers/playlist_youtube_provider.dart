@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/apis/youtube_api.dart';
-import 'package:flutter_cahoi_barbershop/core/view_models/home_page_model.dart';
+import 'package:flutter_cahoi_barbershop/core/services/youtube_service.dart';
+import 'package:flutter_cahoi_barbershop/core/providers/home_page_provider.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 
-class PlaylistYoutubeModel extends ChangeNotifier {
+class PlaylistYoutubeProvider extends ChangeNotifier {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _youtubeApi = locator<YoutubeApi>();
+  final _youtubeApi = locator<YoutubeService>();
 
   List<IdClipYoutube> clipIdList = [];
   List<ItemYoutube> clipInfoList = [];
@@ -43,7 +43,6 @@ class PlaylistYoutubeModel extends ChangeNotifier {
       debugPrint(e.toString());
     }
   }
-
   @override
   void dispose() {
     _disposed = true;

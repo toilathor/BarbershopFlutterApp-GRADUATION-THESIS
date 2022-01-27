@@ -13,7 +13,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 
 import '../../ui/views/login/change_password_view.dart';
 
-class EnterPinModel extends ChangeNotifier {
+class EnterPinProvider extends ChangeNotifier {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final formKey = GlobalKey<FormState>();
   TextEditingController textEditingController = TextEditingController();

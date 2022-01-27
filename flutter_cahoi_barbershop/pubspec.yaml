@@ -61,9 +61,7 @@ dependencies:
   video_player: ^2.2.11
   webview_flutter: ^3.0.0
 
-  #Map Loacation
-  flutter_google_places: ^0.3.0
-  geocoder: ^0.2.1
+  #Map Location
   geolocator: ^8.0.3
 
   #firebase
@@ -125,6 +123,7 @@ flutter:
     - family: Jaapokki
       fonts:
         - asset: fonts/Jaapokki-Regular.otf
+          weight: 700
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

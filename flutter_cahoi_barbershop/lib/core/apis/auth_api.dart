@@ -23,7 +23,7 @@ class AuthAPI {
     }
   }
 
-  Future<Map<String?, String?>?> loginWithPhoneNumber(
+  Future<Map<dynamic, dynamic>?> loginWithPhoneNumber(
       String phoneNumber, String password) async {
     http.Response response = await client.post(
       Uri.parse('$localHost/auth/login-phone-number'),
@@ -34,25 +34,21 @@ class AuthAPI {
     );
 
     try {
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
+      var data = jsonDecode(response.body);
 
-        String user = jsonEncode(data['data']['user']);
-        String token = jsonEncode(data['data']['token']);
-        return {user: token};
-      } else if (response.statusCode == 201) {
-        return {'user': null};
-      }
+      return {data['user']: data['token']};
     } catch (e) {
       debugPrint(e.toString());
     }
     return null;
   }
 
-  Future<Map<String?, String?>?> loginWithSocials(
+  Future<Map<dynamic, dynamic>?> loginWithSocials(
       Map<String, String> account, TypeSocial typeSocial) async {
+    var url = '$localHost/auth/login-socials/${typeSocial.name}';
+
     http.Response response = await client.post(
-      Uri.parse('$localHost/auth/login-socials/${typeSocial.index}'),
+      Uri.parse(url),
       body: {
         'name': account['name'],
         'phone_number': account['phone_number'],
@@ -60,24 +56,17 @@ class AuthAPI {
         'provider_id': account['provider_id'],
       },
     );
-
     try {
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
+      var data = jsonDecode(response.body);
 
-        String user = jsonEncode(data['data']['user']);
-        String token = jsonEncode(data['data']['token']);
-        return {user: token};
-      } else if (response.statusCode == 201) {
-        return {'user': null};
-      }
+      return {data['user']: data['token']};
     } catch (e) {
       debugPrint(e.toString());
     }
     return null;
   }
 
-  Future<Map<String?, String?>?> register(
+  Future<Map<dynamic, dynamic>?> register(
       String phoneNumber, String name, String password) async {
     http.Response response = await client.post(
       Uri.parse('$localHost/auth/register'),
@@ -90,15 +79,9 @@ class AuthAPI {
     );
 
     try {
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
+      var data = jsonDecode(response.body);
 
-        String user = jsonEncode(data['data']['user']);
-        String token = jsonEncode(data['data']['token']);
-        return {user: token};
-      } else if (response.statusCode == 201) {
-        return {'user': null};
-      }
+      return {data['user']: data['token']};
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -139,14 +122,12 @@ class AuthAPI {
     firebaseAuth = FirebaseAuth.instance;
   }
 
-  Future<bool> resetPassword(String phoneNumber, String password) async{
-    http.Response response = await client.post(
-      Uri.parse('$localHost/auth/reset-password/'),
-      body: {
-        "password":password,
-        "phone_number":phoneNumber,
-      }
-    );
+  Future<bool> resetPassword(String phoneNumber, String password) async {
+    http.Response response =
+        await client.post(Uri.parse('$localHost/auth/reset-password/'), body: {
+      "password": password,
+      "phone_number": phoneNumber,
+    });
 
     try {
       var data = jsonDecode(response.body);
