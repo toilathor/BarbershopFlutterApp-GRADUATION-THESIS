@@ -9,7 +9,7 @@ class AuthAPI {
   var client = http.Client();
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
-  Future<bool> checkUserExisis(String phoneNumber) async {
+  Future<bool> checkUserExist(String phoneNumber) async {
     http.Response response = await client.get(
       Uri.parse('$localHost/auth/check-user/$phoneNumber'),
     );

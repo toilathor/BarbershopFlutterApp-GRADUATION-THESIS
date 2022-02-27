@@ -1,10 +1,10 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/stylist/stylist.dart';
-import 'package:flutter_cahoi_barbershop/core/providers/booking_provider.dart';
-import 'package:flutter_cahoi_barbershop/service_locator.dart';
+import 'package:flutter_cahoi_barbershop/core/providers/booking_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/select_barbershop_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/select_service_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/widgets/select_stylist.dart';
@@ -13,7 +13,6 @@ import 'package:flutter_cahoi_barbershop/ui/widgets/elevated_button_icon.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/text_tag.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
 
 class BookingView extends StatefulWidget {
   const BookingView({Key? key}) : super(key: key);
@@ -24,21 +23,18 @@ class BookingView extends StatefulWidget {
 
 class _BookingViewState extends State<BookingView>
     with SingleTickerProviderStateMixin {
-  @override
-  void initState() {
-    model.changeCategoryServices();
-    super.initState();
-  }
-
-  final model = locator<BookingProvider>();
+  final notesController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return ChangeNotifierProvider<BookingProvider>.value(
-      value: model,
-      child: WillPopScope(
+    return BaseView<BookingModel>(
+      onModelReady: (model) {},
+      onModelDisposed: (model) {
+        model.changeDisposed();
+      },
+      builder: (context, model, child) => WillPopScope(
         onWillPop: () async {
           Fluttertoast.showToast(
             msg: "Để tránh back nhầm. Hãy bấm nút back góc trên bên phải!",
@@ -66,31 +62,29 @@ class _BookingViewState extends State<BookingView>
               ),
             ],
           ),
-          body: Consumer<BookingProvider>(
-            builder: (context, value, child) => Theme(
-              data: Theme.of(context).copyWith(
-                colorScheme: ColorScheme.light(
-                  primary: Theme.of(context).secondaryHeaderColor,
-                ),
+          body: Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.light(
+                primary: Theme.of(context).secondaryHeaderColor,
               ),
-              child: SizedBox(
-                height: size.height,
-                child: Stepper(
-                  currentStep: model.currentStep.index,
-                  onStepContinue: () {
-                    model.nextStep();
-                  },
-                  onStepCancel: () {
-                    model.backStep();
-                  },
-                  controlsBuilder: (context, details) =>
-                      _buildControl(context, details),
-                  steps: [
-                    _buildStepSelectBarbershop(),
-                    _buildStepSelectService(),
-                    _buildStepSelectDateAndStylist(size),
-                  ],
-                ),
+            ),
+            child: SizedBox(
+              height: size.height,
+              child: Stepper(
+                currentStep: model.currentStep.index,
+                onStepContinue: () {
+                  model.nextStep();
+                },
+                onStepCancel: () {
+                  model.backStep();
+                },
+                controlsBuilder: (context, details) =>
+                    _buildControl(context, details, model),
+                steps: [
+                  _buildStepSelectBarbershop(model),
+                  _buildStepSelectService(model),
+                  _buildStepSelectDateAndStylist(size, model),
+                ],
               ),
             ),
           ),
@@ -173,26 +167,25 @@ class _BookingViewState extends State<BookingView>
         ],
       );
 
-  Widget _buildSelectTime(Size size) => Padding(
+  Widget _buildSelectTime(Size size, BookingModel model) => Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<BookingProvider>(builder: (context, value, child) {
-          return SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 6,
-            child: ToggleTime(
-              timeStart: timeStart,
-              timeEnd: timeEnd,
-              duration: value.totalDuration,
-              currentIndex: model.currentIndexTime,
-              onPressed: (time, index) {
-                value.changeSelectedTime(index, time);
-              },
-            ),
-          );
-        }),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height / 6,
+          child: ToggleTime(
+            timeStart: timeStart,
+            timeEnd: timeEnd,
+            duration: model.totalDuration,
+            currentIndex: model.currentIndexTime,
+            onPressed: (time, index) {
+              model.changeSelectedTime(index, time);
+            },
+          ),
+        ),
       );
 
-  List<Widget> _buildOptionMore(Size size, BuildContext context) {
+  List<Widget> _buildOptionMore(
+      Size size, BuildContext context, BookingModel model) {
     return [
       SizedBox(
         width: size.width,
@@ -201,28 +194,24 @@ class _BookingViewState extends State<BookingView>
           style: Theme.of(context).textTheme.headline3,
         ),
       ),
-      Consumer<BookingProvider>(builder: (context, value, child) {
-        return TextField(
-          maxLines: 3,
-          maxLength: 250,
-          controller: value.notesController,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 16,
+      TextField(
+        maxLines: 3,
+        maxLength: 250,
+        controller: notesController,
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 16,
+        ),
+        onChanged: (_) {},
+        decoration: InputDecoration(
+          hintText: "EX: You go with 2 children, You go with you,"
+              " Wash your hands and so on...etc",
+          hintStyle: TextStyle(
+            fontSize: 14,
+            color: Colors.grey.withOpacity(0.5),
           ),
-          onChanged: (_) {
-            value.changeNotes();
-          },
-          decoration: InputDecoration(
-            hintText: "EX: You go with 2 children, You go with you,"
-                " Wash your hands and so on...etc",
-            hintStyle: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.withOpacity(0.5),
-            ),
-          ),
-        );
-      }),
+        ),
+      ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -267,65 +256,60 @@ class _BookingViewState extends State<BookingView>
     ];
   }
 
-  Widget _buildControl(BuildContext context, ControlsDetails details) {
+  Widget _buildControl(
+      BuildContext context, ControlsDetails details, BookingModel model) {
     if (details.currentStep == StepBooking.selectBarbershop.index) {
-      return Consumer<BookingProvider>(
-        builder: (context, value, child) => ElevatedButtonIcon(
-          title: 'Next step',
-          onPressed: value.workplace == null ? null : details.onStepContinue,
-        ),
+      return ElevatedButtonIcon(
+        title: 'Next step',
+        onPressed: model.workplace == null ? null : details.onStepContinue,
       );
     } else if (details.currentStep == StepBooking.selectStylistAndDate.index) {
-      return Consumer<BookingProvider>(builder: (context, value, child) {
-        return Row(
-          children: [
-            Expanded(
-              child: TextButton(
-                onPressed: details.onStepCancel,
-                child: const Text('Back'),
-              ),
+      return Row(
+        children: [
+          Expanded(
+            child: TextButton(
+              onPressed: details.onStepCancel,
+              child: const Text('Back'),
             ),
-            Expanded(
-              child: ElevatedButtonIcon(
-                title: 'Completed',
-                onPressed: model.checkCompleted()
-                    ? () {
-                        //Call api
-                        value.complete();
-                      }
-                    : null,
-              ),
-            )
-          ],
-        );
-      });
+          ),
+          Expanded(
+            child: ElevatedButtonIcon(
+              title: 'Completed',
+              onPressed: model.checkCompleted()
+                  ? () {
+                      //Call api
+                      model.complete();
+                    }
+                  : null,
+            ),
+          )
+        ],
+      );
     } else {
-      return Consumer<BookingProvider>(builder: (context, value, child) {
-        return Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: TextButton(
-                onPressed: details.onStepCancel,
-                child: const Text('Back'),
-              ),
+      return Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: TextButton(
+              onPressed: details.onStepCancel,
+              child: const Text('Back'),
             ),
-            Expanded(
-              flex: 1,
-              child: ElevatedButtonIcon(
-                title: 'Next Step',
-                onPressed: value.selectedServices.isEmpty
-                    ? null
-                    : details.onStepContinue,
-              ),
+          ),
+          Expanded(
+            flex: 1,
+            child: ElevatedButtonIcon(
+              title: 'Next Step',
+              onPressed: model.selectedServices.isEmpty
+                  ? null
+                  : details.onStepContinue,
             ),
-          ],
-        );
-      });
+          ),
+        ],
+      );
     }
   }
 
-  Step _buildStepSelectBarbershop() => Step(
+  Step _buildStepSelectBarbershop(BookingModel model) => Step(
         isActive: model.currentStep == StepBooking.selectBarbershop,
         title: Text(
           "Select Barbershop",
@@ -344,12 +328,17 @@ class _BookingViewState extends State<BookingView>
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
+                onPressed: () async {
+                  var result = await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => const SelectBarbershopView(),
                     ),
                   );
+
+                  if (result != null && result.containsKey('selection')) {
+                    debugPrint(result['selection'].toString());
+                    model.changeWorkplace(result['selection']);
+                  }
                 },
                 child: const Text('Select Barbershop'),
               ),
@@ -358,7 +347,7 @@ class _BookingViewState extends State<BookingView>
         ),
       );
 
-  Step _buildStepSelectService() => Step(
+  Step _buildStepSelectService(BookingModel model) => Step(
         isActive: model.currentStep == StepBooking.selectService,
         state: model.selectedServices.isEmpty
             ? StepState.indexed
@@ -369,19 +358,23 @@ class _BookingViewState extends State<BookingView>
         ),
         content: Column(
           children: [
-            _buildSelectedService(),
+            _buildSelectedService(model),
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
                 child: const Text('Select Service'),
-                onPressed: () {
-                  Navigator.of(context).push(
+                onPressed: () async {
+                  var result = await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => SelectServiceView(
                         model: model,
                       ),
                     ),
                   );
+
+                  if (result != null && result['services'] != null) {
+                    model.setSelectedService(result['services']);
+                  }
                 },
               ),
             ),
@@ -389,7 +382,7 @@ class _BookingViewState extends State<BookingView>
         ),
       );
 
-  Step _buildStepSelectDateAndStylist(Size size) => Step(
+  Step _buildStepSelectDateAndStylist(Size size, BookingModel model) => Step(
         isActive: model.currentStep == StepBooking.selectStylistAndDate,
         title: Text(
           "Select Stylist & Datetime",
@@ -403,62 +396,58 @@ class _BookingViewState extends State<BookingView>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-                  Consumer<BookingProvider>(
-                    builder: (context, value, child) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: DatePicker(
-                        DateTime.now(),
-                        initialSelectedDate: value.selectedDate,
-                        dateTextStyle: Theme.of(context).textTheme.headline2!,
-                        monthTextStyle: Theme.of(context).textTheme.bodyText2!,
-                        dayTextStyle: Theme.of(context).textTheme.bodyText2!,
-                        daysCount: 7,
-                        height: size.height * 0.115,
-                        width: size.width * 0.17,
-                        selectionColor: Theme.of(context)
-                            .floatingActionButtonTheme
-                            .backgroundColor!,
-                        onDateChange: (selectedDate) {
-                          value.changeSelectedDate(selectedDate);
-                        },
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: DatePicker(
+                      DateTime.now(),
+                      initialSelectedDate: model.selectedDate,
+                      dateTextStyle: Theme.of(context).textTheme.headline2!,
+                      monthTextStyle: Theme.of(context).textTheme.bodyText2!,
+                      dayTextStyle: Theme.of(context).textTheme.bodyText2!,
+                      daysCount: 7,
+                      height: size.height * 0.117,
+                      width: size.width * 0.17,
+                      selectionColor: Theme.of(context)
+                          .floatingActionButtonTheme
+                          .backgroundColor!,
+                      onDateChange: (selectedDate) {
+                        model.changeSelectedDate(selectedDate);
+                      },
                     ),
                   ),
-                  Consumer<BookingProvider>(
-                    builder: (context, value, child) => Container(
-                      padding: const EdgeInsets.all(8.0),
-                      margin: const EdgeInsets.only(bottom: 8.0),
-                      width: size.width,
-                      // height: size.width * 0.26,
-                      child: value.isDefaultStylist
-                          ? Center(
-                              child: Text(
-                                "We will select help you the stylist the best",
-                                style: TextStyle(
-                                    fontFamily: Theme.of(context)
-                                        .textTheme
-                                        .headline1!
-                                        .fontFamily,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            )
-                          : _buildDescriptionStylist(
-                              stylist: model.stylists![model.selectedStylist]),
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
+                  Container(
+                    padding: const EdgeInsets.all(8.0),
+                    margin: const EdgeInsets.only(bottom: 8.0),
+                    width: size.width,
+                    // height: size.width * 0.26,
+                    child: model.isDefaultStylist
+                        ? Center(
+                            child: Text(
+                              "We will select help you the stylist the best",
+                              style: TextStyle(
+                                  fontFamily: Theme.of(context)
+                                      .textTheme
+                                      .headline1!
+                                      .fontFamily,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          )
+                        : _buildDescriptionStylist(
+                            stylist: model.stylists![model.selectedStylist]),
+                    decoration: BoxDecoration(
+                      border: Border.all(),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
                   const SelectStylist(),
-                  _buildSelectTime(size),
+                  _buildSelectTime(size, model),
                 ] +
-                _buildOptionMore(size, context),
+                _buildOptionMore(size, context, model),
           ),
         ),
       );
 
-  Widget _buildSelectedService() {
+  Widget _buildSelectedService(BookingModel model) {
     if (model.selectedServices.isEmpty) {
       return Container();
     } else {
@@ -478,11 +467,5 @@ class _BookingViewState extends State<BookingView>
         ),
       );
     }
-  }
-
-  @override
-  void dispose() {
-    model.reset();
-    super.dispose();
   }
 }

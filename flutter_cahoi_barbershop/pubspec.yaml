@@ -55,7 +55,7 @@ dependencies:
   flutter_local_notifications: ^9.1.5
   date_picker_timeline: ^1.2.3
   flutter_rating_bar: ^4.0.0
-  extended_image: ^6.0.1
+  extended_image: 4.0.0
   pin_code_fields: ^7.3.0
   phone_numbers_parser: ^4.2.0
   video_player: ^2.2.11
@@ -76,6 +76,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  dio: ^4.0.4
 
 dev_dependencies:
   flutter_test:

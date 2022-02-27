@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/stylist/stylist.dart';
-import 'package:flutter_cahoi_barbershop/core/providers/booking_provider.dart';
+import 'package:flutter_cahoi_barbershop/core/providers/booking_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/avatar.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +18,7 @@ class _SelectStylistState extends State<SelectStylist> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Consumer<BookingProvider>(
+    return Consumer<BookingModel>(
       builder:(context, value, child) =>  Row(
         mainAxisSize: MainAxisSize.min,
         children: [

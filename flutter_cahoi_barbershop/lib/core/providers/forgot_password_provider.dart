@@ -41,7 +41,7 @@ class ForgotPasswordProvider extends ChangeNotifier {
         .validate()) {
       return;
     } else {
-      bool isExitPassword = await _authAPI.checkUserExisis(currrentPhoneNumber);
+      bool isExitPassword = await _authAPI.checkUserExist(currrentPhoneNumber);
 
       if (!isExitPassword) {
         Fluttertoast.showToast(msg: 'This user does not exist!');

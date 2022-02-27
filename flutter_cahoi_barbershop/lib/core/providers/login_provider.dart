@@ -34,7 +34,7 @@ class LoginProvider extends ChangeNotifier {
     if (!isValidatePhoneNumber) {
       return;
     }
-    var userExitsted = await _authAPI.checkUserExisis(
+    var userExitsted = await _authAPI.checkUserExist(
         PhoneNumber.fromIsoCode(countryCode!, textEditingController.text)
             .international);
     debugPrint(PhoneNumber.fromIsoCode(countryCode!, textEditingController.text)

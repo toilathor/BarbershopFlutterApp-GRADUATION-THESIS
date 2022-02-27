@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/providers/change_password_provider.dart';
+import 'package:flutter_cahoi_barbershop/core/providers/change_password_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/button_login.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/text_regex.dart';
@@ -15,12 +15,12 @@ class ChangePasswordView extends StatefulWidget {
 }
 
 class _ChangePasswordViewState extends State<ChangePasswordView> {
-  final model = locator<ChangePasswordProvider>();
+  final model = locator<ChangePasswordModel>();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return ChangeNotifierProvider<ChangePasswordProvider>(
+    return ChangeNotifierProvider<ChangePasswordModel>(
       create: (context) => model,
       child: Scaffold(
         key: model.scaffoldKey,
@@ -52,7 +52,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
         textAlign: TextAlign.left,
       );
 
-  Widget _buildNewPasswordField() => Consumer<ChangePasswordProvider>(
+  Widget _buildNewPasswordField() => Consumer<ChangePasswordModel>(
         builder: (context, value, child) => Form(
           key: model.formKey,
           child: Padding(
@@ -125,7 +125,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
         ),
       );
 
-  Widget _buildButtonChangePass(Size size) => Consumer<ChangePasswordProvider>(
+  Widget _buildButtonChangePass(Size size) => Consumer<ChangePasswordModel>(
         builder: (context, value, child) => Positioned(
           bottom: size.height * 0.02,
           child: ButtonLogin(
@@ -143,7 +143,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
   Widget _buildRegex(
     Size size,
   ) =>
-      Consumer<ChangePasswordProvider>(
+      Consumer<ChangePasswordModel>(
         builder: (context, value, child) => Padding(
           padding: const EdgeInsets.all(12.0),
           child:
