@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/view_models/discover_model.dart';
-import 'package:flutter_cahoi_barbershop/service_locator.dart';
+import 'package:flutter_cahoi_barbershop/core/providers/discover_model.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/discover/show_photo_view.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
@@ -13,13 +13,10 @@ class DiscoverPageView extends StatefulWidget {
 }
 
 class _DiscoverPageViewState extends State<DiscoverPageView> {
-  DiscoverModel model = locator<DiscoverModel>();
-
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<DiscoverModel>(
-      create: (context) => model,
-      child: Scaffold(
+    return BaseView<DiscoverModel>(
+      builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: Text("Discover".toUpperCase()),
         ),

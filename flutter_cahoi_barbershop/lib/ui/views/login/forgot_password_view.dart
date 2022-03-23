@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/view_models/forgot_password_model.dart';
+import 'package:flutter_cahoi_barbershop/core/providers/forgot_password_provider.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/button_login.dart';
 import 'package:provider/provider.dart';
@@ -14,19 +14,19 @@ class ForgotPasswordView extends StatefulWidget {
 }
 
 class _ForgotPasswordViewState extends State<ForgotPasswordView> {
-  final model = locator<ForgotPasswordModel>();
+  final model = locator<ForgotPasswordProvider>();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return ChangeNotifierProvider<ForgotPasswordModel>(
+    return ChangeNotifierProvider<ForgotPasswordProvider>(
       create: (context) => model,
       child: Scaffold(
         key: model.scaffoldKey,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Consumer<ForgotPasswordModel>(
+            child: Consumer<ForgotPasswordProvider>(
               builder: (context, value, child) => Stack(
                 children: [
                   Column(
@@ -48,13 +48,13 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
     );
   }
 
-  _buildHeader() => Text(
+  Widget _buildHeader() => Text(
         'Forgot Password?',
         style: Theme.of(context).textTheme.headline1,
         textAlign: TextAlign.left,
       );
 
-  _buildButtonResetPass(Size size) => Positioned(
+  Widget _buildButtonResetPass(Size size) => Positioned(
         bottom: size.height * 0.02,
         child: ButtonLogin(
             height: size.height * 0.06,
@@ -67,7 +67,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
             title: 'Reset Password'),
       );
 
-  _buildPhoneField() => Form(
+  Widget _buildPhoneField() => Form(
         key: model.formKey,
         child: TextFormField(
           style: const TextStyle(
@@ -108,7 +108,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         ),
       );
 
-  _buildNotifi(Size size) => Expanded(
+  Widget _buildNotifi(Size size) => Expanded(
           child: Center(
         child: Column(children: [
           const Icon(

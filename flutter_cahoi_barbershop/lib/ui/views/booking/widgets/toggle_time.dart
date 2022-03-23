@@ -26,10 +26,13 @@ class _ToggleTimeState extends State<ToggleTime> {
   Widget build(BuildContext context) {
     return MasonryGridView(
       children: _buildItemToggleTime(),
-      mainAxisSpacing: 0,
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      mainAxisSpacing: 8.0,
       crossAxisSpacing: 8.0,
       gridDelegate: const SliverMasonryGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
+
       ),
     );
   }

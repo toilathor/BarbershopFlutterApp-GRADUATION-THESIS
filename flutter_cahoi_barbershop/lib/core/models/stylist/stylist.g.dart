@@ -7,17 +7,17 @@ part of 'stylist.dart';
 // **************************************************************************
 
 Stylist _$StylistFromJson(Map<String, dynamic> json) => Stylist(
-      id: json['id'] as String,
+      id: json['id'] as int,
       name: json['name'] as String,
-      skill: json['skill'] as String,
-      communicate: json['communicate'] as String,
-      avatar: json['avatar'] as String,
+      birthday: json['birthday'] as String,
+      skill: (json['skill_rate'] as num).toDouble(),
+      communication: (json['communication_rate'] as num).toDouble(),
     );
 
 Map<String, dynamic> _$StylistToJson(Stylist instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'skill': instance.skill,
-      'communicate': instance.communicate,
-      'avatar': instance.avatar,
+      'birthday': instance.birthday,
+      'skill_rate': instance.skill,
+      'communicate_rate': instance.communication,
     };

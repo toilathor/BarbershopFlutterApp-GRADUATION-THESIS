@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/view_models/change_password_model.dart';
+import 'package:flutter_cahoi_barbershop/core/providers/change_password_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/button_login.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/text_regex.dart';
@@ -46,13 +46,13 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     );
   }
 
-  _buildHeader() => Text(
+  Widget _buildHeader() => Text(
         'Create New Password',
         style: Theme.of(context).textTheme.headline1,
         textAlign: TextAlign.left,
       );
 
-  _buildNewPasswordField() => Consumer<ChangePasswordModel>(
+  Widget _buildNewPasswordField() => Consumer<ChangePasswordModel>(
         builder: (context, value, child) => Form(
           key: model.formKey,
           child: Padding(
@@ -125,7 +125,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
         ),
       );
 
-  _buildButtonChangePass(Size size) => Consumer<ChangePasswordModel>(
+  Widget _buildButtonChangePass(Size size) => Consumer<ChangePasswordModel>(
         builder: (context, value, child) => Positioned(
           bottom: size.height * 0.02,
           child: ButtonLogin(
@@ -140,7 +140,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
         ),
       );
 
-  _buildRegex(
+  Widget _buildRegex(
     Size size,
   ) =>
       Consumer<ChangePasswordModel>(

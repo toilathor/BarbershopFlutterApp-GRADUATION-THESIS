@@ -8,10 +8,10 @@ import 'package:flutter_cahoi_barbershop/ui/views/login/login_view.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitDown,
-    DeviceOrientation.portraitUp,
-  ]);
+  // to hide only status bar & bottom bar
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+
+  //auto rotate when running the app
   runApp(const MyApp());
 }
 
@@ -33,35 +33,45 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Cá hồi Barbershop',
+      debugShowCheckedModeBanner: false,
+      // initialRoute: RouterApp.initialRoute,
+      // routes: RouterApp.Router.defineRoute,
       theme: ThemeData(
         primaryColor: primaryColor,
         secondaryHeaderColor: secondaryColor,
         backgroundColor: backgroundColor,
-        textTheme: const TextTheme(
-          headline1: TextStyle(
+        textTheme: TextTheme(
+          headline1: const TextStyle(
               color: headerColor1,
               fontSize: 36,
               fontWeight: FontWeight.w500,
               fontFamily: "Jaapokki"),
-          headline2: TextStyle(
+          headline2: const TextStyle(
               color: textColorLight2,
               fontSize: 24,
               fontWeight: FontWeight.w500,
               fontFamily: "Jaapokki"),
-          headline3: TextStyle(
+          headline3: const TextStyle(
               color: textColorLight1,
               fontSize: 18,
               fontWeight: FontWeight.w500,
               fontFamily: "Jaapokki"),
-          bodyText1: TextStyle(
+          bodyText1: const TextStyle(
+              color: primaryColor,
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              fontFamily: "Jaapokki"),
+          bodyText2: const TextStyle(
               color: primaryColor,
               fontSize: 12,
               fontWeight: FontWeight.w500,
               fontFamily: "Jaapokki"),
-          subtitle1: TextStyle(
+          subtitle1: const TextStyle(
               color: backgroundColor, fontSize: 12, fontFamily: "Jaapokki"),
           subtitle2: TextStyle(
-              color: Colors.black, fontSize: 12, fontFamily: "Jaapokki"),
+              color: primaryColor.withOpacity(0.5),
+              fontSize: 12,
+              fontFamily: "Jaapokki"),
         ),
         iconTheme: const IconThemeData(
           size: 32,
@@ -87,7 +97,25 @@ class _MyAppState extends State<MyApp> {
         cardTheme: const CardTheme(
           elevation: 8,
         ),
+        fontFamily: "Jaapokki",
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            side: const BorderSide(
+              width: 2.0,
+              color: secondaryColor,
+              style: BorderStyle.solid,
+            ),
+          ),
+        ),
       ),
+      onUnknownRoute: (settings) => MaterialPageRoute(
+        builder: (_) => Scaffold(
+          body: Center(
+            child: Text('No route defined for ${settings.name}'),
+          ),
+        ),
+      ),
+      // onGenerateInitialRoutes: RouterApp.Router.generateRoute,
       home: const LoginView(),
     );
   }

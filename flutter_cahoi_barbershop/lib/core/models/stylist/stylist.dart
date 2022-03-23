@@ -4,18 +4,20 @@ part 'stylist.g.dart';
 
 @JsonSerializable()
 class Stylist {
-  String id;
+  int id;
   String name;
-  String skill;
-  String communicate;
-  String avatar;
-  Stylist({
-    required this.id,
-    required this.name,
-    required this.skill,
-    required this.communicate,
-    required this.avatar,
-  });
+  String birthday;
+  @JsonKey(name: 'skill_rate')
+  double skill;
+  @JsonKey(name: 'communication_rate')
+  double communication;
+
+  Stylist(
+      {required this.id,
+      required this.name,
+      required this.birthday,
+      required this.skill,
+      required this.communication});
 
   factory Stylist.fromJson(Map<String, dynamic> json) =>
       _$StylistFromJson(json);

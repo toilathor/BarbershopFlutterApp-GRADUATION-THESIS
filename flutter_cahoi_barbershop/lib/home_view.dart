@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/pages/account_page_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/pages/discover_page_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/pages/home_page_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/pages/shop_page_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/pages/style_master_page_view.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/pages/story_page_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -18,8 +15,7 @@ class _HomeViewState extends State<HomeView> {
   final List<Widget> _listPage = [
     const HomePageView(),
     const DiscoverPageView(),
-    const ShopPageView(),
-    const StyleMasterPageView(),
+    const StoryPageView(),
     const AccountPageView(),
   ];
 
@@ -29,20 +25,9 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: _listPage[_currentIndex],
-        floatingActionButton: FloatingActionButton(
-          backgroundColor:
-              Theme.of(context).floatingActionButtonTheme.backgroundColor,
-          onPressed: () async {
-            if (await canLaunch("tel:$hostLine")) {
-              await launch("tel:$hostLine");
-            }
-          },
-          tooltip: 'Hotline',
-          child: Icon(
-            Icons.call,
-            color: Theme.of(context).backgroundColor,
-          ),
+        body: IndexedStack(
+          children: _listPage,
+          index: _currentIndex,
         ),
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: Theme.of(context).primaryColor,
@@ -68,12 +53,7 @@ class _HomeViewState extends State<HomeView> {
                 ),
                 label: "Discover"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.storefront), label: 'Shop'),
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.cut_sharp,
-                ),
-                label: "Style Master"),
+                icon: Icon(Icons.history_edu_rounded), label: 'Story'),
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.person,

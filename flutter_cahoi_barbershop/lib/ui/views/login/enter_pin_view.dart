@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/view_models/enter_pin_model.dart';
+import 'package:flutter_cahoi_barbershop/core/providers/enter_pin_provider.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +27,7 @@ class EnterPinView extends StatefulWidget {
 }
 
 class _EnterPinViewState extends State<EnterPinView> {
-  final model = locator<EnterPinModel>();
+  final model = locator<EnterPinProvider>();
 
   @override
   void initState() {
@@ -49,7 +49,7 @@ class _EnterPinViewState extends State<EnterPinView> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return ChangeNotifierProvider<EnterPinModel>(
+    return ChangeNotifierProvider<EnterPinProvider>(
       create: (context) => model,
       builder: (context, child) => Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
@@ -148,7 +148,7 @@ class _EnterPinViewState extends State<EnterPinView> {
                       },
                     )),
               ),
-              Consumer<EnterPinModel>(
+              Consumer<EnterPinProvider>(
                 builder: (context, value, child) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: Text(
@@ -163,7 +163,7 @@ class _EnterPinViewState extends State<EnterPinView> {
               const SizedBox(
                 height: 20,
               ),
-              Consumer<EnterPinModel>(
+              Consumer<EnterPinProvider>(
                 builder: (context, value, child) => GestureDetector(
                   onTap: model.timeOut == 0
                       ? () {
@@ -214,7 +214,7 @@ class _EnterPinViewState extends State<EnterPinView> {
         margin: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 30),
         child: ButtonTheme(
           height: 50,
-          child: Consumer<EnterPinModel>(
+          child: Consumer<EnterPinProvider>(
             builder: (context, value, child) => TextButton(
               onPressed: model.isEnableButtonVerify
                   ? () {

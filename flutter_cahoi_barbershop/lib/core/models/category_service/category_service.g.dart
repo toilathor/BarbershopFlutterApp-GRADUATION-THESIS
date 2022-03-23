@@ -6,16 +6,16 @@ part of 'category_service.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CategorySevice _$CategorySeviceFromJson(Map<String, dynamic> json) =>
-    CategorySevice(
-      id: json['id'] as String,
+CategoryService _$CategoryServiceFromJson(Map<String, dynamic> json) =>
+    CategoryService(
+      id: json['id'] as int,
       name: json['name'] as String,
       serviceCuts: (json['serviceCuts'] as List<dynamic>?)
           ?.map((e) => ServiceCut.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$CategorySeviceToJson(CategorySevice instance) =>
+Map<String, dynamic> _$CategoryServiceToJson(CategoryService instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
