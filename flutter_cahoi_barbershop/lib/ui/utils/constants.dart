@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 const hostLine = "0973271208";
 // const localhost = 'http://192.168.31.236:8000/api/v1';
-const localHost = 'http://192.168.1.15:8000/api/v1';
+const localHost = 'http://192.168.1.6:8000/api/v1';
 const baseLinkAPIYT = 'https://www.googleapis.com/youtube/v3';
 
 final timeStart = DateTime(2021, 1, 1, 9, 0);

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/pages/account_page_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/pages/discover_page_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/pages/home_page_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/pages/shop_page_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/pages/story_page_view.dart';
+
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
 
@@ -14,7 +15,7 @@ class _HomeViewState extends State<HomeView> {
   final List<Widget> _listPage = [
     const HomePageView(),
     const DiscoverPageView(),
-    const ShopPageView(),
+    const StoryPageView(),
     const AccountPageView(),
   ];
 
@@ -52,7 +53,7 @@ class _HomeViewState extends State<HomeView> {
                 ),
                 label: "Discover"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.storefront), label: 'Shop'),
+                icon: Icon(Icons.history_edu_rounded), label: 'Story'),
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.person,
