@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/models/stylist/stylist.dart';
 import 'package:flutter_cahoi_barbershop/core/providers/booking_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/avatar.dart';
 import 'package:provider/provider.dart';
 
 class SelectStylist extends StatefulWidget {
-
   const SelectStylist({
     Key? key,
   }) : super(key: key);
@@ -19,20 +17,20 @@ class _SelectStylistState extends State<SelectStylist> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Consumer<BookingModel>(
-      builder:(context, value, child) =>  Row(
+      builder: (context, model, child) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Chúng tôi sẽ chọn cho bạn stylist thích hợp
           GestureDetector(
             onTap: () {
-              value.changeDefaultStylist();
+              model.changeDefaultStylist();
             },
             child: _buildAvatarStylist(
               size: size,
               title: "We choose stylist for you",
               src: "https://bit.ly/3FMV625",
               index: 0,
-              isSelected: value.isDefaultStylist,
+              isSelected: model.isDefaultStylist,
             ),
           ),
 
@@ -40,7 +38,7 @@ class _SelectStylistState extends State<SelectStylist> {
           SizedBox(
             height: size.width * 0.44,
             width: size.width * 0.56,
-            child: value.stylists == null
+            child: model.stylists == null
                 ? Container()
                 : ListView.builder(
                     physics: const BouncingScrollPhysics(),
@@ -48,17 +46,19 @@ class _SelectStylistState extends State<SelectStylist> {
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) => GestureDetector(
                       onTap: () {
-                        value.changeSelectedStylist(index);
+                        model.changeSelectedStylist(index);
                       },
                       child: _buildAvatarStylist(
                         size: size,
-                        title: value.stylists![index].name,
+                        title: model.stylists![index].name,
                         src: 'https://bit.ly/3JH8APa',
                         index: index,
-                        isSelected: value.isDefaultStylist ? false: (value.selectedStylist == index),
+                        isSelected: model.isDefaultStylist
+                            ? false
+                            : (model.selectedStylist == index),
                       ),
                     ),
-                    itemCount: value.stylists!.length,
+                    itemCount: model.stylists!.length,
                   ),
           )
         ],
@@ -126,8 +126,7 @@ class _SelectStylistState extends State<SelectStylist> {
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                  fontFamily:
-                      Theme.of(context).textTheme.headline1!.fontFamily,
+                  fontFamily: Theme.of(context).textTheme.headline1!.fontFamily,
                   fontWeight: FontWeight.w400),
             ),
           ),

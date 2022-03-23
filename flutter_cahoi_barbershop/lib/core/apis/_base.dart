@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_cahoi_barbershop/core/models/response.dart' as api_res;
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 
 class ApiBase {
   var options = BaseOptions(
-    baseUrl: 'http://192.168.1.15:8000/api/v1',
+    baseUrl: localHost,
     connectTimeout: 5000,
     receiveTimeout: 3000,
   );

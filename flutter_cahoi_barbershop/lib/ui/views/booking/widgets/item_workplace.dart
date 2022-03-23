@@ -23,8 +23,6 @@ class ItemWorkplace extends StatefulWidget {
 class _ItemWorkplaceState extends State<ItemWorkplace> {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Stack(
       children: [
         Card(
