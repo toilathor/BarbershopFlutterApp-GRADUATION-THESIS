@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/providers/forgot_password_provider.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/forgot_password_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/button_login.dart';
 import 'package:provider/provider.dart';
 
@@ -14,19 +16,20 @@ class ForgotPasswordView extends StatefulWidget {
 }
 
 class _ForgotPasswordViewState extends State<ForgotPasswordView> {
-  final model = locator<ForgotPasswordProvider>();
+  final model = locator<ForgotPasswordModel>();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return ChangeNotifierProvider<ForgotPasswordProvider>(
+    return ChangeNotifierProvider<ForgotPasswordModel>(
       create: (context) => model,
       child: Scaffold(
         key: model.scaffoldKey,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Consumer<ForgotPasswordProvider>(
+            child: Consumer<ForgotPasswordModel>(
               builder: (context, value, child) => Stack(
                 children: [
                   Column(
@@ -48,9 +51,13 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
     );
   }
 
-  Widget _buildHeader() => Text(
+  Widget _buildHeader() => const Text(
         'Forgot Password?',
-        style: Theme.of(context).textTheme.headline1,
+        style: TextStyle(
+          fontSize: 36,
+          fontFamily: fontBold,
+          color: headerColor1,
+        ),
         textAlign: TextAlign.left,
       );
 
@@ -143,6 +150,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
           ),
         ]),
       ));
+
   goToEnterOTP(Size size) => Positioned(
         bottom: size.height * 0.02,
         child: GestureDetector(

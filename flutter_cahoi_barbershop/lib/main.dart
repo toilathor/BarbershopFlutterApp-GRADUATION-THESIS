@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/login_view.dart';
 
 void main() async {
@@ -40,39 +41,41 @@ class _MyAppState extends State<MyApp> {
         primaryColor: primaryColor,
         secondaryHeaderColor: secondaryColor,
         backgroundColor: backgroundColor,
-        textTheme: TextTheme(
-          headline1: const TextStyle(
-              color: headerColor1,
-              fontSize: 36,
-              fontWeight: FontWeight.w500,
-              fontFamily: "Jaapokki"),
-          headline2: const TextStyle(
-              color: textColorLight2,
-              fontSize: 24,
-              fontWeight: FontWeight.w500,
-              fontFamily: "Jaapokki"),
-          headline3: const TextStyle(
-              color: textColorLight1,
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              fontFamily: "Jaapokki"),
-          bodyText1: const TextStyle(
-              color: primaryColor,
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              fontFamily: "Jaapokki"),
-          bodyText2: const TextStyle(
-              color: primaryColor,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              fontFamily: "Jaapokki"),
-          subtitle1: const TextStyle(
-              color: backgroundColor, fontSize: 12, fontFamily: "Jaapokki"),
-          subtitle2: TextStyle(
-              color: primaryColor.withOpacity(0.5),
-              fontSize: 12,
-              fontFamily: "Jaapokki"),
-        ),
+        fontFamily: fontLight,
+        // textTheme: TextTheme(
+        //   headline1: const TextStyle(
+        //       color: headerColor1,
+        //       fontSize: 36,
+        //       fontWeight: FontWeight.w500,
+        //       fontFamily: "Jaapokki"),
+        //   headline2: const TextStyle(
+        //       color: textColorLight2,
+        //       fontSize: 24,
+        //       fontWeight: FontWeight.w500,
+        //       fontFamily: "Jaapokki"),
+        //   headline3: const TextStyle(
+        //       color: textColorLight1,
+        //       fontSize: 18,
+        //       fontWeight: FontWeight.w500,
+        //       fontFamily: "Jaapokki"),
+        //   bodyText1: const TextStyle(
+        //       color: primaryColor,
+        //       fontSize: 18,
+        //       fontWeight: FontWeight.w500,
+        //       fontFamily: "Jaapokki"),
+        //   bodyText2: const TextStyle(
+        //       color: primaryColor,
+        //       fontSize: 12,
+        //       fontWeight: FontWeight.w500,
+        //       fontFamily: "Jaapokki"),
+        //   subtitle1: const TextStyle(
+        //       color: backgroundColor, fontSize: 12, fontFamily: "Jaapokki"),
+        //   subtitle2: TextStyle(
+        //       color: primaryColor.withOpacity(0.5),
+        //       fontSize: 12,
+        //       fontFamily: "Jaapokki"),
+        // ),
+
         iconTheme: const IconThemeData(
           size: 32,
           color: backgroundColor,
@@ -97,7 +100,7 @@ class _MyAppState extends State<MyApp> {
         cardTheme: const CardTheme(
           elevation: 8,
         ),
-        fontFamily: "Jaapokki",
+        // fontFamily: "Jaapokki",
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: OutlinedButton.styleFrom(
             side: const BorderSide(

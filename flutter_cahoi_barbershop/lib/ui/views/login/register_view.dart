@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/providers/register_provider.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/register_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/button_login.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/text_regex.dart';
 import 'package:provider/provider.dart';
@@ -18,12 +20,13 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  final model = locator<RegisterProvider>();
+  final model = locator<RegisterModel>();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return ChangeNotifierProvider<RegisterProvider>(
+    return ChangeNotifierProvider<RegisterModel>(
       create: (context) => model,
       child: Scaffold(
         key: model.scaffoldKey,
@@ -40,12 +43,15 @@ class _RegisterViewState extends State<RegisterView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 12.0),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 12.0),
                             child: Text(
                               "Register",
-                              style: Theme.of(context).textTheme.headline1,
+                              style: TextStyle(
+                                fontSize: 36,
+                                fontFamily: fontBold,
+                                color: headerColor1,
+                              ),
                             ),
                           ),
                           _buildNameField(),
@@ -65,7 +71,7 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
-  Widget _buildNameField() => Consumer<RegisterProvider>(
+  Widget _buildNameField() => Consumer<RegisterModel>(
         builder: (context, value, child) => Form(
           key: model.formNameKey,
           child: Padding(
@@ -108,7 +114,7 @@ class _RegisterViewState extends State<RegisterView> {
         ),
       );
 
-  Widget _buildPasswordField() => Consumer<RegisterProvider>(
+  Widget _buildPasswordField() => Consumer<RegisterModel>(
         builder: (context, value, child) => Form(
           key: model.formPassKey,
           child: Padding(
@@ -178,7 +184,8 @@ class _RegisterViewState extends State<RegisterView> {
         ),
       );
 
-  Widget _buildRegex(Size size, BuildContext context) => Consumer<RegisterProvider>(
+  Widget _buildRegex(Size size, BuildContext context) =>
+      Consumer<RegisterModel>(
         builder: (context, value, child) => Padding(
           padding: const EdgeInsets.all(12.0),
           child:
@@ -199,7 +206,7 @@ class _RegisterViewState extends State<RegisterView> {
         ),
       );
 
-  Widget _buildButtonLogin(Size size) => Consumer<RegisterProvider>(
+  Widget _buildButtonLogin(Size size) => Consumer<RegisterModel>(
         builder: (context, value, child) => Positioned(
           bottom: size.height * 0.02,
           child: SizedBox(

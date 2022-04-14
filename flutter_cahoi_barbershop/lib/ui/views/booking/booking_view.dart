@@ -1,7 +1,6 @@
-import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/stylist/stylist.dart';
-import 'package:flutter_cahoi_barbershop/core/providers/booking_model.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/booking_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_cahoi_barbershop/ui/views/booking/select_service_view.da
 import 'package:flutter_cahoi_barbershop/ui/views/booking/widgets/select_stylist.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/widgets/toggle_time.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/elevated_button_icon.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/my_date_picker_timeline.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/text_tag.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -99,7 +99,11 @@ class _BookingViewState extends State<BookingView>
           RichText(
             text: TextSpan(
               text: 'Stylist: ',
-              style: Theme.of(context).textTheme.headline3,
+              style: const TextStyle(
+                color: textColorLight1,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
               children: [
                 TextSpan(
                   text: stylist.name,
@@ -157,8 +161,7 @@ class _BookingViewState extends State<BookingView>
                   text: " Communicate",
                   style: TextStyle(
                       color: Theme.of(context).textTheme.headline6!.color,
-                      fontFamily:
-                          Theme.of(context).textTheme.headline1!.fontFamily,
+                      fontFamily: fontBold,
                       fontWeight: FontWeight.w400),
                 ),
               ],
@@ -189,9 +192,12 @@ class _BookingViewState extends State<BookingView>
     return [
       SizedBox(
         width: size.width,
-        child: Text(
+        child: const Text(
           "Notes",
-          style: Theme.of(context).textTheme.headline3,
+          style: TextStyle(
+            fontSize: 16,
+            fontFamily: fontBold,
+          ),
         ),
       ),
       TextField(
@@ -215,9 +221,12 @@ class _BookingViewState extends State<BookingView>
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
+          const Text(
             "Advice",
-            style: Theme.of(context).textTheme.headline3,
+            style: TextStyle(
+              fontSize: 16,
+              fontFamily: fontBold,
+            ),
           ),
           Switch(
             activeColor: primaryColor2,
@@ -235,9 +244,12 @@ class _BookingViewState extends State<BookingView>
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
+          const Text(
             "Take a photo after haircut",
-            style: Theme.of(context).textTheme.headline3,
+            style: TextStyle(
+              fontSize: 16,
+              fontFamily: fontBold,
+            ),
           ),
           Switch(
             activeColor: primaryColor2,
@@ -311,9 +323,13 @@ class _BookingViewState extends State<BookingView>
 
   Step _buildStepSelectBarbershop(BookingModel model) => Step(
         isActive: model.currentStep == StepBooking.selectBarbershop,
-        title: Text(
+        title: const Text(
           "Select Barbershop",
-          style: Theme.of(context).textTheme.headline2,
+          style: TextStyle(
+              color: textColorLight2,
+              fontSize: 24,
+              fontWeight: FontWeight.w500,
+              fontFamily: fontBold),
         ),
         state: model.workplace == null ? StepState.indexed : StepState.complete,
         content: Column(
@@ -352,9 +368,14 @@ class _BookingViewState extends State<BookingView>
         state: model.selectedServices.isEmpty
             ? StepState.indexed
             : StepState.complete,
-        title: Text(
+        title: const Text(
           "Select Service",
-          style: Theme.of(context).textTheme.headline2,
+          style: TextStyle(
+            color: textColorLight2,
+            fontSize: 24,
+            fontWeight: FontWeight.w500,
+            fontFamily: fontBold,
+          ),
         ),
         content: Column(
           children: [
@@ -384,9 +405,14 @@ class _BookingViewState extends State<BookingView>
 
   Step _buildStepSelectDateAndStylist(Size size, BookingModel model) => Step(
         isActive: model.currentStep == StepBooking.selectStylistAndDate,
-        title: Text(
+        title: const Text(
           "Select Stylist & Datetime",
-          style: Theme.of(context).textTheme.headline2,
+          style: TextStyle(
+            color: textColorLight2,
+            fontSize: 24,
+            fontWeight: FontWeight.w500,
+            fontFamily: fontBold,
+          ),
         ),
         state: model.checkSelectDateAndStylist()
             ? StepState.indexed
@@ -396,24 +422,23 @@ class _BookingViewState extends State<BookingView>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: DatePicker(
-                      DateTime.now(),
-                      initialSelectedDate: model.selectedDate,
-                      dateTextStyle: Theme.of(context).textTheme.headline2!,
-                      monthTextStyle: Theme.of(context).textTheme.bodyText2!,
-                      dayTextStyle: Theme.of(context).textTheme.bodyText2!,
-                      daysCount: 7,
-                      height: size.height * 0.117,
-                      width: size.width * 0.17,
-                      selectionColor: Theme.of(context)
-                          .floatingActionButtonTheme
-                          .backgroundColor!,
-                      onDateChange: (selectedDate) {
-                        model.changeSelectedDate(selectedDate);
-                      },
+                  MyDatePickerTimeline(
+                    DateTime.now(),
+                    initialSelectedDate: model.selectedDate,
+                    daysCount: 7,
+                    height: size.height * 0.117,
+                    width: size.width * 0.17,
+                    selectedTextColor: Colors.white,
+                    selectionColor: secondaryColor,
+                    dateTextStyle: const TextStyle(
+                      fontSize: 12,
                     ),
+                    dayTextStyle: const TextStyle(
+                      fontSize: 12,
+                    ),
+                    onDateChange: (selectedDate) {
+                      model.changeSelectedDate(selectedDate);
+                    },
                   ),
                   Container(
                     padding: const EdgeInsets.all(8.0),
@@ -421,15 +446,10 @@ class _BookingViewState extends State<BookingView>
                     width: size.width,
                     // height: size.width * 0.26,
                     child: model.isDefaultStylist
-                        ? Center(
+                        ? const Center(
                             child: Text(
                               "We will select help you the stylist the best",
-                              style: TextStyle(
-                                  fontFamily: Theme.of(context)
-                                      .textTheme
-                                      .headline1!
-                                      .fontFamily,
-                                  fontWeight: FontWeight.w400),
+                              style: TextStyle(fontWeight: FontWeight.w400),
                             ),
                           )
                         : _buildDescriptionStylist(

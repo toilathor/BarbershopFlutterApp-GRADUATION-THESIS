@@ -1,7 +1,8 @@
 import 'package:date_format/date_format.dart' as date_format;
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/providers/home_page_provider.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/home_page_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/booking_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/playlist_youtube/play_clip_view.dart';
@@ -19,7 +20,7 @@ class HomePageView extends StatefulWidget {
 }
 
 class _HomePageViewState extends State<HomePageView> {
-  final model = locator<HomePageProvider>();
+  final model = locator<HomePageModel>();
 
   @override
   void initState() {
@@ -31,7 +32,7 @@ class _HomePageViewState extends State<HomePageView> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    return ChangeNotifierProvider<HomePageProvider>(
+    return ChangeNotifierProvider<HomePageModel>(
       create: (context) => model,
       child: Scaffold(
         appBar: AppBar(
@@ -108,22 +109,30 @@ class _HomePageViewState extends State<HomePageView> {
                           src: "https://bit.ly/3FMV625",
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 4.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Consumer<HomePageProvider>(
+                              Consumer<HomePageModel>(
                                 builder: (context, value, child) => Text(
                                   model.user.name,
-                                  style: Theme.of(context).textTheme.headline1,
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontFamily: fontBold,
+                                    color: headerColor1,
+                                  ),
                                 ),
                               ),
                               const SizedBox(
                                 height: 12,
                               ),
-                              Text(
+                              const Text(
                                 "No membership class yet",
-                                style: Theme.of(context).textTheme.subtitle1,
+                                style: TextStyle(
+                                  color: Colors.white54,
+                                ),
                               )
                             ],
                           ),
@@ -182,7 +191,7 @@ class _HomePageViewState extends State<HomePageView> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Consumer<HomePageProvider>(
+                    Consumer<HomePageModel>(
                       builder: (context, model, child) => SliderImage(
                         height: size.height * 0.23,
                         width: size.width,
@@ -196,25 +205,36 @@ class _HomePageViewState extends State<HomePageView> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("CAHOI Barbershop",
-                                  style: Theme.of(context).textTheme.headline3),
+                              const Text(
+                                "CAHOI TV",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: fontBold,
+                                ),
+                              ),
                               TextButton(
-                                  style: const ButtonStyle(
-                                      splashFactory: NoSplash.splashFactory),
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
+                                style: const ButtonStyle(
+                                    splashFactory: NoSplash.splashFactory),
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
                                       builder: (context) =>
                                           const PlaylistYoutube(),
-                                    ));
-                                  },
-                                  child: Text("More >",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline3)),
+                                    ),
+                                  );
+                                },
+                                child: const Text(
+                                  "More >",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontFamily: fontBold,
+                                    color: Colors.cyan,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
-                          Consumer<HomePageProvider>(
+                          Consumer<HomePageModel>(
                             builder: (context, value, child) => SizedBox(
                               width: size.width,
                               height: size.height * 0.32,
@@ -251,8 +271,15 @@ class _HomePageViewState extends State<HomePageView> {
   Widget _buildLockBook(BuildContext context, Size size) {
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("CAHOI Lookbook", style: Theme.of(context).textTheme.headline3),
+        const Text(
+          "CAHOI Lookbook",
+          style: TextStyle(
+            fontSize: 16,
+            fontFamily: fontBold,
+          ),
+        ),
         Flexible(
           child: ListView.builder(
             shrinkWrap: true,

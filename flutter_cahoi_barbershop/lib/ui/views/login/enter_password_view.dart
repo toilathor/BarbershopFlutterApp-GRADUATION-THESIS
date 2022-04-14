@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/providers/enter_password_provider.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/enter_password_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/button_login.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/text_regex.dart';
 import 'package:provider/provider.dart';
 
 class EnterPasswordView extends StatefulWidget {
   final String phoneNumber;
+
   const EnterPasswordView({Key? key, required this.phoneNumber})
       : super(key: key);
 
@@ -15,13 +18,13 @@ class EnterPasswordView extends StatefulWidget {
 }
 
 class _EnterPasswordViewState extends State<EnterPasswordView> {
-  final model = locator<EnterPasswordProvider>();
+  final model = locator<EnterPasswordModel>();
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return ChangeNotifierProvider<EnterPasswordProvider>(
+    return ChangeNotifierProvider<EnterPasswordModel>(
       create: (context) => model,
       child: Scaffold(
         key: model.scaffoldKey,
@@ -36,11 +39,15 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12.0),
                           child: Text(
                             "Enter Password",
-                            style: Theme.of(context).textTheme.headline1,
+                            style: TextStyle(
+                              fontSize: 36,
+                              fontFamily: fontBold,
+                              color: headerColor1,
+                            ),
                           ),
                         ),
                         Padding(
@@ -85,7 +92,7 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
     );
   }
 
-  Widget _buildPasswordField() => Consumer<EnterPasswordProvider>(
+  Widget _buildPasswordField() => Consumer<EnterPasswordModel>(
         builder: (context, value, child) => Form(
           key: model.formGlobalKey,
           child: Padding(
@@ -151,7 +158,7 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
         ),
       );
 
-  Widget _buildBottomLogin(Size size) => Consumer<EnterPasswordProvider>(
+  Widget _buildBottomLogin(Size size) => Consumer<EnterPasswordModel>(
         builder: (context, value, child) => Positioned(
           bottom: size.height * 0.02,
           child: SizedBox(
@@ -197,7 +204,7 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
         ),
       );
 
-  Widget _buildRegex(Size size) => Consumer<EnterPasswordProvider>(
+  Widget _buildRegex(Size size) => Consumer<EnterPasswordModel>(
         builder: (context, value, child) => Padding(
           padding: const EdgeInsets.all(12.0),
           child:

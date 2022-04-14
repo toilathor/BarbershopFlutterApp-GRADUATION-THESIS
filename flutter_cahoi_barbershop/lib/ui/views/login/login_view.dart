@@ -1,7 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/providers/login_provider.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/login_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/button_login.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +17,7 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final model = locator<LoginProvider>();
+  final model = locator<LoginModel>();
 
   @override
   void initState() {
@@ -26,7 +28,7 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return ChangeNotifierProvider<LoginProvider>(
+    return ChangeNotifierProvider<LoginModel>(
       create: (context) => model,
       child: Scaffold(
         key: model.scaffoldKey,
@@ -44,11 +46,15 @@ class _LoginViewState extends State<LoginView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12.0),
                         child: Text(
                           "Hello,",
-                          style: Theme.of(context).textTheme.headline1,
+                          style: TextStyle(
+                            color: headerColor1,
+                            fontSize: 36,
+                            fontFamily: fontBold,
+                          ),
                         ),
                       ),
                       Padding(
@@ -58,10 +64,6 @@ class _LoginViewState extends State<LoginView> {
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                             fontSize: 18,
-                            fontFamily: Theme.of(context)
-                                .textTheme
-                                .subtitle1!
-                                .fontFamily,
                           ),
                         ),
                       ),
@@ -94,7 +96,11 @@ class _LoginViewState extends State<LoginView> {
                       children: [
                         Text(
                           "Or continue with",
-                          style: Theme.of(context).textTheme.subtitle2,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black.withOpacity(0.5),
+                            fontFamily: fontBold,
+                          ),
                         ),
                         SizedBox(
                           height: size.height * 0.03,
@@ -107,20 +113,16 @@ class _LoginViewState extends State<LoginView> {
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                style: Theme.of(context).textTheme.subtitle2,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black.withOpacity(0.5),
+                                  fontFamily: fontBold,
+                                ),
                                 text: 'By continuing, you have accepted',
                               ),
                               TextSpan(
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.blue,
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .subtitle1!
-                                        .fontSize,
-                                    fontFamily: Theme.of(context)
-                                        .textTheme
-                                        .subtitle1!
-                                        .fontFamily,
                                     decoration: TextDecoration.underline,
                                     fontStyle: FontStyle.italic),
                                 text: ' terms of use',
@@ -150,7 +152,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   Widget _buildButtonContinue(Size size, BuildContext context) =>
-      Consumer<LoginProvider>(
+      Consumer<LoginModel>(
         builder: (context, value, child) => ButtonLogin(
             height: size.height * 0.06,
             width: size.width * 0.9,
@@ -162,7 +164,7 @@ class _LoginViewState extends State<LoginView> {
             title: "Continue"),
       );
 
-  Widget _buildSocials(Size size) => Consumer<LoginProvider>(
+  Widget _buildSocials(Size size) => Consumer<LoginModel>(
         builder: (context, value, child) => Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -185,24 +187,24 @@ class _LoginViewState extends State<LoginView> {
               },
               child: Image.asset("assets/ic_google.png"),
             ),
-            SizedBox(
-              width: size.width * 0.03,
-            ),
-            FloatingActionButton(
-              heroTag: "zalo",
-              backgroundColor: Colors.transparent,
-              onPressed: () async {
-                Fluttertoast.showToast(
-                  msg: 'We will connect with Zalo soon in the future!',
-                );
-              },
-              child: Image.asset("assets/ic_zalo.png"),
-            ),
+            // SizedBox(
+            //   width: size.width * 0.03,
+            // ),
+            // FloatingActionButton(
+            //   heroTag: "zalo",
+            //   backgroundColor: Colors.transparent,
+            //   onPressed: () async {
+            //     Fluttertoast.showToast(
+            //       msg: 'We will connect with Zalo soon in the future!',
+            //     );
+            //   },
+            //   child: Image.asset("assets/ic_zalo.png"),
+            // ),
           ],
         ),
       );
 
-  Widget _buildPhoneField() => Consumer<LoginProvider>(
+  Widget _buildPhoneField() => Consumer<LoginModel>(
         builder: (context, value, child) => Form(
           key: model.formGlobalKey,
           child: Padding(

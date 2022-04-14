@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/providers/discover_model.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/discover_model.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/discover/show_photo_view.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -25,9 +26,12 @@ class _DiscoverPageViewState extends State<DiscoverPageView> {
           children: [
             Container(
               padding: const EdgeInsets.all(12.0),
-              child: Text(
+              child: const Text(
                 'Discover the most popular hairstyles with CAHOI BARBERSHOP',
-                style: Theme.of(context).textTheme.headline2,
+                style: TextStyle(
+                  fontFamily: fontBold,
+                  fontSize: 20,
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -70,7 +74,9 @@ class _DiscoverPageViewState extends State<DiscoverPageView> {
                           width: MediaQuery.of(context).size.width,
                           child: Text(
                             model.photos[index].name,
-                            style: Theme.of(context).textTheme.headline3,
+                            style: const TextStyle(
+                              fontSize: 12,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),

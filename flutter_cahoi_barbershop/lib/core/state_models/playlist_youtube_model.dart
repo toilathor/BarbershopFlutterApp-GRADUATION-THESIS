@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/services/youtube_service.dart';
-import 'package:flutter_cahoi_barbershop/core/providers/home_page_provider.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/home_page_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 
-class PlaylistYoutubeProvider extends ChangeNotifier {
+class PlaylistYoutubeModel extends ChangeNotifier {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _youtubeApi = locator<YoutubeService>();
 

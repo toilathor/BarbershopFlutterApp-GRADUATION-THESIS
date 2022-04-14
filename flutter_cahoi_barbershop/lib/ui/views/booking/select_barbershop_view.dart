@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/providers/booking_model.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/booking_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/widgets/item_workplace.dart';
 import 'package:geolocator/geolocator.dart';

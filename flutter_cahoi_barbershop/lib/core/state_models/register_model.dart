@@ -7,7 +7,7 @@ import 'package:flutter_cahoi_barbershop/home_view.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/store_secure.dart';
 
-class RegisterProvider extends ChangeNotifier {
+class RegisterModel extends ChangeNotifier {
   final _authAPI = locator<AuthAPI>();
   final _storeSecure = locator<StoreSecure>();
   final _prefs = locator<SharedPreferencesService>();

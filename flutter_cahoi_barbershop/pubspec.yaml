@@ -104,6 +104,7 @@ flutter:
   assets:
     - assets/
     - assets/slider_demo/
+    - assets/icon/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -125,6 +126,13 @@ flutter:
       fonts:
         - asset: fonts/Jaapokki-Regular.otf
           weight: 700
+
+    - family: sf-ui-display-bold
+      fonts:
+        - asset: fonts/sf-ui-display-bold.otf
+    - family: sf-ui-display-light
+      fonts:
+      - asset: fonts/sf-ui-display-light.otf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 
 class ButtonLogin extends StatefulWidget {
   final double height;
@@ -31,9 +32,9 @@ class _ButtonLoginState extends State<ButtonLogin> {
           onPressed: widget.onPressed,
           child: Text(
             widget.title,
-            style: TextStyle(
-              fontFamily: Theme.of(context).textTheme.subtitle1!.fontFamily,
-              color: Theme.of(context).textTheme.subtitle1!.color,
+            style: const TextStyle(
+              fontFamily: fontBold,
+              color: backgroundColor,
               fontSize: 18,
             ),
           ),

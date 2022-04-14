@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/providers/change_password_model.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/change_password_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/button_login.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/text_regex.dart';
 import 'package:provider/provider.dart';
 
 class ChangePasswordView extends StatefulWidget {
   final String phoneNumber;
+
   const ChangePasswordView({Key? key, required this.phoneNumber})
       : super(key: key);
 
@@ -16,6 +19,7 @@ class ChangePasswordView extends StatefulWidget {
 
 class _ChangePasswordViewState extends State<ChangePasswordView> {
   final model = locator<ChangePasswordModel>();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -46,9 +50,13 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     );
   }
 
-  Widget _buildHeader() => Text(
+  Widget _buildHeader() => const Text(
         'Create New Password',
-        style: Theme.of(context).textTheme.headline1,
+        style: TextStyle(
+          fontSize: 36,
+          fontFamily: fontBold,
+          color: headerColor1,
+        ),
         textAlign: TextAlign.left,
       );
 

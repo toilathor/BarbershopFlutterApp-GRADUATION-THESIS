@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/providers/enter_pin_provider.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/enter_pin_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +29,7 @@ class EnterPinView extends StatefulWidget {
 }
 
 class _EnterPinViewState extends State<EnterPinView> {
-  final model = locator<EnterPinProvider>();
+  final model = locator<EnterPinModel>();
 
   @override
   void initState() {
@@ -49,7 +51,7 @@ class _EnterPinViewState extends State<EnterPinView> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return ChangeNotifierProvider<EnterPinProvider>(
+    return ChangeNotifierProvider<EnterPinModel>(
       create: (context) => model,
       builder: (context, child) => Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
@@ -58,11 +60,15 @@ class _EnterPinViewState extends State<EnterPinView> {
           child: Column(
             children: [
               const SizedBox(height: 30),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text(
                   'Phone Number Verification',
-                  style: Theme.of(context).textTheme.headline1,
+                  style: TextStyle(
+                    fontSize: 36,
+                    fontFamily: fontBold,
+                    color: headerColor1,
+                  ),
                   textAlign: TextAlign.left,
                 ),
               ),
@@ -148,7 +154,7 @@ class _EnterPinViewState extends State<EnterPinView> {
                       },
                     )),
               ),
-              Consumer<EnterPinProvider>(
+              Consumer<EnterPinModel>(
                 builder: (context, value, child) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: Text(
@@ -163,7 +169,7 @@ class _EnterPinViewState extends State<EnterPinView> {
               const SizedBox(
                 height: 20,
               ),
-              Consumer<EnterPinProvider>(
+              Consumer<EnterPinModel>(
                 builder: (context, value, child) => GestureDetector(
                   onTap: model.timeOut == 0
                       ? () {
@@ -214,7 +220,7 @@ class _EnterPinViewState extends State<EnterPinView> {
         margin: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 30),
         child: ButtonTheme(
           height: 50,
-          child: Consumer<EnterPinProvider>(
+          child: Consumer<EnterPinModel>(
             builder: (context, value, child) => TextButton(
               onPressed: model.isEnableButtonVerify
                   ? () {

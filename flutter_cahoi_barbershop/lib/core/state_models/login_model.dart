@@ -16,7 +16,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
-class LoginProvider extends ChangeNotifier {
+class LoginModel extends ChangeNotifier {
   final _authAPI = locator<AuthAPI>();
   final _storeSecure = locator<StoreSecure>();
   final _prefs = locator<SharedPreferencesService>();

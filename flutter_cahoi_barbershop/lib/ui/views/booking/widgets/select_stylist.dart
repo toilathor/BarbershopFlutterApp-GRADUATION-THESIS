@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/providers/booking_model.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/booking_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/avatar.dart';
 import 'package:provider/provider.dart';
 

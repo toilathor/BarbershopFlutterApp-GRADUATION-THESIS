@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/providers/discover_model.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/discover_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 
 class ShowPhotoView extends StatefulWidget {

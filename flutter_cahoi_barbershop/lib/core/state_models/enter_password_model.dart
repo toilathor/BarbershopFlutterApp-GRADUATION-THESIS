@@ -9,7 +9,7 @@ import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/login/forgot_password_view.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class EnterPasswordProvider extends ChangeNotifier {
+class EnterPasswordModel extends ChangeNotifier {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController textEditingController = TextEditingController();
   final _authAPI = locator<AuthAPI>();
