@@ -11,7 +11,7 @@ final fullFormatDatetime = [yyyy, '-', mm, '-', dd, ' ', hh, ':', mm, ':', ss];
 final formatTime = [hh, ':', mm];
 final fullFormatTime = [hh, ':', mm, ':', ss];
 
-const countryCode = 'vn';//WidgetsBinding.instance.window.locale.countryCode;
+const countryCode = 'vn'; //WidgetsBinding.instance.windoshplocale.countryCode;
 
 const apiKeyFirebase = 'AIzaSyA8wTEYb57gCtFs2bu41CKoTrXZm6f7LnI';
 const playlistId = 'PLbplMzmYtClBFL_513hKHQNGS1nmvM3Zj';

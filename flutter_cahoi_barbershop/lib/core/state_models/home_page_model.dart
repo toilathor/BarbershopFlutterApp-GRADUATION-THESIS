@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/services/youtube_service.dart';
 import 'package:flutter_cahoi_barbershop/core/models/user/user.dart';
+import 'package:flutter_cahoi_barbershop/core/services/youtube_service.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/store_secure.dart';
 
@@ -13,21 +13,11 @@ class HomePageModel extends ChangeNotifier {
 
   bool _disposed = false;
   List<Widget> itemsSlider = [
-    Image.asset(
-      "assets/slider_demo/demo1.png",
-    ),
-    Image.asset(
-      "assets/slider_demo/demo2.png",
-    ),
-    Image.asset(
-      "assets/slider_demo/demo3.png",
-    ),
-    Image.asset(
-      "assets/slider_demo/demo4.png",
-    ),
-    Image.asset(
-      "assets/slider_demo/demo5.png",
-    ),
+    Image.asset("assets/slider_demo/demo1.png"),
+    Image.asset("assets/slider_demo/demo2.png"),
+    Image.asset("assets/slider_demo/demo3.png"),
+    Image.asset("assets/slider_demo/demo4.png"),
+    Image.asset("assets/slider_demo/demo5.png"),
   ];
 
   List<IdClipYoutube> clipIdList = [];

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 
-class ButtonLogin extends StatefulWidget {
+class BaseButton extends StatefulWidget {
   final double height;
   final double width;
   final Function()? onPressed;
   final String title;
-  const ButtonLogin({
+  const BaseButton({
     Key? key,
     required this.height,
     required this.width,
@@ -16,10 +16,10 @@ class ButtonLogin extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ButtonLogin> createState() => _ButtonLoginState();
+  State<BaseButton> createState() => _BaseButtonState();
 }
 
-class _ButtonLoginState extends State<ButtonLogin> {
+class _BaseButtonState extends State<BaseButton> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(

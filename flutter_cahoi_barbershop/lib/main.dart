@@ -4,8 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/login/login_view.dart';
-
+import 'package:flutter_cahoi_barbershop/ui/views/auth/login_view_2.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -119,7 +118,7 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       // onGenerateInitialRoutes: RouterApp.Router.generateRoute,
-      home: const LoginView(),
+      home: const LoginView2(),
     );
   }
 }

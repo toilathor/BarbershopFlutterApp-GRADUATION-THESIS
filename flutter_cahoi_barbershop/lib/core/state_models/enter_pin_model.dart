@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/apis/auth_api.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/login/enter_pin_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/login/register_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/auth/enter_pin_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/auth/register_view.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-import '../../ui/views/login/change_password_view.dart';
+import '../../ui/views/auth/change_password_view.dart';
 
 class EnterPinModel extends ChangeNotifier {
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -81,7 +81,7 @@ class EnterPinModel extends ChangeNotifier {
   resendOTP() async {
     _authAPI.verifyPhoneNumber(
       phoneNumber:
-          PhoneNumber.fromIsoCode(countryCode!, currentPhone).international,
+          PhoneNumber.fromIsoCode(countryCode, currentPhone).international,
       verificationCompleted: (phoneAuthCredential) =>
           verificationCompleted(phoneAuthCredential),
       verificationFailed: (error) => verificationFailed(error),

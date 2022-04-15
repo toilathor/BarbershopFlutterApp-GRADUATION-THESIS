@@ -1,38 +1,38 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/login_model.dart';
-import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/button_login.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/auth/enter_password_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/base_text_form_field.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/button_login.dart';
+import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({Key? key}) : super(key: key);
+class LoginView2 extends StatefulWidget {
+  const LoginView2({Key? key}) : super(key: key);
 
   @override
-  _LoginViewState createState() => _LoginViewState();
+  _LoginView2State createState() => _LoginView2State();
 }
 
-class _LoginViewState extends State<LoginView> {
-  final model = locator<LoginModel>();
-
-  @override
-  void initState() {
-    super.initState();
-  }
+class _LoginView2State extends State<LoginView2> {
+  Size size = Size.zero;
+  final TextEditingController textEditingController = TextEditingController();
+  final formGlobalKey = GlobalKey<FormState>();
+  bool isValidatePhoneNumber = false;
+  String currentPhone = '';
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    size = MediaQuery.of(context).size;
 
-    return ChangeNotifierProvider<LoginModel>(
-      create: (context) => model,
-      child: Scaffold(
+    return BaseView<LoginModel>(
+      builder: (context, model, child) => Scaffold(
         key: model.scaffoldKey,
-        backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: backgroundColor,
         body: Stack(
           children: [
             Column(
@@ -67,12 +67,62 @@ class _LoginViewState extends State<LoginView> {
                           ),
                         ),
                       ),
-                      _buildPhoneField(),
+                      _buildPhoneField(
+                        onChanged: (value) {
+                          setState(() {
+                            currentPhone = PhoneNumber.fromIsoCode(
+                                    countryCode, textEditingController.text)
+                                .international;
+                          });
+                          formGlobalKey.currentState?.validate();
+                        },
+                        validator: (_) {
+                          if (PhoneNumber.fromIsoCode(
+                                  countryCode, textEditingController.text)
+                              .validate()) {
+                            isValidatePhoneNumber = true;
+                            return null;
+                          } else if (textEditingController.text.isEmpty) {
+                            isValidatePhoneNumber = false;
+                            return "Please enter mobile number";
+                          } else {
+                            isValidatePhoneNumber = false;
+                            return "Please enter valid mobile number";
+                          }
+                        },
+                        onFieldSubmitted: (_) async {
+                          currentPhone = PhoneNumber.fromIsoCode(
+                                  countryCode, textEditingController.text)
+                              .international;
+
+                          var res = await model.checkUserExisted(
+                            phoneNumber: currentPhone,
+                          );
+
+                          ///nếu đã tồn tại thì nhập pass, ngược lại thì đằng kí
+                          if (res) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => EnterPasswordView(
+                                    phoneNumber: currentPhone),
+                              ),
+                            );
+                          } else {
+                            await model.sendOTP(
+                              phoneNumber: currentPhone,
+                            );
+                          }
+                        },
+                      ),
                     ],
                   ),
                 ),
                 MediaQuery.of(context).viewInsets.bottom == 0
-                    ? _buildButtonContinue(size, context)
+                    ? _buildButtonContinue(
+                        onCheckUserExisted: () {
+                          model.checkUserExisted(phoneNumber: currentPhone);
+                        },
+                      )
                     : Container()
               ],
             ),
@@ -82,7 +132,11 @@ class _LoginViewState extends State<LoginView> {
                     child: SizedBox(
                       width: size.width,
                       child: Center(
-                        child: _buildButtonContinue(size, context),
+                        child: _buildButtonContinue(
+                          onCheckUserExisted: () {
+                            model.checkUserExisted(phoneNumber: currentPhone);
+                          },
+                        ),
                       ),
                     ),
                   )
@@ -151,17 +205,12 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  Widget _buildButtonContinue(Size size, BuildContext context) =>
-      Consumer<LoginModel>(
-        builder: (context, value, child) => ButtonLogin(
-            height: size.height * 0.06,
-            width: size.width * 0.9,
-            onPressed: model.isValidatePhoneNumber
-                ? () async {
-                    await model.checkUserExisted();
-                  }
-                : null,
-            title: "Continue"),
+  Widget _buildButtonContinue({required Function() onCheckUserExisted}) =>
+      BaseButton(
+        height: 50,
+        width: size.width * 0.9,
+        onPressed: isValidatePhoneNumber ? onCheckUserExisted : null,
+        title: "Continue",
       );
 
   Widget _buildSocials(Size size) => Consumer<LoginModel>(
@@ -171,7 +220,7 @@ class _LoginViewState extends State<LoginView> {
             FloatingActionButton(
               heroTag: "facebook",
               onPressed: () async {
-                await model.loginWithFacebook();
+                // await model.loginWithFacebook();
               },
               backgroundColor: Colors.transparent,
               child: Image.asset("assets/ic_facebook.png"),
@@ -183,62 +232,31 @@ class _LoginViewState extends State<LoginView> {
               heroTag: "google",
               backgroundColor: Colors.transparent,
               onPressed: () async {
-                await model.loginWithGoogle();
+                // await model.loginWithGoogle();
               },
               child: Image.asset("assets/ic_google.png"),
             ),
-            // SizedBox(
-            //   width: size.width * 0.03,
-            // ),
-            // FloatingActionButton(
-            //   heroTag: "zalo",
-            //   backgroundColor: Colors.transparent,
-            //   onPressed: () async {
-            //     Fluttertoast.showToast(
-            //       msg: 'We will connect with Zalo soon in the future!',
-            //     );
-            //   },
-            //   child: Image.asset("assets/ic_zalo.png"),
-            // ),
           ],
         ),
       );
 
-  Widget _buildPhoneField() => Consumer<LoginModel>(
-        builder: (context, value, child) => Form(
-          key: model.formGlobalKey,
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: TextFormField(
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 36,
-              ),
-              // autofillHints: const [AutofillHints.],
-              textInputAction: TextInputAction.send,
-              validator: (value) {
-                return model.validatePhoneNumber();
-              },
-              cursorColor: Colors.black,
-              controller: model.textEditingController,
-              keyboardType: TextInputType.phone,
-              onChanged: (_) {
-                model.changeCurrentPhone();
-              },
-              onFieldSubmitted: (value) async {
-                await model.checkUserExisted();
-              },
-              maxLength: 15,
-              autocorrect: true,
-              decoration: InputDecoration(
-                hintText: "Phone number",
-                counterText: "",
-                hintStyle: TextStyle(
-                  fontSize: 36,
-                  color: Colors.grey.withOpacity(0.5),
-                ),
-              ),
-            ),
+  Widget _buildPhoneField({
+    Function(String? value)? onChanged,
+    Function(String? value)? onFieldSubmitted,
+    FormFieldValidator<String>? validator,
+  }) =>
+      Form(
+        key: formGlobalKey,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: BaseTextFormField(
+            maxLength: 15,
+            controller: textEditingController,
+            textInputAction: TextInputAction.send,
+            hintText: "Phone number",
+            onChanged: onChanged,
+            onFieldSubmitted: onFieldSubmitted,
+            validator: validator,
           ),
         ),
       );

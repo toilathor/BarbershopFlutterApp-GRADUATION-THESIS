@@ -1,15 +1,14 @@
 import 'package:date_format/date_format.dart' as date_format;
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/home_page_model.dart';
-import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/booking_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/playlist_youtube/play_clip_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/playlist_youtube/playlist_youtube_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/avatar.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/slider_image.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePageView extends StatefulWidget {
@@ -20,21 +19,17 @@ class HomePageView extends StatefulWidget {
 }
 
 class _HomePageViewState extends State<HomePageView> {
-  final model = locator<HomePageModel>();
-
   @override
   void initState() {
     super.initState();
-    model.initHomePage();
   }
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    return ChangeNotifierProvider<HomePageModel>(
-      create: (context) => model,
-      child: Scaffold(
+    return BaseView<HomePageModel>(
+      builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           leading: IconButton(
             onPressed: () async {
@@ -115,14 +110,12 @@ class _HomePageViewState extends State<HomePageView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Consumer<HomePageModel>(
-                                builder: (context, value, child) => Text(
-                                  model.user.name,
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontFamily: fontBold,
-                                    color: headerColor1,
-                                  ),
+                              Text(
+                                model.user.name,
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontFamily: fontBold,
+                                  color: headerColor1,
                                 ),
                               ),
                               const SizedBox(
@@ -191,12 +184,10 @@ class _HomePageViewState extends State<HomePageView> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Consumer<HomePageModel>(
-                      builder: (context, model, child) => SliderImage(
-                        height: size.height * 0.23,
-                        width: size.width,
-                        items: model.itemsSlider,
-                      ),
+                    SliderImage(
+                      height: size.height * 0.23,
+                      width: size.width,
+                      items: model.itemsSlider,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(12.0),
@@ -234,21 +225,19 @@ class _HomePageViewState extends State<HomePageView> {
                               ),
                             ],
                           ),
-                          Consumer<HomePageModel>(
-                            builder: (context, value, child) => SizedBox(
-                              width: size.width,
-                              height: size.height * 0.32,
-                              child: ListView.builder(
-                                physics: const ClampingScrollPhysics(),
-                                scrollDirection: Axis.horizontal,
-                                itemCount: model.clipInfoList.length > 5
-                                    ? 5
-                                    : model.clipInfoList.length,
-                                itemBuilder: (context, index) {
-                                  return _buildItemChanelYoutube(
-                                      size, model.clipInfoList[index]);
-                                },
-                              ),
+                          SizedBox(
+                            width: size.width,
+                            height: size.height * 0.32,
+                            child: ListView.builder(
+                              physics: const ClampingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              itemCount: model.clipInfoList.length > 5
+                                  ? 5
+                                  : model.clipInfoList.length,
+                              itemBuilder: (context, index) {
+                                return _buildItemChanelYoutube(
+                                    size, model.clipInfoList[index]);
+                              },
                             ),
                           ),
                         ],

@@ -3,7 +3,7 @@ import 'package:flutter_cahoi_barbershop/core/state_models/forgot_password_model
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/button_login.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/button_login.dart';
 import 'package:provider/provider.dart';
 
 import 'enter_pin_view.dart';
@@ -63,7 +63,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
 
   Widget _buildButtonResetPass(Size size) => Positioned(
         bottom: size.height * 0.02,
-        child: ButtonLogin(
+        child: BaseButton(
             height: size.height * 0.06,
             width: size.width * 0.9,
             onPressed: model.isValidatePhoneNumber
@@ -131,7 +131,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                     "The OTP code used to recover the password has been sent to ",
                 children: [
                   TextSpan(
-                    text: model.currrentPhoneNumber,
+                    text: model.currentPhoneNumber,
                     style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -158,7 +158,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
                   builder: (context) => EnterPinView(
-                      phoneNumber: model.currrentPhoneNumber,
+                      phoneNumber: model.currentPhoneNumber,
                       verificationId: model.verificationId,
                       typeOTP: TypeOTP.resetPassword),
                 ),

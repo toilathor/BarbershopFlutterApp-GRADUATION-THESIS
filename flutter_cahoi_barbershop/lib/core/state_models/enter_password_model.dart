@@ -3,14 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/apis/auth_api.dart';
 import 'package:flutter_cahoi_barbershop/core/services/shared_preferences_service.dart';
-import 'package:flutter_cahoi_barbershop/ui/utils/store_secure.dart';
-import 'package:flutter_cahoi_barbershop/home_view.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/login/forgot_password_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/store_secure.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class EnterPasswordModel extends ChangeNotifier {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController textEditingController = TextEditingController();
   final _authAPI = locator<AuthAPI>();
   final _storeSecure = locator<StoreSecure>();
@@ -30,22 +27,21 @@ class EnterPasswordModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  login(String phoneNumber) async {
+  Future<bool> login(String phoneNumber) async {
     if (!isAllReady) {
-      return;
+      return false;
     }
     Map<dynamic, dynamic>? response = await _authAPI.loginWithPhoneNumber(
         phoneNumber, currentPassword.trim());
 
-    debugPrint(response.toString());
     if (response == null) {
       //Có lỗi HTTP
       Fluttertoast.showToast(msg: "Connection errors!");
-      return;
+      return false;
     } else if (response.values.first == null || response.keys.first == null) {
       //Sai password
       Fluttertoast.showToast(msg: "Wrong password!");
-      return;
+      return false;
     } else {
       //Lưu thông tin User vào Store
       await _storeSecure.setUser(jsonEncode(response.keys.first));
@@ -54,11 +50,7 @@ class EnterPasswordModel extends ChangeNotifier {
       //Lưu social
       _prefs.setSocial(TypeSocial.none);
 
-      Navigator.of(scaffoldKey.currentContext!).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => const HomeView(),
-          ),
-          (route) => false);
+      return true;
     }
   }
 
@@ -124,12 +116,4 @@ class EnterPasswordModel extends ChangeNotifier {
       isAllReady = false;
     }
   }
-
-  forgotPassword() {
-    Navigator.of(scaffoldKey.currentContext!).push(MaterialPageRoute(
-      builder: (context) => const ForgotPasswordView(),
-    ));
-  }
-
-  loginWithSMS() {}
 }

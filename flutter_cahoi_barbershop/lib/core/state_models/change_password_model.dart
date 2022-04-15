@@ -1,14 +1,12 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/apis/auth_api.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/base.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 
 class ChangePasswordModel extends BaseModel {
-  final formKey = GlobalKey<FormState>();
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-  final passEditingController = TextEditingController();
   final _authAPI = locator<AuthAPI>();
+
+  final passEditingController = TextEditingController();
 
   bool isHidePassword = true;
   bool isUppercase = false;
@@ -16,11 +14,6 @@ class ChangePasswordModel extends BaseModel {
   bool isLength = false;
   bool isAllReady = false;
   String currentPassword = '';
-
-  void changeHidePassword() {
-    isHidePassword = !isHidePassword;
-    notifyListeners();
-  }
 
   void changeCurrentPassword({String? value}) {
     if (value == null) {
@@ -85,26 +78,7 @@ class ChangePasswordModel extends BaseModel {
     }
   }
 
-  changePassword(String phoneNumber) async {
-    bool result = await _authAPI.resetPassword(phoneNumber, currentPassword);
-    if (result) {
-      AwesomeDialog(
-        context: scaffoldKey.currentContext!,
-        dialogType: DialogType.SUCCES,
-        title: 'Successful',
-        btnOkOnPress: () {
-          Navigator.of(scaffoldKey.currentContext!)
-              .popUntil((route) => route.isFirst);
-        },
-        dismissOnBackKeyPress: false,
-        dismissOnTouchOutside: false,
-      ).show();
-    } else {
-      AwesomeDialog(
-        context: scaffoldKey.currentContext!,
-        dialogType: DialogType.ERROR,
-        title: 'Fail',
-      ).show();
-    }
+  Future<bool> changePassword(String phoneNumber) async {
+    return await _authAPI.resetPassword(phoneNumber, currentPassword);
   }
 }

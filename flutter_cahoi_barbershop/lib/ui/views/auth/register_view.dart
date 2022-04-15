@@ -3,8 +3,8 @@ import 'package:flutter_cahoi_barbershop/core/state_models/register_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/button_login.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/text_regex.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/button_login.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/text_regex.dart';
 import 'package:provider/provider.dart';
 
 class RegisterView extends StatefulWidget {
@@ -214,7 +214,7 @@ class _RegisterViewState extends State<RegisterView> {
             child: Column(
               children: [
                 Center(
-                  child: ButtonLogin(
+                  child: BaseButton(
                       height: size.height * 0.06,
                       width: size.width * 0.9,
                       onPressed: model.isAllReady

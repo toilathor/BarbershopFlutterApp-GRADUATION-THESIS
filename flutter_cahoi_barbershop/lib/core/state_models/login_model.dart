@@ -8,9 +8,8 @@ import 'package:flutter_cahoi_barbershop/home_view.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/store_secure.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/login/enter_password_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/login/enter_pin_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/login/register_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/auth/enter_pin_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/auth/register_view.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -20,73 +19,55 @@ class LoginModel extends ChangeNotifier {
   final _authAPI = locator<AuthAPI>();
   final _storeSecure = locator<StoreSecure>();
   final _prefs = locator<SharedPreferencesService>();
-  final formGlobalKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final TextEditingController textEditingController = TextEditingController();
   final _googleAuth = GoogleSignIn();
   GoogleSignInAccount? googleAccount;
 
-  String currentPhone = '';
   String _verificationId = '';
-  bool isValidatePhoneNumber = false;
 
-  checkUserExisted() async {
-    if (!isValidatePhoneNumber) {
-      return;
-    }
-    var userExitsted = await _authAPI.checkUserExist(
-        PhoneNumber.fromIsoCode(countryCode!, textEditingController.text)
-            .international);
-    debugPrint(PhoneNumber.fromIsoCode(countryCode!, textEditingController.text)
-        .international);
-    if (userExitsted) {
-      Navigator.of(scaffoldKey.currentContext!).push(
-        MaterialPageRoute(
-          builder: (context) => EnterPasswordView(phoneNumber: currentPhone),
-        ),
-      );
-    } else {
-      await sendOTP();
-    }
+  Future<bool> checkUserExisted({required String phoneNumber}) async {
+    return await _authAPI.checkUserExist(phoneNumber);
   }
 
-  void changeCurrentPhone() {
-    currentPhone =
-        PhoneNumber.fromIsoCode(countryCode!, textEditingController.text.trim())
-            .international;
-    validatePhoneNumber();
-    formGlobalKey.currentState!.validate();
-    notifyListeners();
-  }
+  // void changeCurrentPhone() {
+  //   currentPhone =
+  //       PhoneNumber.fromIsoCode(countryCode!, textEditingController.text.trim())
+  //           .international;
+  //   validatePhoneNumber();
+  //   formGlobalKey.currentState!.validate();
+  //   notifyListeners();
+  // }
 
-  String? validatePhoneNumber() {
-    if (PhoneNumber.fromIsoCode(countryCode!, currentPhone).validate()) {
-      isValidatePhoneNumber = true;
-      return null;
-    } else if (currentPhone.isEmpty) {
-      isValidatePhoneNumber = false;
-      return "Please enter mobile number";
-    } else {
-      isValidatePhoneNumber = false;
-      return "Please enter valid mobile number";
-    }
-  }
+  // String? validatePhoneNumber() {
+  //   if (PhoneNumber.fromIsoCode(countryCode!, currentPhone).validate()) {
+  //     isValidatePhoneNumber = true;
+  //     return null;
+  //   } else if (currentPhone.isEmpty) {
+  //     isValidatePhoneNumber = false;
+  //     return "Please enter mobile number";
+  //   } else {
+  //     isValidatePhoneNumber = false;
+  //     return "Please enter valid mobile number";
+  //   }
+  // }
 
-  sendOTP() async {
+  sendOTP({required String phoneNumber}) async {
     _authAPI.verifyPhoneNumber(
       phoneNumber:
-          PhoneNumber.fromIsoCode(countryCode!, currentPhone).international,
+          PhoneNumber.fromIsoCode(countryCode, phoneNumber).international,
       verificationCompleted: (phoneAuthCredential) =>
-          verificationCompleted(phoneAuthCredential),
+          verificationCompleted(phoneAuthCredential, phoneNumber: phoneNumber),
       verificationFailed: (error) => verificationFailed(error),
-      codeSent: (verificationId, forceResendingToken) =>
-          codeSent(verificationId, forceResendingToken),
+      codeSent: (verificationId, forceResendingToken) => codeSent(
+          verificationId, forceResendingToken,
+          phoneNumber: phoneNumber),
       codeAutoRetrievalTimeout: (verificationId) =>
           codeAutoRetrievalTimeout(verificationId),
     );
   }
 
-  verificationCompleted(PhoneAuthCredential phoneAuthCredential) async {
+  verificationCompleted(PhoneAuthCredential phoneAuthCredential,
+      {required String phoneNumber}) async {
     // ANDROID ONLY!
 
     // Sign the user in (or link) with the auto-generated credential
@@ -95,7 +76,7 @@ class LoginModel extends ChangeNotifier {
       Navigator.of(scaffoldKey.currentContext!).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (context) => RegisterView(
-              phoneNumber: currentPhone,
+              phoneNumber: phoneNumber,
             ),
           ),
           (Route<dynamic> route) => route.isFirst);
@@ -109,15 +90,16 @@ class LoginModel extends ChangeNotifier {
     debugPrint(error.toString());
   }
 
-  codeSent(String verificationId, int? forceResendingToken) {
+  codeSent(String verificationId, int? forceResendingToken,
+      {required String phoneNumber}) {
     _verificationId = verificationId;
 
     Navigator.of(scaffoldKey.currentContext!).push(
       MaterialPageRoute(
         builder: (context) => EnterPinView(
           phoneNumber: PhoneNumber.fromIsoCode(
-            countryCode!,
-            currentPhone,
+            countryCode,
+            phoneNumber,
           ).international,
           verificationId: _verificationId,
           typeOTP: TypeOTP.register,

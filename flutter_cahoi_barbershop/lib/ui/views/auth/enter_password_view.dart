@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/enter_password_model.dart';
+import 'package:flutter_cahoi_barbershop/home_view.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/button_login.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/login/widgets/text_regex.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/auth/forgot_password_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/button_login.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/text_regex.dart';
 import 'package:provider/provider.dart';
 
 class EnterPasswordView extends StatefulWidget {
@@ -24,10 +27,8 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return ChangeNotifierProvider<EnterPasswordModel>(
-      create: (context) => model,
-      child: Scaffold(
-        key: model.scaffoldKey,
+    return BaseView<EnterPasswordModel>(
+      builder: (context, model, child) => Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         body: SafeArea(
           child: Stack(
@@ -78,7 +79,11 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
                           ),
                         ),
                         _buildPasswordField(),
-                        _buildRegex(size),
+                        _buildRegex(
+                          isLength: model.isLength,
+                          isNumeric: model.isNumeric,
+                          isUppercase: model.isUppercase,
+                        ),
                       ],
                     ),
                   ),
@@ -119,7 +124,13 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
               maxLength: 250,
               autocorrect: true,
               onFieldSubmitted: (_) async {
-                await model.login(widget.phoneNumber);
+                if(await model.login(widget.phoneNumber)){
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => const HomeView(),
+                      ),
+                          (route) => false);
+                }
               },
               decoration: InputDecoration(
                   hintText: "Password",
@@ -166,7 +177,7 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
             child: Column(
               children: [
                 Center(
-                  child: ButtonLogin(
+                  child: BaseButton(
                       height: size.height * 0.06,
                       width: size.width * 0.9,
                       onPressed: model.isAllReady
@@ -183,7 +194,11 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          model.forgotPassword();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const ForgotPasswordView(),
+                            ),
+                          );
                         },
                         child: const Text("Forgot password?"),
                         style: const ButtonStyle(
@@ -204,24 +219,26 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
         ),
       );
 
-  Widget _buildRegex(Size size) => Consumer<EnterPasswordModel>(
-        builder: (context, value, child) => Padding(
-          padding: const EdgeInsets.all(12.0),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            TextRegex(
-              title: "• contains 1 uppercase character",
-              validated: model.isUppercase,
-            ),
-            TextRegex(
-              title: "• contains 1 numeric character",
-              validated: model.isNumeric,
-            ),
-            TextRegex(
-              title: "• length must be greater than or equal to 8 characters",
-              validated: model.isLength,
-            ),
-          ]),
-        ),
+  Widget _buildRegex({
+    required bool isUppercase,
+    required bool isNumeric,
+    required bool isLength,
+  }) =>
+      Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          TextRegex(
+            title: "• contains 1 uppercase character",
+            validated: isUppercase,
+          ),
+          TextRegex(
+            title: "• contains 1 numeric character",
+            validated: isNumeric,
+          ),
+          TextRegex(
+            title: "• length must be greater than or equal to 8 characters",
+            validated: isLength,
+          ),
+        ]),
       );
 }
