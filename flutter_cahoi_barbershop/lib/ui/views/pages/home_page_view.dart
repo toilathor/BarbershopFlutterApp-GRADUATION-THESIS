@@ -1,5 +1,6 @@
 import 'package:date_format/date_format.dart' as date_format;
 import 'package:flutter/material.dart';
+import 'package:flutter_cahoi_barbershop/core/fake-data/data.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/home_page_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
@@ -185,7 +186,7 @@ class _HomePageViewState extends State<HomePageView> {
                     SliderImage(
                       height: size.height * 0.23,
                       width: size.width,
-                      items: model.itemsSlider,
+                      items: itemsSlider,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(12.0),

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
+import 'package:flutter_cahoi_barbershop/service_locator.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AccountPageView extends StatefulWidget {
   const AccountPageView({Key? key}) : super(key: key);
@@ -8,84 +11,67 @@ class AccountPageView extends StatefulWidget {
 }
 
 class _AccountPageViewState extends State<AccountPageView> {
+  Size size = Size.zero;
+
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
+
     return Scaffold(
-        body: Column(
-      children: [
-        _buildTileSetting(
-            icon: Container(),
-            title: 'Cahoi Member',
-            onPress: () {},
-            context: context),
-        const Divider(
-          color: Colors.black,
-        ),
-        _buildTileSetting(
-            icon: Container(),
-            title: 'Thông tin tài khoản',
-            onPress: () {},
-            context: context),
-        const Divider(
-          color: Colors.black,
-        ),
-        _buildTileSetting(
-            icon: Container(),
-            title: 'Rewards',
-            onPress: () {},
-            context: context),
-        const Divider(
-          color: Colors.black,
-        ),
-        _buildTileSetting(
-            icon: Container(),
-            title: 'Lịch sử cắt',
-            onPress: () {},
-            context: context),
-        const Divider(
-          color: Colors.black,
-        ),
-        _buildTileSetting(
+      body: Column(
+        children: [
+          _buildTileSetting(
             icon: Container(),
             title: 'Đăng xuất',
-            onPress: () {},
-            context: context),
-      ],
-    )
-        // Center(
-        //   child: TextButton(
-        //     child: const Text("Logout!"),
-        //     onPressed: () {
-        //       Navigator.of(context).pushAndRemoveUntil(
-        //           MaterialPageRoute(
-        //             builder: (context) => const LoginView(),
-        //           ),
-        //           (route) => false);
-        //     },
-        //   ),
-        // ),
-        );
+            onPress: () async {
+              var res = await locator<AuthenticationService>().logOut();
+              if (res) {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  'login',
+                  (route) => false,
+                );
+
+                return;
+              }
+
+              Fluttertoast.showToast(msg: "Error!");
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildTileSetting({
-    required Container icon,
+    required Widget icon,
     required String title,
-    required Null Function() onPress,
-    required BuildContext context,
+    required Function() onPress,
   }) {
     Size size = MediaQuery.of(context).size;
-    return SizedBox(
-      height: size.height * 0.05,
-      child: Row(
-        children: [
-          const Icon(
-            Icons.person,
-            color: Colors.black,
-          ),
-          Text(
-            title,
-          ),
-        ],
+    return GestureDetector(
+      onTap: onPress,
+      child: SizedBox(
+        height: size.height * 0.1,
+        width: size.width,
+        child: Row(
+          children: [
+            const Icon(
+              Icons.person,
+              color: Colors.black,
+            ),
+            const SizedBox(
+              width: 8,
+            ),
+            Text(
+              title,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

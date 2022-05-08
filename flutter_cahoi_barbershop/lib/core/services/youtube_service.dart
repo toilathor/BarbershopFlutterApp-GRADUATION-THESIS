@@ -8,7 +8,7 @@ class YoutubeService {
   Client client = Client();
 
   Future<Map<String, List<dynamic>>> getPlayListYouTube(
-      {String nextPageId = '', int maxResults = 50}) async {
+      {String nextPageId = '', int maxResults = 10}) async {
     String url = '$baseLinkAPIYT/playlistItems?part=snippet'
         '&maxResults=$maxResults'
         '&pageToken=$nextPageId'

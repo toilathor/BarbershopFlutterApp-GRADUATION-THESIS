@@ -1,14 +1,17 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/state_models/login_model.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/auth_model.dart';
+import 'package:flutter_cahoi_barbershop/home_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/auth/enter_password_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/auth/enter_pin_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/auth/register_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/base_text_form_field.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/button_login.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/loading_dialog.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -30,9 +33,8 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
 
-    return BaseView<LoginModel>(
+    return BaseView<AuthModel>(
       builder: (context, model, child) => Scaffold(
-        key: model.scaffoldKey,
         backgroundColor: backgroundColor,
         body: Stack(
           children: [
@@ -92,30 +94,7 @@ class _LoginViewState extends State<LoginView> {
                           }
                         },
                         onFieldSubmitted: (_) async {
-                          LoadingDialog.show(context);
-                          currentPhone = PhoneNumber.fromIsoCode(
-                                  countryCode, phoneEditingController.text)
-                              .international;
-
-                          var res = await model.checkUserExisted(
-                            phoneNumber: currentPhone,
-                          );
-
-                          ///nếu đã tồn tại thì nhập pass, ngược lại thì đằng kí
-                          if (res) {
-                            LoadingDialog.dismiss(context);
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => EnterPasswordView(
-                                    phoneNumber: currentPhone),
-                              ),
-                            );
-                          } else {
-                            await model.sendOTP(
-                              phoneNumber: currentPhone,
-                            );
-                            LoadingDialog.dismiss(context);
-                          }
+                          await _checkUserExist(model: model);
                         },
                       ),
                     ],
@@ -124,30 +103,7 @@ class _LoginViewState extends State<LoginView> {
                 MediaQuery.of(context).viewInsets.bottom == 0
                     ? _buildButtonContinue(
                         onCheckUserExisted: () async {
-                          LoadingDialog.show(context);
-                          currentPhone = PhoneNumber.fromIsoCode(
-                                  countryCode, phoneEditingController.text)
-                              .international;
-
-                          var res = await model.checkUserExisted(
-                            phoneNumber: currentPhone,
-                          );
-
-                          ///nếu đã tồn tại thì nhập pass, ngược lại thì đằng kí
-                          if (res) {
-                            LoadingDialog.dismiss(context);
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => EnterPasswordView(
-                                    phoneNumber: currentPhone),
-                              ),
-                            );
-                          } else {
-                            await model.sendOTP(
-                              phoneNumber: currentPhone,
-                            );
-                            LoadingDialog.dismiss(context);
-                          }
+                          await _checkUserExist(model: model);
                         },
                       )
                     : Container()
@@ -161,30 +117,7 @@ class _LoginViewState extends State<LoginView> {
                       child: Center(
                         child: _buildButtonContinue(
                           onCheckUserExisted: () async {
-                            LoadingDialog.show(context);
-                            currentPhone = PhoneNumber.fromIsoCode(
-                                    countryCode, phoneEditingController.text)
-                                .international;
-
-                            var res = await model.checkUserExisted(
-                              phoneNumber: currentPhone,
-                            );
-
-                            ///nếu đã tồn tại thì nhập pass, ngược lại thì đằng kí
-                            if (res) {
-                              LoadingDialog.dismiss(context);
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => EnterPasswordView(
-                                      phoneNumber: currentPhone),
-                                ),
-                              );
-                            } else {
-                              await model.sendOTP(
-                                phoneNumber: currentPhone,
-                              );
-                              LoadingDialog.dismiss(context);
-                            }
+                            await _checkUserExist(model: model);
                           },
                         ),
                       ),
@@ -209,14 +142,32 @@ class _LoginViewState extends State<LoginView> {
                         SizedBox(
                           height: size.height * 0.03,
                         ),
-                        _buildSocials(onLoginGoogle: () async {
-                          await model.loginWithGoogle();
-                        }, onLoginFacebook: () async {
-                          final status = await Permission.storage.request();
-                          if (status != PermissionStatus.denied) {
-                            await model.loginWithFacebook();
-                          }
-                        }),
+                        _buildSocials(
+                          onLoginGoogle: () async {
+                            if (await model.loginWithGoogle()) {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (context) => const HomeView(),
+                                ),
+                                (route) => false,
+                              );
+                            } else {
+                              Fluttertoast.showToast(msg: 'Error!');
+                            }
+                          },
+                          onLoginFacebook: () async {
+                            if (await model.loginWithFacebook()) {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (context) => const HomeView(),
+                                ),
+                                (route) => false,
+                              );
+                            } else {
+                              Fluttertoast.showToast(msg: 'Error!');
+                            }
+                          },
+                        ),
                         SizedBox(
                           height: size.height * 0.03,
                         ),
@@ -316,4 +267,67 @@ class _LoginViewState extends State<LoginView> {
           ),
         ),
       );
+
+  Future _checkUserExist({required AuthModel model}) async {
+    LoadingDialog.show(context);
+    currentPhone =
+        PhoneNumber.fromIsoCode(countryCode, phoneEditingController.text)
+            .international;
+
+    var res = await model.checkUserExisted(
+      phoneNumber: currentPhone,
+    );
+
+    ///nếu đã tồn tại thì nhập pass, ngược lại thì đằng kí
+    if (res) {
+      LoadingDialog.dismiss(context);
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => EnterPasswordView(
+            phoneNumber: currentPhone,
+          ),
+        ),
+      );
+    } else {
+      var res = await model.sendOTPRegister(
+          phoneNumber: currentPhone,
+          onlyAndroid: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RegisterView(
+                  phoneNumber: currentPhone,
+                ),
+              ),
+              (route) => route.isFirst,
+            );
+          },
+          gotoVerifyOTP: (verifyId) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EnterPinView(
+                  phoneNumber: currentPhone,
+                  verificationId: verifyId,
+                  typeOTP: TypeOTP.register,
+                ),
+              ),
+            );
+          });
+
+      if (res) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RegisterView(
+              phoneNumber: currentPhone,
+            ),
+          ),
+          (route) => route.isFirst,
+        );
+      }
+
+      LoadingDialog.dismiss(context);
+    }
+  }
 }

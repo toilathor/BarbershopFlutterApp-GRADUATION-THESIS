@@ -5,6 +5,7 @@ class StoreSecure {
 
   final _keyUser = 'user';
   final _keyToken = 'token';
+  final _expiresIn = 'expires_in';
 
   StoreSecure() {
     getInstance();
@@ -23,6 +24,14 @@ class StoreSecure {
 
   Future<String?> getToken() async {
     return await _storage?.read(key: _keyToken);
+  }
+
+  Future setExpiresIn(String? expiresIn) async {
+    await _storage?.write(key: _expiresIn, value: expiresIn ?? '');
+  }
+
+  Future<String?> getExpiresIn() async {
+    return await _storage?.read(key: _expiresIn);
   }
 
   getInstance() async {

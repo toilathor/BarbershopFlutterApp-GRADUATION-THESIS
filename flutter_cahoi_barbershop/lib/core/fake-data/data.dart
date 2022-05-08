@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/discover/discover.dart';
 
 const List<String> imagePostDemo = [
@@ -7,6 +8,13 @@ const List<String> imagePostDemo = [
   "assets/slider_demo/demo4.png",
 ];
 
+List<Widget> itemsSlider = [
+  Image.asset("assets/slider_demo/demo1.png"),
+  Image.asset("assets/slider_demo/demo2.png"),
+  Image.asset("assets/slider_demo/demo3.png"),
+  Image.asset("assets/slider_demo/demo4.png"),
+  Image.asset("assets/slider_demo/demo5.png"),
+];
 
 List<Discover> photos = [
   Discover(

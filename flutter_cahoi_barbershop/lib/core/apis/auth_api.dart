@@ -10,19 +10,6 @@ class AuthAPI {
   var client = http.Client();
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
-  Future<bool> checkUserExist(String phoneNumber) async {
-    http.Response response = await client.get(
-      Uri.parse('$localHost/auth/check-user/$phoneNumber'),
-    );
-
-    try {
-      var data = jsonDecode(response.body);
-      return data['data'];
-    } catch (e) {
-      return false;
-    }
-  }
-
   Future<Map<dynamic, dynamic>?> loginWithPhoneNumber(
       String phoneNumber, String password) async {
     http.Response response = await client.post(

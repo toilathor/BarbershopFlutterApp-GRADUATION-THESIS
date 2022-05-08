@@ -12,13 +12,6 @@ class HomePageModel extends ChangeNotifier {
   final _storeSecure = locator<StoreSecure>();
 
   bool _disposed = false;
-  List<Widget> itemsSlider = [
-    Image.asset("assets/slider_demo/demo1.png"),
-    Image.asset("assets/slider_demo/demo2.png"),
-    Image.asset("assets/slider_demo/demo3.png"),
-    Image.asset("assets/slider_demo/demo4.png"),
-    Image.asset("assets/slider_demo/demo5.png"),
-  ];
 
   List<IdClipYoutube> clipIdList = [];
   List<ItemYoutube> clipInfoList = [];

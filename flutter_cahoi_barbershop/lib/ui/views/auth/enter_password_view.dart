@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/state_models/login_model.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/auth_model.dart';
 import 'package:flutter_cahoi_barbershop/home_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
@@ -38,7 +38,7 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
 
-    return BaseView<LoginModel>(
+    return BaseView<AuthModel>(
       builder: (context, model, child) => Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         body: SafeArea(
@@ -91,20 +91,8 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
                         ),
                         _buildPasswordField(
                           onFieldSubmitted: (_) async {
-                            LoadingDialog.show(context);
-                            if (await model.login(
-                              phoneNumber: widget.phoneNumber,
-                              currentPassword: passEditingController.text,
-                            )) {
-                              LoadingDialog.dismiss(context);
-                              Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                  builder: (context) => const HomeView(),
-                                ),
-                                (route) => false,
-                              );
-                            } else {
-                              LoadingDialog.dismiss(context);
+                            if (isUppercase && isNumeric && isLength) {
+                              await _login(model: model);
                             }
                           },
                         ),
@@ -120,20 +108,8 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
               ),
               _buildBottomLogin(
                 onLogin: () async {
-                  LoadingDialog.show(context);
-                  if (await model.login(
-                    phoneNumber: widget.phoneNumber,
-                    currentPassword: passEditingController.text,
-                  )) {
-                    LoadingDialog.dismiss(context);
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (context) => const HomeView(),
-                      ),
-                      (route) => false,
-                    );
-                  } else {
-                    LoadingDialog.dismiss(context);
+                  if (isUppercase && isNumeric && isLength) {
+                    await _login(model: model);
                   }
                 },
               ),
@@ -154,7 +130,6 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
               color: Colors.black,
               fontSize: 24,
             ),
-            // autofillHints: const [AutofillHints.],
             textInputAction: TextInputAction.done,
             validator: (_) {
               RegExp regex = RegExp(
@@ -173,7 +148,7 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
             controller: passEditingController,
             keyboardType: TextInputType.visiblePassword,
             obscureText: isHidePassword,
-            obscuringCharacter: '*',
+            obscuringCharacter: '●',
             onChanged: (value) {
               setState(() {
                 currentPassword = passEditingController.text;
@@ -237,11 +212,12 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
             children: [
               Center(
                 child: BaseButton(
-                    height: size.height * 0.06,
-                    width: size.width * 0.9,
-                    onPressed:
-                        isLength && isUppercase && isNumeric ? onLogin : null,
-                    title: "Login"),
+                  height: size.height * 0.06,
+                  width: size.width * 0.9,
+                  onPressed: onLogin,
+                  // isLength && isUppercase && isNumeric ? onLogin : null,
+                  title: "Login",
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -258,14 +234,9 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
                       },
                       child: const Text("Forgot password?"),
                       style: const ButtonStyle(
-                          splashFactory: NoSplash.splashFactory),
+                        splashFactory: NoSplash.splashFactory,
+                      ),
                     ),
-                    // TextButton(
-                    //   onPressed: () async {},
-                    //   child: const Text("Login by SMS"),
-                    //   style: const ButtonStyle(
-                    //       splashFactory: NoSplash.splashFactory),
-                    // ),
                   ],
                 ),
               )
@@ -321,6 +292,24 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
       isLength = false;
     } else {
       isLength = true;
+    }
+  }
+
+  Future _login({required AuthModel model}) async {
+    LoadingDialog.show(context);
+    if (await model.loginWithPhoneNumber(
+      phoneNumber: widget.phoneNumber,
+      currentPassword: passEditingController.text,
+    )) {
+      LoadingDialog.dismiss(context);
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => const HomeView(),
+        ),
+        (route) => false,
+      );
+    } else {
+      LoadingDialog.dismiss(context);
     }
   }
 }

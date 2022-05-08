@@ -11,7 +11,7 @@ class Api extends ApiBase {
   Future<api_res.Response?> checkUserExist(
       {required String phoneNumber}) async {
     try {
-      var res = await dio.get('/auth/check-user/$phoneNumber');
+      var res = await dio.get('/auth/check-exist/$phoneNumber');
       return castRes(res);
     } catch (e) {
       return null;
@@ -90,7 +90,7 @@ class Api extends ApiBase {
     }
   }
 
-  //Workplace
+  ///Workplace
   Future<api_res.Response?> getAllWorkPlace() async {
     try {
       var res = await dio.get('/workplace/all');

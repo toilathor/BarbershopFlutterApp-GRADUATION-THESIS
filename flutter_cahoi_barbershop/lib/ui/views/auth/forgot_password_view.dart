@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/state_models/login_model.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/auth_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
@@ -27,7 +27,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
 
-    return BaseView<LoginModel>(
+    return BaseView<AuthModel>(
       builder: (context, model, child) => Scaffold(
         body: SafeArea(
           child: Padding(
@@ -40,8 +40,9 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                     _buildHeader(),
                     _buildPhoneField(
                       onFieldSubmitted: () async {
-                        await model.sendOTPForgotPassword(
-                            phoneNumber: currentPhone);
+                        //TODO update api
+                        // await model.sendOTPForgotPassword(
+                        //     phoneNumber: currentPhone);
                       },
                     ),
                   ],
@@ -62,9 +63,10 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                       LoadingDialog.dismiss(context);
                       Fluttertoast.showToast(msg: 'User not found!');
                     } else {
-                      await model.sendOTPForgotPassword(
-                        phoneNumber: currentPhone,
-                      );
+                      //TODO update api
+                      // await model.sendOTPForgotPassword(
+                      //   phoneNumber: currentPhone,
+                      // );
                       LoadingDialog.dismiss(context);
                     }
                   },
