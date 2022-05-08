@@ -1,0 +1,1 @@
+enum TypeSocial { none, facebook, google, zalo }

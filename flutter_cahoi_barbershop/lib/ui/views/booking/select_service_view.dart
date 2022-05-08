@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/providers/booking_model.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/booking_model.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/widgets/item_service.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/elevated_button_icon.dart';
@@ -48,13 +49,18 @@ class _SelectServiceViewState extends State<SelectServiceView>
               },
             ),
             bottom: TabBar(
+              labelStyle: const TextStyle(
+                fontFamily: fontBold,
+              ),
               physics: const BouncingScrollPhysics(),
               isScrollable: true,
               controller: tabController,
               automaticIndicatorColorAdjustment: true,
-              tabs: _buildTabBard(),
+              tabs: _buildTabBar(),
             ),
-            title: const Text("Select Service"),
+            title: const Text(
+              "Select Service",
+            ),
           ),
           body: Stack(
             children: [
@@ -87,12 +93,14 @@ class _SelectServiceViewState extends State<SelectServiceView>
     );
   }
 
-  List<Widget> _buildTabBard() {
+  List<Widget> _buildTabBar() {
     List<Widget> tabs = [];
     for (int i = 0; i < categoryServices.length; i++) {
-      tabs.add(Tab(
-        text: categoryServices[i],
-      ));
+      tabs.add(
+        Tab(
+          text: categoryServices[i],
+        ),
+      );
     }
     return tabs;
   }
