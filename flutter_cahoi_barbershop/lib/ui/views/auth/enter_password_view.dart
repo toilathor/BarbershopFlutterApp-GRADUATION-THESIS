@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/state_models/enter_password_model.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/login_model.dart';
 import 'package:flutter_cahoi_barbershop/home_view.dart';
-import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/auth/forgot_password_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/button_login.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/loading_dialog.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/text_regex.dart';
-import 'package:provider/provider.dart';
 
 class EnterPasswordView extends StatefulWidget {
   final String phoneNumber;
@@ -21,13 +20,25 @@ class EnterPasswordView extends StatefulWidget {
 }
 
 class _EnterPasswordViewState extends State<EnterPasswordView> {
-  final model = locator<EnterPasswordModel>();
+  final formPassKey = GlobalKey<FormState>();
+  final passEditingController = TextEditingController();
+
+  String currentPassword = '';
+  String currentName = '';
+
+  String? messageValidatePassword;
+  bool isUppercase = false;
+  bool isNumeric = false;
+  bool isLength = false;
+  bool isHidePassword = true;
+
+  Size size = Size.zero;
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    size = MediaQuery.of(context).size;
 
-    return BaseView<EnterPasswordModel>(
+    return BaseView<LoginModel>(
       builder: (context, model, child) => Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         body: SafeArea(
@@ -78,18 +89,54 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
                             textAlign: TextAlign.left,
                           ),
                         ),
-                        _buildPasswordField(),
+                        _buildPasswordField(
+                          onFieldSubmitted: (_) async {
+                            LoadingDialog.show(context);
+                            if (await model.login(
+                              phoneNumber: widget.phoneNumber,
+                              currentPassword: passEditingController.text,
+                            )) {
+                              LoadingDialog.dismiss(context);
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (context) => const HomeView(),
+                                ),
+                                (route) => false,
+                              );
+                            } else {
+                              LoadingDialog.dismiss(context);
+                            }
+                          },
+                        ),
                         _buildRegex(
-                          isLength: model.isLength,
-                          isNumeric: model.isNumeric,
-                          isUppercase: model.isUppercase,
+                          isLength: isLength,
+                          isNumeric: isNumeric,
+                          isUppercase: isUppercase,
                         ),
                       ],
                     ),
                   ),
                 ],
               ),
-              _buildBottomLogin(size),
+              _buildBottomLogin(
+                onLogin: () async {
+                  LoadingDialog.show(context);
+                  if (await model.login(
+                    phoneNumber: widget.phoneNumber,
+                    currentPassword: passEditingController.text,
+                  )) {
+                    LoadingDialog.dismiss(context);
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => const HomeView(),
+                      ),
+                      (route) => false,
+                    );
+                  } else {
+                    LoadingDialog.dismiss(context);
+                  }
+                },
+              ),
             ],
           ),
         ),
@@ -97,124 +144,132 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
     );
   }
 
-  Widget _buildPasswordField() => Consumer<EnterPasswordModel>(
-        builder: (context, value, child) => Form(
-          key: model.formGlobalKey,
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: TextFormField(
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 24,
-              ),
-              // autofillHints: const [AutofillHints.],
-              textInputAction: TextInputAction.done,
-              validator: (_) {
-                return model.validatePassword();
-              },
-              cursorColor: Colors.black,
-              controller: model.textEditingController,
-              keyboardType: TextInputType.visiblePassword,
-              obscureText: model.isHidePassword,
-              obscuringCharacter: '*',
-              onChanged: (value) {
-                model.changeCurrentPassword();
-                model.formGlobalKey.currentState?.validate();
-              },
-              maxLength: 250,
-              autocorrect: true,
-              onFieldSubmitted: (_) async {
-                if(await model.login(widget.phoneNumber)){
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (context) => const HomeView(),
-                      ),
-                          (route) => false);
+  Widget _buildPasswordField({required Function(String) onFieldSubmitted}) =>
+      Form(
+        key: formPassKey,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: TextFormField(
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 24,
+            ),
+            // autofillHints: const [AutofillHints.],
+            textInputAction: TextInputAction.done,
+            validator: (_) {
+              RegExp regex = RegExp(
+                  r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$');
+              if (currentPassword.isEmpty) {
+                return 'Please enter password';
+              } else {
+                if (!regex.hasMatch(currentPassword)) {
+                  return 'Enter valid password';
+                } else {
+                  return null;
                 }
-              },
-              decoration: InputDecoration(
-                  hintText: "Password",
-                  counterText: "",
-                  hintStyle: TextStyle(
-                    fontSize: 24,
-                    color: Colors.grey.withOpacity(0.5),
-                  ),
-                  suffix: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      model.currentPassword.isNotEmpty
-                          ? IconButton(
-                              splashColor: Colors.transparent,
-                              onPressed: () {
-                                model.changeCurrentPassword(value: '');
-                              },
-                              icon: const Icon(
-                                Icons.cancel,
-                                size: 24,
-                                color: Colors.red,
-                              ),
-                            )
-                          : Container(),
-                      TextButton(
+              }
+            },
+            cursorColor: Colors.black,
+            controller: passEditingController,
+            keyboardType: TextInputType.visiblePassword,
+            obscureText: isHidePassword,
+            obscuringCharacter: '*',
+            onChanged: (value) {
+              setState(() {
+                currentPassword = passEditingController.text;
+
+                validateUppercase();
+                validateNumeric();
+                validateLength();
+              });
+              formPassKey.currentState!.validate();
+            },
+            maxLength: 250,
+            autocorrect: true,
+            onFieldSubmitted: onFieldSubmitted,
+            decoration: InputDecoration(
+              hintText: "Password",
+              counterText: "",
+              hintStyle: TextStyle(
+                fontSize: 24,
+                color: Colors.grey.withOpacity(0.5),
+              ),
+              suffix: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  currentPassword.isNotEmpty
+                      ? IconButton(
+                          splashColor: Colors.transparent,
                           onPressed: () {
-                            model.changeHidePassword();
+                            setState(() {
+                              passEditingController.text = '';
+                            });
                           },
-                          style: const ButtonStyle(
-                              splashFactory: NoSplash.splashFactory),
-                          child: Text(model.isHidePassword ? 'Show' : 'Hide')),
-                    ],
-                  )),
+                          icon: const Icon(
+                            Icons.cancel,
+                            size: 24,
+                            color: Colors.red,
+                          ),
+                        )
+                      : Container(),
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        isHidePassword = !isHidePassword;
+                      });
+                    },
+                    style: const ButtonStyle(
+                        splashFactory: NoSplash.splashFactory),
+                    child: Text(isHidePassword ? 'Show' : 'Hide'),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       );
 
-  Widget _buildBottomLogin(Size size) => Consumer<EnterPasswordModel>(
-        builder: (context, value, child) => Positioned(
-          bottom: size.height * 0.02,
-          child: SizedBox(
-            width: size.width,
-            child: Column(
-              children: [
-                Center(
-                  child: BaseButton(
-                      height: size.height * 0.06,
-                      width: size.width * 0.9,
-                      onPressed: model.isAllReady
-                          ? () async {
-                              await model.login(widget.phoneNumber);
-                            }
-                          : null,
-                      title: "Login"),
+  Widget _buildBottomLogin({required Function() onLogin}) => Positioned(
+        bottom: size.height * 0.02,
+        child: SizedBox(
+          width: size.width,
+          child: Column(
+            children: [
+              Center(
+                child: BaseButton(
+                    height: size.height * 0.06,
+                    width: size.width * 0.9,
+                    onPressed:
+                        isLength && isUppercase && isNumeric ? onLogin : null,
+                    title: "Login"),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const ForgotPasswordView(),
+                          ),
+                        );
+                      },
+                      child: const Text("Forgot password?"),
+                      style: const ButtonStyle(
+                          splashFactory: NoSplash.splashFactory),
+                    ),
+                    // TextButton(
+                    //   onPressed: () async {},
+                    //   child: const Text("Login by SMS"),
+                    //   style: const ButtonStyle(
+                    //       splashFactory: NoSplash.splashFactory),
+                    // ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const ForgotPasswordView(),
-                            ),
-                          );
-                        },
-                        child: const Text("Forgot password?"),
-                        style: const ButtonStyle(
-                            splashFactory: NoSplash.splashFactory),
-                      ),
-                      TextButton(
-                        onPressed: () async {},
-                        child: const Text("Login by SMS"),
-                        style: const ButtonStyle(
-                            splashFactory: NoSplash.splashFactory),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+              )
+            ],
           ),
         ),
       );
@@ -241,4 +296,31 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
           ),
         ]),
       );
+
+  validateUppercase() {
+    RegExp regex = RegExp(r'(?=.*[A-Z])');
+    if (!regex.hasMatch(currentPassword)) {
+      isUppercase = false;
+    } else {
+      isUppercase = true;
+    }
+  }
+
+  validateNumeric() {
+    RegExp regex = RegExp(r'(?=.*?[0-9])');
+    if (!regex.hasMatch(currentPassword)) {
+      isNumeric = false;
+    } else {
+      isNumeric = true;
+    }
+  }
+
+  validateLength() {
+    RegExp regex = RegExp(r'.{8,}');
+    if (!regex.hasMatch(currentPassword)) {
+      isLength = false;
+    } else {
+      isLength = true;
+    }
+  }
 }

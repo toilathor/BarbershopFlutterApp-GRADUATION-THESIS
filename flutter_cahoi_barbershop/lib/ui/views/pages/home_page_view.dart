@@ -20,15 +20,13 @@ class HomePageView extends StatefulWidget {
 
 class _HomePageViewState extends State<HomePageView> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
     return BaseView<HomePageModel>(
+      onModelReady: (model) {
+        model.initHomePage();
+      },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           leading: IconButton(

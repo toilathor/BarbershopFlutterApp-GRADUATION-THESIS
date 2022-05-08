@@ -1,4 +1,5 @@
 import 'package:flutter_cahoi_barbershop/core/apis/auth_api.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/server_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesService {
@@ -10,14 +11,10 @@ class SharedPreferencesService {
   }
 
   setSocial(TypeSocial typeSocial) async {
-    // await getInstance();
-
     prefs?.setInt(keyLoginWithSocial, typeSocial.index);
   }
 
   int getSocial()  {
-    // await getInstance();
-
     return prefs?.getInt(keyLoginWithSocial) ?? 0;
   }
 

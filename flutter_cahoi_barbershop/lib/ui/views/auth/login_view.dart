@@ -7,20 +7,21 @@ import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/auth/enter_password_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/base_text_form_field.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/button_login.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/loading_dialog.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class LoginView2 extends StatefulWidget {
-  const LoginView2({Key? key}) : super(key: key);
+class LoginView extends StatefulWidget {
+  const LoginView({Key? key}) : super(key: key);
 
   @override
-  _LoginView2State createState() => _LoginView2State();
+  _LoginViewState createState() => _LoginViewState();
 }
 
-class _LoginView2State extends State<LoginView2> {
+class _LoginViewState extends State<LoginView> {
   Size size = Size.zero;
-  final TextEditingController textEditingController = TextEditingController();
+  final TextEditingController phoneEditingController = TextEditingController();
   final formGlobalKey = GlobalKey<FormState>();
   bool isValidatePhoneNumber = false;
   String currentPhone = '';
@@ -71,18 +72,18 @@ class _LoginView2State extends State<LoginView2> {
                         onChanged: (value) {
                           setState(() {
                             currentPhone = PhoneNumber.fromIsoCode(
-                                    countryCode, textEditingController.text)
+                                    countryCode, phoneEditingController.text)
                                 .international;
                           });
                           formGlobalKey.currentState?.validate();
                         },
                         validator: (_) {
                           if (PhoneNumber.fromIsoCode(
-                                  countryCode, textEditingController.text)
+                                  countryCode, phoneEditingController.text)
                               .validate()) {
                             isValidatePhoneNumber = true;
                             return null;
-                          } else if (textEditingController.text.isEmpty) {
+                          } else if (phoneEditingController.text.isEmpty) {
                             isValidatePhoneNumber = false;
                             return "Please enter mobile number";
                           } else {
@@ -91,8 +92,9 @@ class _LoginView2State extends State<LoginView2> {
                           }
                         },
                         onFieldSubmitted: (_) async {
+                          LoadingDialog.show(context);
                           currentPhone = PhoneNumber.fromIsoCode(
-                                  countryCode, textEditingController.text)
+                                  countryCode, phoneEditingController.text)
                               .international;
 
                           var res = await model.checkUserExisted(
@@ -101,6 +103,7 @@ class _LoginView2State extends State<LoginView2> {
 
                           ///nếu đã tồn tại thì nhập pass, ngược lại thì đằng kí
                           if (res) {
+                            LoadingDialog.dismiss(context);
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => EnterPasswordView(
@@ -111,6 +114,7 @@ class _LoginView2State extends State<LoginView2> {
                             await model.sendOTP(
                               phoneNumber: currentPhone,
                             );
+                            LoadingDialog.dismiss(context);
                           }
                         },
                       ),
@@ -119,8 +123,31 @@ class _LoginView2State extends State<LoginView2> {
                 ),
                 MediaQuery.of(context).viewInsets.bottom == 0
                     ? _buildButtonContinue(
-                        onCheckUserExisted: () {
-                          model.checkUserExisted(phoneNumber: currentPhone);
+                        onCheckUserExisted: () async {
+                          LoadingDialog.show(context);
+                          currentPhone = PhoneNumber.fromIsoCode(
+                                  countryCode, phoneEditingController.text)
+                              .international;
+
+                          var res = await model.checkUserExisted(
+                            phoneNumber: currentPhone,
+                          );
+
+                          ///nếu đã tồn tại thì nhập pass, ngược lại thì đằng kí
+                          if (res) {
+                            LoadingDialog.dismiss(context);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => EnterPasswordView(
+                                    phoneNumber: currentPhone),
+                              ),
+                            );
+                          } else {
+                            await model.sendOTP(
+                              phoneNumber: currentPhone,
+                            );
+                            LoadingDialog.dismiss(context);
+                          }
                         },
                       )
                     : Container()
@@ -133,8 +160,31 @@ class _LoginView2State extends State<LoginView2> {
                       width: size.width,
                       child: Center(
                         child: _buildButtonContinue(
-                          onCheckUserExisted: () {
-                            model.checkUserExisted(phoneNumber: currentPhone);
+                          onCheckUserExisted: () async {
+                            LoadingDialog.show(context);
+                            currentPhone = PhoneNumber.fromIsoCode(
+                                    countryCode, phoneEditingController.text)
+                                .international;
+
+                            var res = await model.checkUserExisted(
+                              phoneNumber: currentPhone,
+                            );
+
+                            ///nếu đã tồn tại thì nhập pass, ngược lại thì đằng kí
+                            if (res) {
+                              LoadingDialog.dismiss(context);
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => EnterPasswordView(
+                                      phoneNumber: currentPhone),
+                                ),
+                              );
+                            } else {
+                              await model.sendOTP(
+                                phoneNumber: currentPhone,
+                              );
+                              LoadingDialog.dismiss(context);
+                            }
                           },
                         ),
                       ),
@@ -159,7 +209,14 @@ class _LoginView2State extends State<LoginView2> {
                         SizedBox(
                           height: size.height * 0.03,
                         ),
-                        _buildSocials(size),
+                        _buildSocials(onLoginGoogle: () async {
+                          await model.loginWithGoogle();
+                        }, onLoginFacebook: () async {
+                          final status = await Permission.storage.request();
+                          if (status != PermissionStatus.denied) {
+                            await model.loginWithFacebook();
+                          }
+                        }),
                         SizedBox(
                           height: size.height * 0.03,
                         ),
@@ -213,31 +270,29 @@ class _LoginView2State extends State<LoginView2> {
         title: "Continue",
       );
 
-  Widget _buildSocials(Size size) => Consumer<LoginModel>(
-        builder: (context, value, child) => Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FloatingActionButton(
-              heroTag: "facebook",
-              onPressed: () async {
-                // await model.loginWithFacebook();
-              },
-              backgroundColor: Colors.transparent,
-              child: Image.asset("assets/ic_facebook.png"),
-            ),
-            SizedBox(
-              width: size.width * 0.03,
-            ),
-            FloatingActionButton(
-              heroTag: "google",
-              backgroundColor: Colors.transparent,
-              onPressed: () async {
-                // await model.loginWithGoogle();
-              },
-              child: Image.asset("assets/ic_google.png"),
-            ),
-          ],
-        ),
+  Widget _buildSocials({
+    required Function() onLoginGoogle,
+    required Function() onLoginFacebook,
+  }) =>
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FloatingActionButton(
+            heroTag: "facebook",
+            onPressed: onLoginFacebook,
+            backgroundColor: Colors.transparent,
+            child: Image.asset("assets/ic_facebook.png"),
+          ),
+          SizedBox(
+            width: size.width * 0.03,
+          ),
+          FloatingActionButton(
+            heroTag: "google",
+            backgroundColor: Colors.transparent,
+            onPressed: onLoginGoogle,
+            child: Image.asset("assets/ic_google.png"),
+          ),
+        ],
       );
 
   Widget _buildPhoneField({
@@ -250,8 +305,9 @@ class _LoginView2State extends State<LoginView2> {
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: BaseTextFormField(
+            textInputFormatter: r'^([0-9]+([.][0-9]*)?|[.][0-9]+)',
             maxLength: 15,
-            controller: textEditingController,
+            controller: phoneEditingController,
             textInputAction: TextInputAction.send,
             hintText: "Phone number",
             onChanged: onChanged,

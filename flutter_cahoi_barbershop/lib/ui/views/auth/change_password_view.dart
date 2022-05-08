@@ -1,12 +1,12 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/state_models/change_password_model.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/login_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/button_login.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/loading_dialog.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/text_regex.dart';
-import 'package:provider/provider.dart';
 
 class ChangePasswordView extends StatefulWidget {
   final String phoneNumber;
@@ -22,12 +22,25 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
   final formKey = GlobalKey<FormState>();
   bool isHidePassword = false;
   Size size = Size.zero;
+  final formPassKey = GlobalKey<FormState>();
+  final formNameKey = GlobalKey<FormState>();
+  final passEditingController = TextEditingController();
+
+  String currentPassword = '';
+  String currentName = '';
+
+  String? messageValidatePassword;
+  String? messageValidateName;
+  bool isUppercase = false;
+  bool isNumeric = false;
+  bool isLength = false;
+  bool isValidatedName = false;
 
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
 
-    return BaseView<ChangePasswordModel>(
+    return BaseView<LoginModel>(
       builder: (context, model, child) => Scaffold(
         body: SafeArea(
           child: Padding(
@@ -40,7 +53,11 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                     _buildHeader(),
                     _buildNewPasswordField(
                       onFieldSubmitted: (_) async {
-                        if (await model.changePassword(widget.phoneNumber)) {
+                        LoadingDialog.show(context);
+                        if (await model.changePassword(
+                            currentPassword: currentPassword,
+                            phoneNumber: widget.phoneNumber)) {
+                          LoadingDialog.dismiss(context);
                           AwesomeDialog(
                             context: context,
                             dialogType: DialogType.SUCCES,
@@ -53,6 +70,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                             dismissOnTouchOutside: false,
                           ).show();
                         } else {
+                          LoadingDialog.dismiss(context);
                           AwesomeDialog(
                             context: context,
                             dialogType: DialogType.ERROR,
@@ -61,29 +79,62 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         }
                       },
                       validator: (_) {
-                        return model.validatePassword() ?? '';
+                        RegExp regex = RegExp(
+                            r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$');
+                        if (currentPassword.isEmpty) {
+                          return 'Please enter password';
+                        } else {
+                          if (!regex.hasMatch(currentPassword)) {
+                            return 'Enter valid password';
+                          } else {
+                            return '';
+                          }
+                        }
                       },
                       onChange: (value) {
-                        model.changeCurrentPassword();
+                        currentPassword = passEditingController.text;
                         formKey.currentState?.validate();
                       },
                       changeCurrentPassword: (value) {
-                        model.changePassword(value);
+                        currentPassword = passEditingController.text;
                       },
-                      passEditingController: model.passEditingController,
-                      currentPassword: model.currentPassword,
+                      passEditingController: passEditingController,
+                      currentPassword: currentPassword,
                     ),
                     _buildRegex(
-                      isLength: model.isLength,
-                      isNumeric: model.isNumeric,
-                      isUppercase: model.isUppercase,
+                      isLength: isLength,
+                      isNumeric: isNumeric,
+                      isUppercase: isUppercase,
                     ),
                   ],
                 ),
                 _buildButtonChangePass(
-                  isAllReady: model.isAllReady,
+                  isAllReady: isLength && isNumeric && isUppercase,
                   onChangePassword: () async {
-                    await model.changePassword(widget.phoneNumber);
+                    LoadingDialog.show(context);
+                    if (await model.changePassword(
+                        currentPassword: currentPassword,
+                        phoneNumber: widget.phoneNumber)) {
+                      LoadingDialog.dismiss(context);
+                      AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.SUCCES,
+                        title: 'Successful',
+                        btnOkOnPress: () {
+                          Navigator.of(context)
+                              .popUntil((route) => route.isFirst);
+                        },
+                        dismissOnBackKeyPress: false,
+                        dismissOnTouchOutside: false,
+                      ).show();
+                    } else {
+                      LoadingDialog.dismiss(context);
+                      AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.ERROR,
+                        title: 'Fail',
+                      ).show();
+                    }
                   },
                 ),
               ],
@@ -182,15 +233,13 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
 
   Widget _buildButtonChangePass(
           {required bool isAllReady, required Function() onChangePassword}) =>
-      Consumer<ChangePasswordModel>(
-        builder: (context, value, child) => Positioned(
-          bottom: size.height * 0.02,
-          child: BaseButton(
-              height: size.height * 0.06,
-              width: size.width * 0.9,
-              onPressed: isAllReady ? onChangePassword : null,
-              title: 'Change Password'),
-        ),
+      Positioned(
+        bottom: size.height * 0.02,
+        child: BaseButton(
+            height: size.height * 0.06,
+            width: size.width * 0.9,
+            onPressed: isAllReady ? onChangePassword : null,
+            title: 'Change Password'),
       );
 
   Widget _buildRegex({

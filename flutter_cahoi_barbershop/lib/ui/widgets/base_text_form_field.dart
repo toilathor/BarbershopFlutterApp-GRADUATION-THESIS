@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 
 class BaseTextFormField extends StatefulWidget {
   const BaseTextFormField({
@@ -10,7 +12,10 @@ class BaseTextFormField extends StatefulWidget {
     this.maxLength,
     this.textInputAction,
     this.validator,
+    this.textInputFormatter = '',
   }) : super(key: key);
+
+  final String textInputFormatter;
 
   final TextEditingController? controller;
 
@@ -41,13 +46,19 @@ class _BaseTextFormFieldState extends State<BaseTextFormField> {
       ),
       textInputAction: widget.textInputAction,
       validator: widget.validator,
-      cursorColor: Colors.black,
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(
+          RegExp(widget.textInputFormatter),
+        ),
+      ],
+      cursorColor: headerColor1,
       controller: widget.controller,
       keyboardType: TextInputType.phone,
       onChanged: widget.onChanged,
       onFieldSubmitted: widget.onFieldSubmitted,
       maxLength: widget.maxLength,
       autocorrect: true,
+      cursorRadius: const Radius.circular(10),
       decoration: InputDecoration(
         hintText: widget.hintText,
         counterText: "",

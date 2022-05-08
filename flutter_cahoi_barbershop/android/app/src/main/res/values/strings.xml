@@ -3,4 +3,5 @@
     <string name="app_name">CAHOI BARBERSHOP</string>
     <string name="facebook_app_id">617680392795377</string>
     <string name="fb_login_protocol_scheme">fb617680392795377</string>
+    <string name="facebook_client_token">9259fae8ab391fb238b11cebb6b5ff3d</string>
 </resources>

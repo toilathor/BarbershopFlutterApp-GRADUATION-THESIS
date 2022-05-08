@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/server_config.dart';
 import 'package:http/http.dart' as http;
 
 class AuthAPI {
@@ -18,7 +19,6 @@ class AuthAPI {
       var data = jsonDecode(response.body);
       return data['data'];
     } catch (e) {
-      debugPrint(e.toString());
       return false;
     }
   }
@@ -138,5 +138,3 @@ class AuthAPI {
     }
   }
 }
-
-enum TypeSocial { none, facebook, google, zalo }
