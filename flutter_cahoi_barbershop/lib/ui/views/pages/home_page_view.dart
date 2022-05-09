@@ -2,7 +2,9 @@ import 'package:date_format/date_format.dart' as date_format;
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/fake-data/data.dart';
 import 'package:flutter_cahoi_barbershop/core/models/clip_youtube.dart';
+import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/home_page_model.dart';
+import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
@@ -22,6 +24,7 @@ class HomePageView extends StatefulWidget {
 
 class _HomePageViewState extends State<HomePageView> {
   Size size = Size.zero;
+  final user = locator<AuthenticationService>().user;
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +111,7 @@ class _HomePageViewState extends State<HomePageView> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                model.user.name,
+                                "${user.name}",
                                 style: const TextStyle(
                                   fontSize: 24,
                                   fontFamily: fontBold,

@@ -226,7 +226,7 @@ class BookingModel extends BaseModel {
       'products': selectedProducts.map((e) => e.id).toList()
     };
 
-    _bookingService.createNewTask(data: data);
+    return _bookingService.createNewTask(data: data);
   }
 
   void reset() {

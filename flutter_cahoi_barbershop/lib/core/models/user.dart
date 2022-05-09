@@ -1,52 +1,176 @@
+/// id : 1
+/// name : "admin"
+/// email : null
+/// phone_number : "0973271208"
+/// status : 1
+/// points : 0
+/// avatar : "https://bit.ly/3kGo0rS"
+/// roles : [{"id":3,"name":"super-admin"}]
+/// rank : {"id":1,"rank_name":"None","threshold":0}
+
 class MUser {
-  final String id;
-  final String name;
-  final String phoneNumber;
-  final String? email;
-  final String birthday;
-  final String? homeAddress;
-  final String? workAddress;
   MUser({
-    required this.id,
-    required this.name,
-    required this.phoneNumber,
+    this.id,
+    this.name,
     this.email,
-    required this.birthday,
-    this.homeAddress,
-    this.workAddress,
+    this.phoneNumber,
+    this.status,
+    this.points,
+    this.avatar,
+    this.roles,
+    this.rank,
   });
 
-  factory MUser.defaultUser() => MUser(
-        id: '',
-        name: '',
-        phoneNumber: '',
-        email: '',
-        birthday: '',
-        homeAddress: '',
-        workAddress: '',
+  MUser.initial()
+      : id = 1,
+        name = "",
+        email = 1,
+        phoneNumber = "",
+        status = 1,
+        points = 1,
+        avatar = "",
+        roles = [];
+
+  MUser.fromJson(dynamic json) {
+    id = json['id'];
+    name = json['name'];
+    email = json['email'];
+    phoneNumber = json['phone_number'];
+    status = json['status'];
+    points = json['points'];
+    avatar = json['avatar'];
+    if (json['roles'] != null) {
+      roles = [];
+      json['roles'].forEach((v) {
+        roles?.add(Roles.fromJson(v));
+      });
+    }
+    rank = json['rank'] != null ? Rank.fromJson(json['rank']) : null;
+  }
+
+  int? id;
+  String? name;
+  dynamic email;
+  String? phoneNumber;
+  int? status;
+  int? points;
+  String? avatar;
+  List<Roles>? roles;
+  Rank? rank;
+
+  MUser copyWith({
+    int? id,
+    String? name,
+    dynamic email,
+    String? phoneNumber,
+    int? status,
+    int? points,
+    String? avatar,
+    List<Roles>? roles,
+    Rank? rank,
+  }) =>
+      MUser(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        email: email ?? this.email,
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        status: status ?? this.status,
+        points: points ?? this.points,
+        avatar: avatar ?? this.avatar,
+        roles: roles ?? this.roles,
+        rank: rank ?? this.rank,
       );
 
-  factory MUser.fromJson(Map<String, dynamic> json) => _$MUserFromJson(json);
-
-  Map<String, dynamic> toJson() => _$MUserToJson(this);
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['id'] = id;
+    map['name'] = name;
+    map['email'] = email;
+    map['phone_number'] = phoneNumber;
+    map['status'] = status;
+    map['points'] = points;
+    map['avatar'] = avatar;
+    if (roles != null) {
+      map['roles'] = roles?.map((v) => v.toJson()).toList();
+    }
+    if (rank != null) {
+      map['rank'] = rank?.toJson();
+    }
+    return map;
+  }
 }
 
-MUser _$MUserFromJson(Map<String, dynamic> json) => MUser(
-  id: json['id'] as String,
-  name: json['name'] as String,
-  phoneNumber: json['phone_number'] as String,
-  email: json['email'] as String?,
-  birthday: json['birthday'] as String,
-  homeAddress: json['home_address'] as String?,
-  workAddress: json['work_address'] as String?,
-);
+/// id : 1
+/// rank_name : "None"
+/// threshold : 0
 
-Map<String, dynamic> _$MUserToJson(MUser instance) => <String, dynamic>{
-  'id': instance.id,
-  'name': instance.name,
-  'phone_number': instance.phoneNumber,
-  'email': instance.email,
-  'birthday': instance.birthday,
-  'home_address': instance.homeAddress,
-  'work_address': instance.workAddress,
-};
+class Rank {
+  Rank({
+    this.id,
+    this.rankName,
+    this.threshold,
+  });
+
+  Rank.fromJson(dynamic json) {
+    id = json['id'];
+    rankName = json['rank_name'];
+    threshold = json['threshold'];
+  }
+
+  int? id;
+  String? rankName;
+  int? threshold;
+
+  Rank copyWith({
+    int? id,
+    String? rankName,
+    int? threshold,
+  }) =>
+      Rank(
+        id: id ?? this.id,
+        rankName: rankName ?? this.rankName,
+        threshold: threshold ?? this.threshold,
+      );
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['id'] = id;
+    map['rank_name'] = rankName;
+    map['threshold'] = threshold;
+    return map;
+  }
+}
+
+/// id : 3
+/// name : "super-admin"
+
+class Roles {
+  Roles({
+    this.id,
+    this.name,
+  });
+
+  Roles.fromJson(dynamic json) {
+    id = json['id'];
+    name = json['name'];
+  }
+
+  int? id;
+  String? name;
+
+  Roles copyWith({
+    int? id,
+    String? name,
+  }) =>
+      Roles(
+        id: id ?? this.id,
+        name: name ?? this.name,
+      );
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['id'] = id;
+    map['name'] = name;
+    return map;
+  }
+}

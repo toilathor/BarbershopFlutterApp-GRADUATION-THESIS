@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_cahoi_barbershop/core/apis/api.dart';
+import 'package:flutter_cahoi_barbershop/core/models/user.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/store_secure.dart';
 
@@ -9,11 +9,15 @@ class AuthenticationService {
   final _api = locator<Api>();
   final _storeSecure = locator<StoreSecure>();
 
-  final _userResponse = StreamController<User>.broadcast();
+  StreamController<MUser> userController = StreamController<MUser>();
 
-  Stream<User> get userResponse => _userResponse.stream;
+  final _userResponse = StreamController<MUser>.broadcast();
 
-  void Function(User) get addUserResponse => _userResponse.sink.add;
+  Stream<MUser> get userResponse => _userResponse.stream;
+
+  Function(MUser) get addUserResponse => _userResponse.sink.add;
+
+  MUser user = MUser.initial();
 
   Future<bool> checkUserExist({required String phoneNumber}) async {
     var res = await _api.checkUserExist(phoneNumber: phoneNumber);
@@ -35,13 +39,10 @@ class AuthenticationService {
     );
 
     if (res != null) {
-      //Lưu thông tin Token vào Store
-      await _storeSecure.setToken(res.data['token']);
-
-      await _storeSecure.setExpiresIn(res.data['expires_in']);
-
-      _api.setToken(res.data['token']);
-
+      await saveSession(
+        token: res.data['token'],
+        expiresIn: res.data['expires_in'],
+      );
       return true;
     }
 
@@ -112,20 +113,39 @@ class AuthenticationService {
     var res = await _api.logOut();
 
     if (res != null && res.data) {
-      await saveSession(
-        token: res.data['token'],
-        expiresIn: res.data['expires_in'],
-      );
+      await _storeSecure.setToken(null);
+      await _storeSecure.setExpiresIn(null);
+
+      user = MUser.initial();
+
+      addResponseUser(user);
       return true;
     }
     return false;
   }
 
   Future saveSession({required String token, required String expiresIn}) async {
+    _api.setToken(token);
+
     await _storeSecure.setToken(token);
 
     await _storeSecure.setExpiresIn(expiresIn);
 
     _api.setToken(token);
+
+    await getMe();
+  }
+
+  Future getMe() async {
+    var res = await _api.getMe();
+
+    if (res != null) {
+      user = MUser.fromJson(res.data);
+      addResponseUser(user);
+    }
+  }
+
+  addResponseUser(MUser user) {
+    addUserResponse(user);
   }
 }

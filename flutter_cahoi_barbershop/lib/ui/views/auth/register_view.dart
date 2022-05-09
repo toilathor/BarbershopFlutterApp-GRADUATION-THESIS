@@ -42,14 +42,15 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
+    EdgeInsets viewPadding = MediaQuery.of(context).viewPadding;
 
     return BaseView<AuthModel>(
       builder: (context, model, child) => Scaffold(
         backgroundColor: backgroundColor,
-        body: SafeArea(
-          child: SingleChildScrollView(
+        body: SingleChildScrollView(
+          child: SafeArea(
             child: SizedBox(
-              height: size.height,
+              height: size.height - viewPadding.top - viewPadding.bottom,
               width: size.width,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -322,7 +323,7 @@ class _RegisterViewState extends State<RegisterView> {
           (route) => false,
         );
       } else {
-        Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
+        Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
       }
     }
   }

@@ -28,10 +28,9 @@ class _AccountPageViewState extends State<AccountPageView> {
               if (res) {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
-                  'login',
+                  '/login',
                   (route) => false,
                 );
-
                 return;
               }
 

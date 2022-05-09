@@ -22,6 +22,15 @@ class Api extends ApiBase {
     }
   }
 
+  Future<api_res.Response?> getMe() async {
+    try {
+      var res = await dio.get('/user/me');
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<api_res.Response?> loginWithPhoneNumber(
       {required String phoneNumber, required String password}) async {
     try {

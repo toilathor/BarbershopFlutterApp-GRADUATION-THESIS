@@ -10,16 +10,9 @@ class StoreSecure {
   StoreSecure() {
     getInstance();
   }
-  Future setUser(String? user) async {
-    await _storage?.write(key: _keyUser, value: user ?? '');
-  }
-
-  Future<String?> getUser() async {
-    return await _storage?.read(key: _keyUser);
-  }
 
   Future setToken(String? token) async {
-    await _storage?.write(key: _keyToken, value: token ?? '');
+    await _storage?.write(key: _keyToken, value: token);
   }
 
   Future<String?> getToken() async {
@@ -27,7 +20,7 @@ class StoreSecure {
   }
 
   Future setExpiresIn(String? expiresIn) async {
-    await _storage?.write(key: _expiresIn, value: expiresIn ?? '');
+    await _storage?.write(key: _expiresIn, value: expiresIn);
   }
 
   Future<String?> getExpiresIn() async {
