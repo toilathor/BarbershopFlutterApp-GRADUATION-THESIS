@@ -8,7 +8,6 @@ import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/booking/booking_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/playlist_youtube/play_clip_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/playlist_youtube/playlist_youtube_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/avatar.dart';
@@ -87,47 +86,57 @@ class _HomePageViewState extends State<HomePageView> {
                     child: SizedBox(
                       height: size.height * 0.188,
                       width: size.width,
-                      child: Image.asset("assets/bg_cahoibarbershop.jpg",
-                          fit: BoxFit.fitWidth,
-                          color: Colors.black.withOpacity(0.7),
-                          colorBlendMode: BlendMode.colorBurn),
+                      child: Image.asset(
+                        "assets/bg_cahoibarbershop.jpg",
+                        fit: BoxFit.fitWidth,
+                        color: Colors.black.withOpacity(0.7),
+                        colorBlendMode: BlendMode.colorBurn,
+                      ),
                     ),
                   ),
                   Positioned(
                     top: 12,
                     left: 12,
+                    right: 12,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Avatar(
                           height: size.width * 0.18,
-                          src: "https://bit.ly/3FMV625",
+                          src: user.avatar ?? "",
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 4.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "${user.name}",
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  fontFamily: fontBold,
-                                  color: headerColor1,
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                              vertical: 4.0,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const SizedBox(
+                                  height: 8,
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              const Text(
-                                "No membership class yet",
-                                style: TextStyle(
-                                  color: Colors.white54,
+                                Text(
+                                  "${user.name}",
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontFamily: fontBold,
+                                    color: headerColor1,
+                                  ),
                                 ),
-                              )
-                            ],
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                Text(
+                                  "your rank is ${user.rank?.rankName}",
+                                  style: const TextStyle(
+                                    color: Colors.white54,
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         )
                       ],
@@ -145,21 +154,19 @@ class _HomePageViewState extends State<HomePageView> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             _buildNaviRoute(
-                              context: context,
-                              icons: "assets/ic_calendar.png",
-                              title: "Booking",
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const BookingView(),
-                                ),
-                              ),
-                            ),
+                                context: context,
+                                icons: "assets/ic_calendar.png",
+                                title: "Booking",
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/booking');
+                                }),
                             _buildNaviRoute(
                               context: context,
                               icons: "assets/ic_history.png",
                               title: "History",
-                              onTap: () => null,
+                              onTap: () {
+                                Navigator.pushNamed(context, '/history');
+                              },
                             ),
                             _buildNaviRoute(
                               context: context,
@@ -183,6 +190,9 @@ class _HomePageViewState extends State<HomePageView> {
             ),
             Expanded(
               child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(
+                  parent: ClampingScrollPhysics(),
+                ),
                 child: Column(
                   children: [
                     SliderImage(
@@ -300,25 +310,27 @@ class _HomePageViewState extends State<HomePageView> {
     required String title,
     required Function() onTap,
   }) =>
-      GestureDetector(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              icons,
-              color: Theme.of(context).primaryColor,
-              height: 32,
-            ),
-            const SizedBox(
-              height: 8.0,
-            ),
-            Text(
-              title,
-              style: Theme.of(context).textTheme.bodyText2,
-            )
-          ],
+      Expanded(
+        child: GestureDetector(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                icons,
+                color: Theme.of(context).primaryColor,
+                height: 32,
+              ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.bodyText2,
+              )
+            ],
+          ),
+          onTap: onTap,
         ),
-        onTap: onTap,
       );
 
   Widget _buildItemChanelYoutube(ClipYouTube item) {

@@ -136,13 +136,16 @@ class AuthenticationService {
     await getMe();
   }
 
-  Future getMe() async {
+  Future<MUser?> getMe() async {
     var res = await _api.getMe();
 
     if (res != null) {
       user = MUser.fromJson(res.data);
       addResponseUser(user);
+      return user;
     }
+
+    return null;
   }
 
   addResponseUser(MUser user) {

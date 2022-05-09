@@ -9,7 +9,6 @@ class HomePageModel extends ChangeNotifier {
 
   bool _disposed = false;
 
-  final _authService = locator<AuthenticationService>().user;
   List<IdClipYouTube> clipIdList = [];
   List<ClipYouTube> clipInfoList = [];
 

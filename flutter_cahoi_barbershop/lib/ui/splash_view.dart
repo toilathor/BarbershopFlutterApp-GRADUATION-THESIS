@@ -2,19 +2,21 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/apis/api.dart';
+import 'package:flutter_cahoi_barbershop/core/models/user.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/server_config.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/store_secure.dart';
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+class SplashView extends StatefulWidget {
+  const SplashView({Key? key}) : super(key: key);
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  State<SplashView> createState() => _SplashViewState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashViewState extends State<SplashView> {
   double position = 0;
   double opacity = 0;
   double scale = 0.7;
@@ -33,18 +35,49 @@ class _SplashScreenState extends State<SplashScreen> {
       String? token = await locator<StoreSecure>().getToken();
       if (date != null && DateTime.parse(date).isAfter(now) && token != null) {
         debugPrint('Login!');
+
+        locator<Api>().setToken(token);
+
+        MUser? user = await locator<AuthenticationService>().getMe();
+
         Timer(
           const Duration(seconds: 2),
           () {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              "/home",
-              (route) => false,
-            );
-            locator<AuthenticationService>().getMe();
+            if (user != null) {
+              Role role = Role.values[user.roles?.first.id ?? 1];
+              switch (role) {
+                case Role.none:
+                case Role.customer:
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/home',
+                    (route) => false,
+                  );
+                  break;
+                case Role.manager:
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/home-manager',
+                    (route) => false,
+                  );
+                  break;
+                case Role.superAdmin:
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/home-super-admin',
+                    (route) => false,
+                  );
+                  break;
+              }
+            } else {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/login',
+                (route) => false,
+              );
+            }
           },
         );
-        locator<Api>().setToken(token);
       } else {
         debugPrint('Expires');
         Timer(
