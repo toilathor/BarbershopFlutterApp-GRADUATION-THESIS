@@ -1,6 +1,7 @@
 import 'package:date_format/date_format.dart' as date_format;
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/fake-data/data.dart';
+import 'package:flutter_cahoi_barbershop/core/models/clip_youtube.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/home_page_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
@@ -20,44 +21,41 @@ class HomePageView extends StatefulWidget {
 }
 
 class _HomePageViewState extends State<HomePageView> {
+  Size size = Size.zero;
+
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-
+    size = MediaQuery.of(context).size;
     return BaseView<HomePageModel>(
       onModelReady: (model) {
         model.initHomePage();
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
+          backgroundColor: textColorLight2,
           leading: IconButton(
-            onPressed: () async {
-              //TODO: Wallet
-            },
+            onPressed: () async {},
             icon: Icon(
               Icons.notifications_none,
               size: Theme.of(context).iconTheme.size ?? 24,
             ),
             tooltip: 'Wallet',
           ),
-          actions: [
-            Container(
-              padding: const EdgeInsets.all(4.0),
-              child: IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.account_balance_wallet_outlined,
-                  size: Theme.of(context).iconTheme.size ?? 24,
+          title: Center(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "assets/logo_appbar.png",
+                  height: 50,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(Icons.error);
+                  },
                 ),
-                tooltip: 'Wallet',
-              ),
-            )
-          ],
-          title: Image.asset(
-            "assets/favicon-ngang.png",
-            errorBuilder: (context, error, stackTrace) {
-              return const Icon(Icons.error);
-            },
+                const Text('Mr.Cahoi')
+              ],
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton(
@@ -148,10 +146,11 @@ class _HomePageViewState extends State<HomePageView> {
                               icons: "assets/ic_calendar.png",
                               title: "Booking",
                               onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const BookingView(),
-                                  )),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const BookingView(),
+                                ),
+                              ),
                             ),
                             _buildNaviRoute(
                               context: context,
@@ -235,7 +234,8 @@ class _HomePageViewState extends State<HomePageView> {
                                   : model.clipInfoList.length,
                               itemBuilder: (context, index) {
                                 return _buildItemChanelYoutube(
-                                    size, model.clipInfoList[index]);
+                                  model.clipInfoList[index],
+                                );
                               },
                             ),
                           ),
@@ -318,7 +318,7 @@ class _HomePageViewState extends State<HomePageView> {
         onTap: onTap,
       );
 
-  Widget _buildItemChanelYoutube(Size size, ItemYoutube item) {
+  Widget _buildItemChanelYoutube(ClipYouTube item) {
     final width = size.width * 0.8;
     final heightImage = width * 9 / 16;
 
@@ -350,19 +350,21 @@ class _HomePageViewState extends State<HomePageView> {
               right: 0,
               left: 0,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(12.0),
                 child: ClipRRect(
                   child: Column(
                     children: [
                       Text(
                         item.title,
                         maxLines: 2,
-                        style: const TextStyle(),
+                        style: const TextStyle(
+                          fontFamily: fontBold,
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                       const Divider(color: Colors.black),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('${item.viewCount} views'),
                           Text(

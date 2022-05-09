@@ -23,10 +23,12 @@ class _StoryPageViewState extends State<StoryPageView> {
       appBar: AppBar(
         actions: [
           Container(
-            padding: const EdgeInsets.all(4.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: IconButton(
               onPressed: () {},
-              icon: const Text('Your Story'),
+              icon: const Icon(
+                Icons.location_history_rounded,
+              ),
               tooltip: 'Your Story',
             ),
           )

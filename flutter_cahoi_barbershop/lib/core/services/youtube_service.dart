@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_cahoi_barbershop/core/models/clip_youtube.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/home_page_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:http/http.dart';
@@ -27,7 +28,7 @@ class YoutubeService {
     return {'': []};
   }
 
-  Future<List<dynamic>> getInfoVideosYouTube(List<IdClipYoutube> idList) async {
+  Future<List<dynamic>> getInfoVideosYouTube(List<IdClipYouTube> idList) async {
     String url = '$baseLinkAPIYT/videos?part=statistics&part=snippet';
 
     for (var item in idList) {

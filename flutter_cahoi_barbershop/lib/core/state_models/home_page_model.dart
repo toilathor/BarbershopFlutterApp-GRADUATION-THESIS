@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/models/user/user.dart';
+import 'package:flutter_cahoi_barbershop/core/models/clip_youtube.dart';
+import 'package:flutter_cahoi_barbershop/core/models/user.dart';
 import 'package:flutter_cahoi_barbershop/core/services/youtube_service.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/store_secure.dart';
@@ -13,8 +14,8 @@ class HomePageModel extends ChangeNotifier {
 
   bool _disposed = false;
 
-  List<IdClipYoutube> clipIdList = [];
-  List<ItemYoutube> clipInfoList = [];
+  List<IdClipYouTube> clipIdList = [];
+  List<ClipYouTube> clipInfoList = [];
   MUser user = MUser.defaultUser();
 
   changeUser() async {
@@ -26,22 +27,22 @@ class HomePageModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  changeClipIdList() async {
+  Future changeClipIdList() async {
     var response = await _youtubeApi.getPlayListYouTube(maxResults: 5);
 
     clipIdList =
-        response.values.first.map((i) => IdClipYoutube.fromMap(i)).toList();
+        response.values.first.map((i) => IdClipYouTube.fromMap(i)).toList();
 
     notifyListeners();
 
     await changeClipInfoList(clipIdList);
   }
 
-  changeClipInfoList(List<IdClipYoutube> clipIdList) async {
+  Future changeClipInfoList(List<IdClipYouTube> clipIdList) async {
     var response = await _youtubeApi.getInfoVideosYouTube(clipIdList);
 
     try {
-      clipInfoList += response.map((i) => ItemYoutube.fromJson(i)).toList();
+      clipInfoList += response.map((i) => ClipYouTube.fromJson(i)).toList();
 
       notifyListeners();
     } catch (e) {
@@ -66,64 +67,4 @@ class HomePageModel extends ChangeNotifier {
     changeUser();
     changeClipIdList();
   }
-}
-
-class ItemYoutube {
-  String title;
-  String linkImage;
-  String id;
-  String publishedAt;
-  String viewCount;
-
-  ItemYoutube({
-    required this.title,
-    required this.linkImage,
-    required this.id,
-    required this.publishedAt,
-    required this.viewCount,
-  });
-
-  set setViewCount(int viewCount) => this.viewCount = '$viewCount';
-
-  factory ItemYoutube.fromJson(Map<String, dynamic> json) {
-    return ItemYoutube(
-      id: json['id'] as String,
-      title: json['snippet']['title'] as String,
-      linkImage: json['snippet']['thumbnails']['maxres'] == null
-          ? ''
-          : json['snippet']['thumbnails']['maxres']['url'].toString(),
-      publishedAt: json['snippet']['publishedAt'] as String,
-      viewCount: json['statistics']['viewCount'] as String,
-    );
-  }
-
-  @override
-  String toString() {
-    return 'ItemYoutube(title: $title, linkImage: $linkImage, id: $id, publishedAt: $publishedAt, viewCount: $viewCount)';
-  }
-}
-
-class IdClipYoutube {
-  String id;
-
-  IdClipYoutube({
-    required this.id,
-  });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-    };
-  }
-
-  factory IdClipYoutube.fromMap(Map<String, dynamic> map) {
-    return IdClipYoutube(
-      id: map['snippet']['resourceId']['videoId'] ?? '',
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory IdClipYoutube.fromJson(String source) =>
-      IdClipYoutube.fromMap(json.decode(source));
 }

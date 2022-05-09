@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/pages/account_page_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/pages/discover_page_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/pages/home_page_view.dart';
@@ -41,27 +43,38 @@ class _HomeViewState extends State<HomeView> {
               _currentIndex = value;
             });
           },
+          selectedLabelStyle: const TextStyle(
+            fontFamily: fontBold
+          ),
+          unselectedLabelStyle: const TextStyle(
+            fontFamily: fontBold
+          ),
           items: const [
             BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.home,
-                ),
-                label: 'Home'),
+              icon: Icon(
+                Icons.home,
+              ),
+              label: 'Home',
+            ),
             BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.search,
-                ),
-                label: "Discover"),
+              icon: Icon(
+                Icons.search,
+              ),
+              label: "Discover",
+            ),
             BottomNavigationBarItem(
-                icon: Icon(Icons.history_edu_rounded), label: 'Story'),
+              icon: Icon(Icons.history_edu_rounded),
+              label: 'Story',
+            ),
             BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.person,
-                ),
-                label: "Account"),
+              icon: Icon(
+                Icons.person,
+              ),
+              label: "Account",
+            ),
           ],
         ),
-        backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: backgroundColor,
       ),
     );
   }

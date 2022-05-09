@@ -1,21 +1,10 @@
-import 'package:json_annotation/json_annotation.dart';
-part 'user.g.dart';
-
-@JsonSerializable()
 class MUser {
-  @JsonKey(name: 'id')
   final String id;
-  @JsonKey(name: 'name')
   final String name;
-  @JsonKey(name: 'phone_number')
   final String phoneNumber;
-  @JsonKey(name: 'email')
   final String? email;
-  @JsonKey(name: 'birthday')
   final String birthday;
-  @JsonKey(name: 'home_address')
   final String? homeAddress;
-  @JsonKey(name: 'work_address')
   final String? workAddress;
   MUser({
     required this.id,
@@ -41,3 +30,23 @@ class MUser {
 
   Map<String, dynamic> toJson() => _$MUserToJson(this);
 }
+
+MUser _$MUserFromJson(Map<String, dynamic> json) => MUser(
+  id: json['id'] as String,
+  name: json['name'] as String,
+  phoneNumber: json['phone_number'] as String,
+  email: json['email'] as String?,
+  birthday: json['birthday'] as String,
+  homeAddress: json['home_address'] as String?,
+  workAddress: json['work_address'] as String?,
+);
+
+Map<String, dynamic> _$MUserToJson(MUser instance) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'phone_number': instance.phoneNumber,
+  'email': instance.email,
+  'birthday': instance.birthday,
+  'home_address': instance.homeAddress,
+  'work_address': instance.workAddress,
+};

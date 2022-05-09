@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/models/discover/discover.dart';
+import 'package:flutter_cahoi_barbershop/core/models/discover.dart';
 
 const List<String> imagePostDemo = [
   "assets/slider_demo/demo1.png",

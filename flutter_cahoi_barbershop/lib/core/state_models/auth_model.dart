@@ -1,4 +1,6 @@
-import 'package:flutter_cahoi_barbershop/core/apis/auth_api.dart';
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/base.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
@@ -7,13 +9,18 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
 class AuthModel extends BaseModel {
-  final _authAPI = locator<AuthAPI>();
   final _authService = locator<AuthenticationService>();
-
   final _googleAuth = GoogleSignIn();
+
   GoogleSignInAccount? googleAccount;
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  int? _resendToken;
+
+  late Timer timer;
+  int timeOut = 60;
 
   Future<bool> checkUserExisted({required String phoneNumber}) async {
     return await _authService.checkUserExist(phoneNumber: phoneNumber);
@@ -36,7 +43,7 @@ class AuthModel extends BaseModel {
 
     if (result.status == LoginStatus.success) {
       final requestData =
-      await FacebookAuth.i.getUserData(fields: "id, email, name, picture");
+          await FacebookAuth.i.getUserData(fields: "id, email, name, picture");
 
       return await _authService.loginWithFacebook(
         name: requestData['name'],
@@ -62,42 +69,69 @@ class AuthModel extends BaseModel {
     return false;
   }
 
-  Future<bool> sendOTPRegister({required String phoneNumber,
+  Future<bool> sendOTPRegister({
+    required String phoneNumber,
     Function()? onlyAndroid,
-    required Function(String) gotoVerifyOTP}) async {
+    required Function(String verifyId) gotoVerifyOTP,
+  }) async {
     bool sent = false;
 
-    await _authAPI.verifyPhoneNumber(
-      phoneNumber:
-      PhoneNumber
-          .fromIsoCode(countryCode, phoneNumber)
-          .international,
-      verificationCompleted: (phoneAuthCredential) async {
-        // ANDROID ONLY!
-        // Sign the user in (or link) with the auto-generated credential
-        // await _authAPI.firebaseAuth.signInWithCredential(phoneAuthCredential);
-        //
-        // if (_authAPI.firebaseAuth.currentUser != null) {
-        //   if (onlyAndroid != null) {
-        //     onlyAndroid();
-        //   }
-        //   sent = true;
-        // }
-      },
-      verificationFailed: (error) {
-        if (error.code == 'invalid-phone-number') {
-          Fluttertoast.showToast(
-              msg: 'The provided phone number is not valid.');
-        }
-        sent = false;
-      },
-      codeSent: (verificationId, forceResendingToken) {
-        gotoVerifyOTP(verificationId);
-      },
-      codeAutoRetrievalTimeout: (verificationId) {},
-    );
+    final _formatPhoneNumber =
+        PhoneNumber.fromIsoCode(countryCode, phoneNumber).international;
+
+    await firebaseAuth.verifyPhoneNumber(
+        phoneNumber: _formatPhoneNumber,
+        verificationCompleted: (phoneAuthCredential) {
+          // ANDROID ONLY!
+          // Sign the user in (or link) with the auto-generated credential
+          // await _authAPI.firebaseAuth.signInWithCredential(phoneAuthCredential);
+          //
+          // if (_authAPI.firebaseAuth.currentUser != null) {
+          //   if (onlyAndroid != null) {
+          //     onlyAndroid();
+          //   }
+          //   sent = true;
+          // }
+        },
+        verificationFailed: (error) {
+          if (error.code == 'invalid-phone-number') {
+            Fluttertoast.showToast(
+                msg: 'The provided phone number is not valid.');
+          }
+          sent = false;
+        },
+        codeSent: (verificationId, forceResendingToken) {
+          _resendToken = forceResendingToken;
+          gotoVerifyOTP(verificationId);
+        },
+        codeAutoRetrievalTimeout: (verificationId) {
+          // gotoVerifyOTP(verificationId);
+        },
+        timeout: const Duration(seconds: 60),
+        forceResendingToken: _resendToken);
 
     return sent;
+  }
+
+  Future verifyOTPRegister({
+    required String verifyId,
+    required String currentPin,
+    required Function() gotoRegister,
+    required Function(String value) changeMessageValidate,
+  }) async {
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: verifyId, smsCode: currentPin);
+        await firebaseAuth.signInWithCredential(credential);
+
+        if (firebaseAuth.currentUser != null) {
+          gotoRegister();
+        } else {
+          changeMessageValidate('*Please fill up all the cells properly');
+        }
+    } catch (e) {
+      changeMessageValidate('*Please fill up all the cells properly');
+    }
   }
 
   Future<bool> register({
@@ -126,6 +160,39 @@ class AuthModel extends BaseModel {
       return true;
     }
     return false;
+  }
+
+  Future resendOTP() async {
+
+  }
+
+  verifyPhoneNumber({
+    required String phoneNumber,
+    required void Function(PhoneAuthCredential phoneAuthCredential)
+        verificationCompleted,
+    required void Function(FirebaseAuthException error) verificationFailed,
+    required void Function(String verificationId, int? forceResendingToken)
+        codeSent,
+    required void Function(String verificationId) codeAutoRetrievalTimeout,
+    Duration timeout = const Duration(seconds: 30),
+    int? forceResendingToken,
+  }) async {}
+
+  resetFirebaseAuth() {
+    firebaseAuth = FirebaseAuth.instance;
+  }
+
+  countDown() {
+    timeOut = 60;
+    timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (timeOut > 0) {
+        timeOut--;
+        notifyListeners();
+      } else {
+        timer.cancel();
+        notifyListeners();
+      }
+    });
   }
 
   loginOut() async {

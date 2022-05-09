@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/state_models/enter_pin_model.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/auth_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/auth/change_password_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/auth/register_view.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 enum TypeOTP {
@@ -13,13 +18,13 @@ enum TypeOTP {
 
 class EnterPinView extends StatefulWidget {
   final String phoneNumber;
-  final String verificationId;
+  final String verifyId;
   final TypeOTP typeOTP;
 
   const EnterPinView({
     Key? key,
     required this.phoneNumber,
-    required this.verificationId,
+    required this.verifyId,
     required this.typeOTP,
   }) : super(key: key);
 
@@ -28,24 +33,29 @@ class EnterPinView extends StatefulWidget {
 }
 
 class _EnterPinViewState extends State<EnterPinView> {
+  TextEditingController pinController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  String? messageValidate;
+  bool hasError = false;
+  String _verifyId = '';
+
+  StreamController<ErrorAnimationType> errorController =
+      StreamController<ErrorAnimationType>();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return BaseView<EnterPinModel>(
+    return BaseView<AuthModel>(
       onModelReady: (model) {
-        model.initModel(
-          widget.phoneNumber,
-          widget.verificationId,
-        );
+        _verifyId = widget.verifyId;
         model.countDown();
       },
       onModelDisposed: (model) {
-        model.errorController.close();
+        errorController.close();
         model.timer.cancel();
       },
       builder: (context, model, child) => Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
-        key: model.scaffoldKey,
         body: SafeArea(
           child: Column(
             children: [
@@ -92,7 +102,7 @@ class _EnterPinViewState extends State<EnterPinView> {
                 height: 20,
               ),
               Form(
-                key: model.formKey,
+                key: formKey,
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 8.0, horizontal: 30),
@@ -126,14 +136,46 @@ class _EnterPinViewState extends State<EnterPinView> {
                     cursorColor: Colors.black,
                     animationDuration: const Duration(milliseconds: 300),
                     textStyle: const TextStyle(fontSize: 20, height: 1.6),
-                    errorAnimationController: model.errorController,
-                    controller: model.textEditingController,
+                    errorAnimationController: errorController,
+                    controller: pinController,
                     keyboardType: TextInputType.number,
                     onCompleted: (v) {
-                      model.verifyOTPRegiter(widget.typeOTP);
+                      model.verifyOTPRegister(
+                        currentPin: pinController.text,
+                        verifyId: _verifyId,
+                        changeMessageValidate: (value) {
+                          pinController.text = '';
+                          errorController.add(ErrorAnimationType.shake);
+                          setState(() {
+                            messageValidate = value;
+                          });
+                        },
+                        gotoRegister: () {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                if (widget.typeOTP == TypeOTP.register) {
+                                  return RegisterView(
+                                    phoneNumber: widget.phoneNumber,
+                                  );
+                                } else {
+                                  //TODO change password
+                                  return ChangePasswordView(
+                                    phoneNumber: widget.phoneNumber,
+                                  );
+                                }
+                              },
+                            ),
+                            (Route<dynamic> route) => route.isFirst,
+                          );
+                        },
+                      );
                     },
                     onChanged: (_) {
-                      model.changeCurrentPin();
+                      setState(() {
+                        formKey.currentState?.validate();
+                      });
                     },
                     beforeTextPaste: (text) {
                       debugPrint("Allowing to paste $text");
@@ -145,7 +187,7 @@ class _EnterPinViewState extends State<EnterPinView> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
                 child: Text(
-                  model.messageValidate ?? "",
+                  messageValidate ?? "",
                   style: const TextStyle(
                       color: Colors.red,
                       fontSize: 12,
@@ -158,7 +200,15 @@ class _EnterPinViewState extends State<EnterPinView> {
               GestureDetector(
                 onTap: model.timeOut == 0
                     ? () {
-                        model.resendOTP();
+                        model.sendOTPRegister(
+                          phoneNumber: widget.phoneNumber,
+                          gotoVerifyOTP: (verifyId) {
+                            pinController.text = '';
+                            setState(() {
+                              _verifyId = verifyId;
+                            });
+                          },
+                        );
                       }
                     : null,
                 child: RichText(
@@ -193,5 +243,23 @@ class _EnterPinViewState extends State<EnterPinView> {
         ),
       ),
     );
+  }
+
+  changeHasError() {
+    formKey.currentState?.validate();
+    // conditions for validating
+    if (pinController.text.length != 6 || messageValidate != null) {
+      errorController
+          .add(ErrorAnimationType.shake); // Triggering error shake animation
+      pinController.text = '';
+      setState(() {
+        hasError = true;
+      });
+    } else {
+      setState(() {
+        hasError = false;
+      });
+      Fluttertoast.showToast(msg: "Aye!!");
+    }
   }
 }

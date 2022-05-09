@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/models/service_cut/service_cut.dart';
+import 'package:flutter_cahoi_barbershop/core/models/product.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/elevated_button_icon.dart';
 
-class ItemService extends StatefulWidget {
-  final ServiceCut serviceCut;
+class ProductTile extends StatefulWidget {
+  final Product serviceCut;
   final Function() onPressSelect;
   final Function() onPressInfo;
   final bool isSelected;
   final double width;
   final double height;
 
-  const ItemService({
+  const ProductTile({
     Key? key,
     required this.serviceCut,
     required this.onPressSelect,
@@ -21,10 +21,10 @@ class ItemService extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ItemServiceState createState() => _ItemServiceState();
+  _ProductTileState createState() => _ProductTileState();
 }
 
-class _ItemServiceState extends State<ItemService> {
+class _ProductTileState extends State<ProductTile> {
   @override
   Widget build(BuildContext context) {
     final heightImage = widget.height / 2;

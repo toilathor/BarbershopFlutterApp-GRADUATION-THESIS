@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/models/workplace/workplace.dart';
+import 'package:flutter_cahoi_barbershop/core/models/facility.dart';
 
 /// @param distance có đơn vị là m
-class ItemWorkplace extends StatefulWidget {
-  final Workplace workplace;
+class FacilityTile extends StatefulWidget {
+  final Facility facility;
   final double distance;
   final bool isFirst;
-  final Function() onPress;
+  final Function()? onPress;
 
-  const ItemWorkplace(
+  const FacilityTile(
       {Key? key,
-      required this.workplace,
-      required this.distance,
-      required this.onPress,
+      required this.facility,
+      required this.distance, this.onPress,
       this.isFirst = false})
       : super(key: key);
 
   @override
-  _ItemWorkplaceState createState() => _ItemWorkplaceState();
+  _FacilityTileState createState() => _FacilityTileState();
 }
 
-class _ItemWorkplaceState extends State<ItemWorkplace> {
+class _FacilityTileState extends State<FacilityTile> {
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -48,7 +47,7 @@ class _ItemWorkplaceState extends State<ItemWorkplace> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(widget.workplace.name),
+                        Text("${widget.facility.address}"),
                         Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8.0, vertical: 4.0),

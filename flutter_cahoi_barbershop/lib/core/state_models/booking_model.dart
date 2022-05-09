@@ -1,7 +1,11 @@
+import 'package:date_format/date_format.dart' as format_date;
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/models/service_cut/service_cut.dart';
-import 'package:flutter_cahoi_barbershop/core/models/stylist/stylist.dart';
-import 'package:flutter_cahoi_barbershop/core/models/workplace/workplace.dart';
+import 'package:flutter_cahoi_barbershop/core/models/facility.dart';
+import 'package:flutter_cahoi_barbershop/core/models/product.dart';
+import 'package:flutter_cahoi_barbershop/core/models/rating.dart';
+import 'package:flutter_cahoi_barbershop/core/models/stylist.dart';
+import 'package:flutter_cahoi_barbershop/core/models/time_slot.dart';
+import 'package:flutter_cahoi_barbershop/core/models/type_product.dart';
 import 'package:flutter_cahoi_barbershop/core/services/booking_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/base.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
@@ -11,74 +15,73 @@ import 'package:geolocator/geolocator.dart';
 class BookingModel extends BaseModel {
   late GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final BookingService _bookingService = locator<BookingService>();
+  StepBooking currentStep = StepBooking.selectFacility;
+  bool _disposed = false;
 
-  StepBooking currentStep = StepBooking.selectBarbershop;
-
-  int selectedStylist = 0;
-  int currentIndexTime = 0;
+  TimeSlot? currentTimeSlot;
   bool isAdvice = true;
   bool isTakeAPhoto = true;
-  bool isDefaultStylist = true;
-  bool _disposed = false;
   DateTime selectedDate = DateTime.now();
-  DateTime selectedTime = timeStart;
-  Workplace? workplace;
-  String notes = '';
+  Facility? selectedFacility;
+  Stylist? selectedStylist;
+  Rating rating = Rating(avgSkillRate: '0', avgCommunicationRate: '0');
   int totalDuration = 30;
   Position? position;
 
-  List<Workplace>? workplaces;
-  List<ServiceCut> selectedServices = [];
-  List<List<ServiceCut>> services = [];
+  List<Facility> facilities = [];
+  List<Product> selectedProducts = [];
+  List<List<Product>> products = [];
+  List<TypeProduct> typeProducts = [];
+  List<TimeSlot> timeSlotsDefault = [];
   List<Stylist>? stylists = [];
 
-  changeDefaultStylist() {
-    if (!isDefaultStylist) {
-      isDefaultStylist = !isDefaultStylist;
-    }
-    notifyListeners();
-  }
-
-  //Step Select Barbershop
-  changeWorkplaces() async {
+  ///Step Select Barbershop
+  changeFacilities() async {
     position = await _bookingService.getCurrentLocation();
-    workplaces = await _bookingService.getWorkPlace();
-    workplaces!.sort(
-      (a, b) => Geolocator.distanceBetween(
-              position!.latitude, position!.longitude, a.latitude, a.longitude)
-          .compareTo(
-        Geolocator.distanceBetween(
-            position!.latitude, position!.longitude, b.latitude, b.longitude),
-      ),
+    facilities = await _bookingService.getFacility();
+    if (position != null) {
+      facilities.sort(
+        (a, b) => Geolocator.distanceBetween(position!.latitude,
+                position!.longitude, a.latitude ?? 0, a.longitude ?? 0)
+            .compareTo(
+          Geolocator.distanceBetween(position!.latitude, position!.longitude,
+              b.latitude ?? 0, b.longitude ?? 0),
+        ),
+      );
+    }
+    notifyListeners();
+  }
+
+  changeSelectedFacility(Facility facility) async {
+    selectedFacility = facility;
+
+    stylists = await _bookingService.getStylists(
+      facilityId: facility.id ?? 0,
+      date: DateTime.now(),
     );
-    notifyListeners();
-  }
-
-  changeWorkplace(Workplace workplace) async {
-    this.workplace = workplace;
-
-    stylists = await _bookingService.getStylists(workplaceId: workplace.id);
 
     notifyListeners();
   }
 
-  //Step Select Service
-  changeServices() async {
-    //Bug load
-    services = [[], [], [], []];
+  ///Step Select Service
+  Future changeTypeProduct() async {
+    typeProducts = await _bookingService.getTypeProduct();
+    await changeProducts();
+  }
 
-    for (var i = 1; i < 5; i++) {
-      final response = await _bookingService.getService(categoryServiceId: i);
-      if (response != null) {
-        services[i - 1] = response;
-      }
+  changeProducts() async {
+    for (var i = 0; i < typeProducts.length; i++) {
+      final res =
+          await _bookingService.getProduct(typeProductId: typeProducts[i].id);
+
+      products.add(res);
     }
 
     notifyListeners();
   }
 
-  void setSelectedService(List<ServiceCut> selectedServices) {
-    this.selectedServices = selectedServices;
+  void updateSelectedProduct(List<Product> selectedServices) {
+    this.selectedProducts = selectedServices;
 
     totalDuration = 0;
     for (int i = 0; i < selectedServices.length; i++) {
@@ -88,29 +91,87 @@ class BookingModel extends BaseModel {
     notifyListeners();
   }
 
-  changeSelectedServices(ServiceCut item) {
-    if (!selectedServices.contains(item)) {
-      selectedServices.removeWhere(
-          (element) => item.categoryServiceId == element.categoryServiceId);
-      selectedServices.add(item);
+  selectedProduct(Product item) {
+    if (!selectedProducts.contains(item)) {
+      selectedProducts.removeWhere(
+          (element) => item.typeProductId == element.typeProductId);
+      selectedProducts.add(item);
     } else {
-      selectedServices.remove(item);
+      selectedProducts.remove(item);
     }
     notifyListeners();
   }
 
-  //Step Select Stylist & Datetime
-  changeSelectedDate(DateTime selectedDate) {
-    this.selectedDate = selectedDate;
-    //change stylists
-    // _employeeApi.getStylistByDate(workplaceId, DateTime.now());
+  ///Step Select Stylist & Datetime
+  Future changeSelectedDate(DateTime date) async {
+    if (selectedDate == date) {
+      return;
+    }
+    selectedDate = date;
+    // change stylists
+    var res = await _bookingService.getStylists(
+      facilityId: selectedFacility != null ? selectedFacility!.id ?? 0 : 0,
+      date: date,
+    );
+
+    selectedStylist = null;
+    currentTimeSlot = null;
+    stylists = res;
+
+    for (var element in timeSlotsDefault) {
+      element.isSelected = false;
+    }
     notifyListeners();
   }
 
-  changeSelectedTime(int index, DateTime time) {
-    currentIndexTime = index;
-    selectedTime = time;
+  Future changeSelectedStylist(Stylist? stylist) async {
+    selectedStylist = stylist;
+
+    if (stylist != null) {
+      rating = await _bookingService.getRating(
+        stylistId:
+            selectedStylist != null ? (selectedStylist!.stylistId ?? 0) : 0,
+      );
+    } else {
+      rating = Rating(avgSkillRate: '0', avgCommunicationRate: '0');
+    }
+
+    //TODO change time
+    // initTimeSlots();
+
+    List<TimeSlot> res = [];
+
+    if (stylist != null) {
+      res = await _bookingService.getTimeSlotSelected(
+        stylistId: stylist.stylistId ?? 0,
+        date: format_date.formatDate(selectedDate, formatDate),
+      );
+    }
+
+    for (var element in timeSlotsDefault) {
+      element.isSelected = false;
+      for (int i = 0; i < res.length; i++) {
+        if (res[i].id == element.id) {
+          element.isSelected = true;
+          res.removeAt(i);
+        }
+      }
+    }
+
+    currentTimeSlot = null;
     notifyListeners();
+  }
+
+  Future initTimeSlots() async {
+    timeSlotsDefault = await _bookingService.getTimeSlot();
+    notifyListeners();
+  }
+
+  changeCurrentTimeSlot({TimeSlot? timeSlot}) {
+    if (timeSlot != currentTimeSlot) {
+      currentTimeSlot = timeSlot;
+      notifyListeners();
+    }
   }
 
   //Booking
@@ -129,13 +190,6 @@ class BookingModel extends BaseModel {
     notifyListeners();
   }
 
-  changeSelectedStylist(int stylist) {
-    isDefaultStylist = false;
-    selectedStylist = stylist;
-    //change time
-    notifyListeners();
-  }
-
   changeAdvice(bool advice) {
     isAdvice = advice;
     notifyListeners();
@@ -146,31 +200,48 @@ class BookingModel extends BaseModel {
     notifyListeners();
   }
 
-  checkSelectDateAndStylist() {
+  bool checkCompleted() {
+    if (selectedProducts.isEmpty || selectedFacility == null) {
+      return false;
+    }
+
+    if (selectedStylist != null && currentTimeSlot == null) {
+      return false;
+    }
     return true;
   }
 
-  checkCompleted() {
-    return selectedServices.isNotEmpty && workplace != null;
-  }
+  Future complete({
+    String notes = "",
+  }) async {
+    debugPrint('task: ${selectedStylist!.stylistId ?? 0}, '
+        '$notes, '
+        '${selectedDate.toString()}, '
+        '${currentTimeSlot!.time ?? ""}');
+    Map<String, dynamic> data = {
+      "time_slot_id": currentTimeSlot!.id,
+      "date": format_date.formatDate(selectedDate, formatDate),
+      "notes": notes,
+      "stylist_id": selectedStylist!.stylistId ?? 0,
+      'products': selectedProducts.map((e) => e.id).toList()
+    };
 
-  void complete() {
-    debugPrint('task: ');
+    _bookingService.createNewTask(data: data);
   }
 
   void reset() {
-    currentStep = StepBooking.selectBarbershop;
-
-    selectedStylist = 0;
-    currentIndexTime = 0;
+    currentStep = StepBooking.selectFacility;
+    rating = Rating(avgSkillRate: '0', avgCommunicationRate: '0');
+    selectedStylist = null;
+    currentTimeSlot = null;
     isAdvice = true;
     isTakeAPhoto = true;
-    isDefaultStylist = true;
     _disposed = false;
-    workplace = null;
+    selectedFacility = null;
 
-    selectedServices = [];
+    selectedProducts = [];
     stylists = [];
+    timeSlotsDefault = [];
   }
 
   @override
@@ -185,4 +256,4 @@ class BookingModel extends BaseModel {
   }
 }
 
-enum StepBooking { selectBarbershop, selectService, selectStylistAndDate }
+enum StepBooking { selectFacility, selectProduct, selectStylistAndDate }

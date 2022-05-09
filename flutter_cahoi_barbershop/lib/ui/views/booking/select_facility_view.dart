@@ -2,32 +2,32 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/booking_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/booking/widgets/item_workplace.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/booking/widgets/facility_tile.dart';
 import 'package:geolocator/geolocator.dart';
 
-class SelectBarbershopView extends StatefulWidget {
-  const SelectBarbershopView({Key? key}) : super(key: key);
+class SelectFacilityView extends StatefulWidget {
+  const SelectFacilityView({Key? key}) : super(key: key);
 
   @override
-  _SelectBarbershopViewState createState() => _SelectBarbershopViewState();
+  _SelectFacilityViewState createState() => _SelectFacilityViewState();
 }
 
-class _SelectBarbershopViewState extends State<SelectBarbershopView> {
+class _SelectFacilityViewState extends State<SelectFacilityView> {
   @override
   Widget build(BuildContext context) {
     return BaseView<BookingModel>(
       onModelReady: (model) async {
-        await model.changeWorkplaces();
+        await model.changeFacilities();
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
-          title: const Text("Select Barbershop"),
+          title: const Text("Select Facility"),
           automaticallyImplyLeading: false,
           leading: CupertinoNavigationBarBackButton(
             color: Theme.of(context).backgroundColor,
           ),
         ),
-        body: model.workplaces == null
+        body: model.facilities.isEmpty
             ? Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -43,25 +43,25 @@ class _SelectBarbershopViewState extends State<SelectBarbershopView> {
                   ],
                 ),
               )
-            : (model.workplaces!.isEmpty || model.position == null
+            : (model.facilities.isEmpty || model.position == null
                 ? const Center(
                     child: Text('Sad!'),
                   )
                 : ListView.builder(
-                    itemCount: model.workplaces!.length,
+                    itemCount: model.facilities.length,
                     physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) => ItemWorkplace(
-                      workplace: model.workplaces![index],
+                    itemBuilder: (context, index) => FacilityTile(
+                      facility: model.facilities[index],
                       isFirst: index == 0,
                       distance: Geolocator.distanceBetween(
                           model.position!.latitude,
                           model.position!.longitude,
-                          model.workplaces![index].latitude,
-                          model.workplaces![index].longitude),
+                          model.facilities[index].latitude ?? 0,
+                          model.facilities[index].longitude ?? 0),
                       onPress: () {
-                        model.changeWorkplace(model.workplaces![index]);
-                        Navigator.of(context)
-                            .pop({'selection': model.workplaces![index]});
+                        Navigator.of(context).pop(
+                          {'selection': model.facilities[index]},
+                        );
                       },
                     ),
                   )),

@@ -1,5 +1,4 @@
 // import 'package:flutter/material.dart';
-// import 'package:flutter_cahoi_barbershop/core/apis/auth_api.dart';
 // import 'package:flutter_cahoi_barbershop/core/state_models/base.dart';
 // import 'package:flutter_cahoi_barbershop/service_locator.dart';
 //

@@ -1,11 +1,12 @@
 import 'package:date_format/date_format.dart' as date_format;
 import 'package:flutter/material.dart';
+import 'package:flutter_cahoi_barbershop/core/models/clip_youtube.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/home_page_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/playlist_youtube/play_clip_view.dart';
 
 class ItemClipYoutube extends StatefulWidget {
-  final ItemYoutube item;
+  final ClipYouTube item;
 
   const ItemClipYoutube({
     Key? key,

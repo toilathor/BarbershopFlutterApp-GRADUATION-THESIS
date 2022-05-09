@@ -308,7 +308,7 @@ class _LoginViewState extends State<LoginView> {
               MaterialPageRoute(
                 builder: (context) => EnterPinView(
                   phoneNumber: currentPhone,
-                  verificationId: verifyId,
+                  verifyId: verifyId,
                   typeOTP: TypeOTP.register,
                 ),
               ),
