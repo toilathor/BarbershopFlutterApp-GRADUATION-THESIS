@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/facility.dart';
 import 'package:flutter_cahoi_barbershop/core/models/product.dart';
@@ -233,14 +234,21 @@ class _BookingViewState extends State<BookingView>
                       var res =
                           await model.complete(notes: notesController.text);
                       if (res) {
-                        Navigator.pop(context);
-                        Fluttertoast.showToast(
-                          msg: 'Create Calendar Successful',
-                        );
-                      }else{
-                        Fluttertoast.showToast(
-                          msg: 'Create Calendar Fail!',
-                        );
+                        AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.SUCCES,
+                          title: "Create Calendar Successful",
+                          btnOkOnPress: () {
+                            Navigator.pop(context);
+                          },
+                        ).show();
+                      } else {
+                        AwesomeDialog(
+                          context: context,
+                          title: "Create Calendar Fail! 🥲🥲🥲",
+                          dialogType: DialogType.ERROR,
+                          btnOkOnPress: () {},
+                        ).show();
                       }
                     }
                   : null,
@@ -468,7 +476,6 @@ class _BookingViewState extends State<BookingView>
                 color: Colors.black,
                 fontSize: 16,
               ),
-              onChanged: (_) {},
               decoration: InputDecoration(
                 hintText: "EX: You go with 2 children, You go with you,"
                     " Wash your hands and so on...etc",

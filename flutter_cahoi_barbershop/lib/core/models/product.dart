@@ -1,7 +1,7 @@
 class Product {
   int id;
   String name;
-  int price;
+  dynamic price;
   int duration;
   String shortDescription;
   String fullDescription;
@@ -24,7 +24,7 @@ class Product {
 Product _$ProductFromJson(Map<String, dynamic> json) => Product(
       id: json['id'] as int,
       name: json['name'] as String,
-      price: json['price'] as int,
+      price: json['price'] as dynamic,
       duration: json['duration'] as int,
       shortDescription: json['sort_description'] as String,
       fullDescription: json['description'] as String,

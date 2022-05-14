@@ -9,15 +9,17 @@ import 'package:flutter_cahoi_barbershop/ui_admin/views/analysis_tab.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/business_tab.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/hr_tab.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/product_tab.dart';
+import 'package:flutter_cahoi_barbershop/ui_employee/report_task_view.dart';
+import 'package:flutter_cahoi_barbershop/ui_employee/task_tab.dart';
 
-class HomeAdminView extends StatefulWidget {
-  const HomeAdminView({Key? key}) : super(key: key);
+class EmployeeHomeView extends StatefulWidget {
+  const EmployeeHomeView({Key? key}) : super(key: key);
 
   @override
-  State<HomeAdminView> createState() => _HomeAdminViewState();
+  State<EmployeeHomeView> createState() => _EmployeeHomeViewState();
 }
 
-class _HomeAdminViewState extends State<HomeAdminView> {
+class _EmployeeHomeViewState extends State<EmployeeHomeView> {
   Size size = Size.zero;
 
   AdminTab currentTab = AdminTab.hr;
@@ -67,29 +69,16 @@ class _HomeAdminViewState extends State<HomeAdminView> {
                 padding: EdgeInsets.zero,
                 physics: const BouncingScrollPhysics(),
                 children: [
-                  _drawerTile(
-                    tab: AdminTab.hr,
-                    title: 'HR',
-                    icon: const Icon(Icons.lock),
+                  ListTile(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    leading: Icon(Icons.cut),
+                    title: const Text(
+                      'Task',
+                    ),
                   ),
                   const Divider(),
-                  _drawerTile(
-                    tab: AdminTab.business,
-                    title: 'Business',
-                    icon: const Icon(Icons.business_center),
-                  ),
-                  const Divider(),
-                  _drawerTile(
-                    tab: AdminTab.product,
-                    title: 'Product',
-                    icon: const Icon(Icons.cut),
-                  ),
-                  const Divider(),
-                  _drawerTile(
-                    tab: AdminTab.analysis,
-                    title: 'Analysis',
-                    icon: const Icon(Icons.bar_chart),
-                  ),
                   ListTile(
                     onTap: () async {
                       LogoutDialog.show(context);
@@ -112,36 +101,5 @@ class _HomeAdminViewState extends State<HomeAdminView> {
     );
   }
 
-  Widget _getTab() {
-    switch (currentTab) {
-      case AdminTab.hr:
-        return const HRTab();
-      case AdminTab.business:
-        return const BusinessTab();
-      case AdminTab.product:
-        return const ProductTab();
-      case AdminTab.analysis:
-        return const AnalysisTab();
-      default:
-        return const HRTab();
-    }
-  }
-
-  Widget _drawerTile({
-    String? title,
-    required AdminTab tab,
-    required Icon icon,
-  }) =>
-      ListTile(
-        onTap: () {
-          Navigator.pop(context);
-          setState(() {
-            currentTab = tab;
-          });
-        },
-        leading: icon,
-        title: Text(
-          '$title',
-        ),
-      );
+  Widget _getTab() => const TaskTab();
 }

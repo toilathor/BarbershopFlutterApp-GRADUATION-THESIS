@@ -2,7 +2,10 @@ import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cahoi_barbershop/core/models/screen_arguments.dart';
+import 'package:flutter_cahoi_barbershop/core/models/task.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/stylist_model/report_task_model.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
@@ -17,24 +20,44 @@ class ReportTaskView extends StatefulWidget {
 
 class _ReportTaskViewState extends State<ReportTaskView> {
   late Size size;
-
   List<PickedFile> images = [];
+  late Task task;
+  late ScreenArguments arguments;
+  bool status = false;
+  double total = 0;
 
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
 
+    arguments = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
+    task = arguments.data;
+
     return BaseView<ReportTaskModel>(
       onModelReady: (model) async {
-         await model.changeTask(taskId: 1);
+        for (var element in task.products!) {
+          total += element.price;
+        }
+
+        if (task.status != null && task.status == 1) {
+          status = true;
+        } else {
+          status = false;
+        }
+
+        await model.changeTask(taskId: task.id ?? 0);
       },
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
+          backgroundColor: backgroundColor,
+          appBar: AppBar(),
           body: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
                 child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(
+                      parent: ClampingScrollPhysics()),
                   child: Column(
                     children: [
                       SizedBox(
@@ -62,10 +85,12 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                               bottom: 0,
                               height: size.height * 0.15,
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                    size.height * 0.15),
+                                borderRadius:
+                                    BorderRadius.circular(size.height * 0.15),
                                 child: Image.network(
                                   "${model.task?.customer?.avatar}",
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Container(),
                                 ),
                               ),
                             ),
@@ -76,11 +101,108 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                         height: size.height * 0.05,
                         child: FittedBox(
                           child: Text(
-                            '${model.task?.customer?.name}',
+                            model.task?.customer?.name ?? "No Name",
                             style: const TextStyle(fontFamily: fontBold),
                           ),
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Task ${status ? "Successfully" : "Await"}",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: fontBold,
+                            color: status ? Colors.green : Colors.amber,
+                          ),
+                        ),
+                      ),
+                      const Divider(),
+                      _buildTileBill(
+                          title: "Time:", content: "${task.time?.time}"),
+                      const Divider(),
+                      _buildTileBill(title: "Date:", content: "${task.date}"),
+                      const Divider(),
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          children: [
+                            const Expanded(
+                              flex: 1,
+                              child: Text(
+                                "Note",
+                                style: TextStyle(
+                                  fontFamily: fontBold,
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                task.notes ?? "NONE",
+                                style: const TextStyle(
+                                  fontFamily: fontBold,
+                                ),
+                                textAlign: TextAlign.end,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Divider(),
+                      const Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: Text(
+                          "Product Use",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: fontBold,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      Column(
+                        children: task.products!
+                            .map(
+                              (e) => _buildTileBill(
+                                title: e.name,
+                                content: "\$${e.price}",
+                              ),
+                            )
+                            .toList(),
+                      ),
+                      const Divider(),
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                "Total",
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  fontFamily: fontBold,
+                                  color: Colors.red.shade500,
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                "\$$total",
+                                style: const TextStyle(
+                                  fontFamily: fontBold,
+                                  fontSize: 30,
+                                ),
+                                textAlign: TextAlign.end,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -103,7 +225,7 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                 ),
               ),
               SizedBox(
-                height: size.width,
+                height: size.width * 0.5,
                 width: size.width,
                 child: ListView.builder(
                   itemCount:
@@ -114,16 +236,18 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                         onTap: () {
                           showMenuPick();
                         },
+                        borderRadius: borderRadius20,
                         child: Center(
-                          child: Container(
-                            height: images.isNotEmpty
-                                ? size.width * 0.5
-                                : size.width,
-                            width: images.isNotEmpty
-                                ? size.width * 0.5
-                                : size.width,
-                            child: const Icon(Icons.photo_camera),
-                            decoration: const BoxDecoration(color: Colors.grey),
+                          child: AspectRatio(
+                            aspectRatio: 1 / 1,
+                            child: Container(
+                              margin: const EdgeInsets.all(8.0),
+                              child: const Icon(Icons.photo_camera),
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: borderRadius20,
+                              ),
+                            ),
                           ),
                         ),
                       );
@@ -167,7 +291,9 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                         Text(
                           'Success Task',
                           style: TextStyle(
-                              fontFamily: fontBold, color: Colors.white),
+                            fontFamily: fontBold,
+                            color: Colors.white,
+                          ),
                         ),
                       ],
                     ),
@@ -324,6 +450,33 @@ class _ReportTaskViewState extends State<ReportTaskView> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildTileBill({required String title, required String content}) {
+    return ListTile(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontFamily: fontBold,
+              ),
+            ),
+          ),
+          const Spacer(),
+          Expanded(
+            child: Text(
+              content,
+              textAlign: TextAlign.end,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

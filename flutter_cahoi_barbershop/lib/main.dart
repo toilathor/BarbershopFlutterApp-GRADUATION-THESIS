@@ -7,7 +7,7 @@ import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/router.dart' as router;
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/report_task_view.dart';
+import 'package:flutter_cahoi_barbershop/ui_employee/report_task_view.dart';
 import 'package:provider/provider.dart';
 
 void main() async {

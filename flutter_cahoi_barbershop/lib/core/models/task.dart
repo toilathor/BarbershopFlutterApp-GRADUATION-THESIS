@@ -39,7 +39,7 @@ class Task {
     if (json['image'] != null) {
       image = [];
       json['image'].forEach((v) {
-        image?.add(Image.fromJson(v));
+        image?.add(ImageTask.fromJson(v));
       });
     }
     time = json['time'] != null ? TimeSlot.fromJson(json['time']) : null;
@@ -51,7 +51,7 @@ class Task {
   String? date;
   MUser? customer;
   List<Product>? products;
-  List<Image>? image;
+  List<ImageTask>? image;
   TimeSlot? time;
 
   Task copyWith({
@@ -61,7 +61,7 @@ class Task {
     String? date,
     MUser? customer,
     List<Product>? products,
-    List<Image>? image,
+    List<ImageTask>? image,
     TimeSlot? time,
   }) =>
       Task(
@@ -80,14 +80,14 @@ class Task {
 /// link : "/upload/task/Task-011652442680.jpg"
 /// task_id : 1
 
-class Image {
-  Image({
+class ImageTask {
+  ImageTask({
     this.id,
     this.link,
     this.taskId,
   });
 
-  Image.fromJson(dynamic json) {
+  ImageTask.fromJson(dynamic json) {
     id = json['id'];
     link = json['link'];
     taskId = json['task_id'];
@@ -97,12 +97,12 @@ class Image {
   String? link;
   int? taskId;
 
-  Image copyWith({
+  ImageTask copyWith({
     int? id,
     String? link,
     int? taskId,
   }) =>
-      Image(
+      ImageTask(
         id: id ?? this.id,
         link: link ?? this.link,
         taskId: taskId ?? this.taskId,

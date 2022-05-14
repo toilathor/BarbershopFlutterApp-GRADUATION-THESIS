@@ -26,4 +26,24 @@ class TaskService {
 
     return null;
   }
+
+  Future<List<Task>> searchTask(String? searchString,
+      {required int page}) async {
+    Map<String, dynamic> data = {
+      "page": page,
+    };
+    if (searchString != null && searchString.isNotEmpty) {
+      data.addAll({"search_string": searchString});
+    }
+
+    var res = await _api.searchTask(data: data);
+
+    if (res != null) {
+      return List<Task>.from(
+        res.data.map((e) => Task.fromJson(e)).toList(),
+      );
+    }
+
+    return [];
+  }
 }

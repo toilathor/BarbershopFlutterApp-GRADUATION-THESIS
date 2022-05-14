@@ -183,6 +183,19 @@ class Api extends ApiBase {
     }
   }
 
+  Future<api_res.Response?> searchTask(
+      {required Map<String, dynamic> data}) async {
+    try {
+      var res = await dio.get(
+        '/task/today',
+        queryParameters: data,
+      );
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<api_res.Response?> updateTaskStatus({
     // required Map<String, dynamic> data,
     required FormData data,

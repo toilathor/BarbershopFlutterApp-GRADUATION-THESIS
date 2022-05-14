@@ -29,7 +29,7 @@ class RouterLogin {
       case Role.stylist:
         Navigator.pushNamedAndRemoveUntil(
           context,
-          '/report-task',
+          '/employee-home',
               (route) => false,
         );
         break;
