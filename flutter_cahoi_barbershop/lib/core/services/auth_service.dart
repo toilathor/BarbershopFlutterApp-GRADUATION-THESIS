@@ -19,14 +19,17 @@ class AuthenticationService {
 
   MUser user = MUser.initial();
 
-  Future<bool> checkUserExist({required String phoneNumber}) async {
+  Future<bool?> checkUserExist({required String phoneNumber}) async {
     var res = await _api.checkUserExist(phoneNumber: phoneNumber);
 
     if (res != null) {
       return res.data;
+    } else {
+      if (res!.data) {
+        return false;
+      }
+      return null;
     }
-
-    return false;
   }
 
   Future<bool> loginWithPhoneNumber({

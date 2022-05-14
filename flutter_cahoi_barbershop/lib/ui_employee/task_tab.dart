@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/screen_arguments.dart';
 import 'package:flutter_cahoi_barbershop/core/models/task.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/stylist_model/report_task_model.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/server_config.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/components/custom_dropdown.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/loading_dialog.dart';
 
 class TaskTab extends StatefulWidget {
@@ -19,6 +21,16 @@ class _TaskTabState extends State<TaskTab> {
   Size size = Size.zero;
   TextEditingController searchController = TextEditingController();
   final ScrollController scrollController = ScrollController();
+  int indexFilDay = 0;
+  int typeTask = 0;
+
+  Future loadData(ReportTaskModel model) async {
+    await model.changeTasks(
+      searchController.text.isEmpty ? null : searchController.text,
+      addDay: indexFilDay,
+      type: typeTask,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,14 +41,13 @@ class _TaskTabState extends State<TaskTab> {
           LoadingDialog.show(context);
         });
 
-        await model.changeTasksToday('');
+        await model.changeTasks('');
 
         scrollController.addListener(() async {
           if (scrollController.position.pixels ==
                   scrollController.position.maxScrollExtent &&
               !model.isLoading) {
-            await model.changeTasksToday(
-                searchController.text.isEmpty ? null : searchController.text);
+            loadData(model);
           }
         });
         LoadingDialog.dismiss(context);
@@ -54,11 +65,33 @@ class _TaskTabState extends State<TaskTab> {
                     model.changeIsLoading();
                     Timer(const Duration(seconds: 1), () async {
                       model.resetData();
-                      await model.changeTasksToday(searchController.text.isEmpty
+                      await model.changeTasks(searchController.text.isEmpty
                           ? null
                           : searchController.text);
                     });
                   }
+                },
+              ),
+            ),
+            Container(
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20.0),
+              height: 50,
+              width: size.width,
+              child: _buildFilter(
+                onFilterDay: (value) {
+                  setState(() {
+                    indexFilDay = filDay.indexOf(value);
+                  });
+                  model.resetData();
+                  loadData(model);
+                },
+                onFilterType: (String value) {
+                  setState(() {
+                    typeTask = filTypeTask.indexOf(value);
+                  });
+                  model.resetData();
+                  loadData(model);
                 },
               ),
             ),
@@ -80,7 +113,7 @@ class _TaskTabState extends State<TaskTab> {
                         model.tasks[index],
                         onReload: () async {
                           model.resetData();
-                          await model.changeTasksToday('');
+                          await model.changeTasks('');
                         },
                       ),
                     ),
@@ -97,22 +130,35 @@ class _TaskTabState extends State<TaskTab> {
         width: size.width,
         child: Material(
           elevation: 8.0,
+          color:
+              task.status! != 1 ? Colors.amber.shade100 : Colors.green.shade100,
           borderRadius: BorderRadius.circular(12.0),
           child: InkWell(
             onTap: () async {
-              dynamic res = await Navigator.pushNamed(
-                context,
-                '/report-task',
-                arguments: ScreenArguments(
-                  "",
-                  task,
-                ),
-              );
+              if (task.status != 1) {
+                dynamic res = await Navigator.pushNamed(
+                  context,
+                  '/report-task',
+                  arguments: ScreenArguments(
+                    "",
+                    task,
+                  ),
+                );
 
-              if (res != null && res) {
-                Timer(const Duration(microseconds: 100), () {
-                  onReload();
-                });
+                if (res != null && res) {
+                  Timer(const Duration(microseconds: 500), () {
+                    onReload();
+                  });
+                }
+              } else {
+                Navigator.pushNamed(
+                  context,
+                  '/show-task',
+                  arguments: ScreenArguments(
+                    "",
+                    task,
+                  ),
+                );
               }
             },
             borderRadius: BorderRadius.circular(12.0),
@@ -166,4 +212,30 @@ class _TaskTabState extends State<TaskTab> {
           ),
         ),
       );
+
+  Widget _buildFilter({
+    required Function(String value) onFilterDay,
+    required Function(String value) onFilterType,
+  }) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Expanded(
+          child: CustomStringDropDown(
+            onChanged: onFilterType,
+            values: filTypeTask,
+          ),
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: CustomStringDropDown(
+            onChanged: onFilterDay,
+            values: filDay,
+          ),
+        ),
+      ],
+    );
+  }
 }

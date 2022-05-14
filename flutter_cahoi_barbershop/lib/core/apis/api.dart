@@ -187,7 +187,7 @@ class Api extends ApiBase {
       {required Map<String, dynamic> data}) async {
     try {
       var res = await dio.get(
-        '/task/today',
+        '/task',
         queryParameters: data,
       );
       return castRes(res);
@@ -202,7 +202,7 @@ class Api extends ApiBase {
   }) async {
     try {
       var res = await dio.post(
-        '/update-status',
+        '/task/update-status',
         data: data,
       );
       return castRes(res);

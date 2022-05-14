@@ -209,10 +209,9 @@ class _EditUserViewState extends State<EditUserView> {
                           LoadingDialog.show(context);
 
                           final res = await model.syncRoleForUser(
-                            user: user,
-                            role: currentRole,
-                            facility: currentFacilityTemp
-                          );
+                              user: user,
+                              role: currentRole,
+                              facility: currentFacilityTemp);
                           if (res) {
                             setState(() {
                               isEdit = false;
@@ -249,7 +248,9 @@ class _EditUserViewState extends State<EditUserView> {
         items: roles
             .map(
               (e) => DropdownMenuItem<Roles>(
-                child: Text("${e.name}"),
+                child: Text(
+                  "${e.name}",
+                ),
                 value: e,
               ),
             )
@@ -272,8 +273,8 @@ class _EditUserViewState extends State<EditUserView> {
         },
         focusColor: Colors.red,
         value: currentRole,
-        style: const TextStyle(
-          color: Colors.deepPurple,
+        style: TextStyle(
+          color: isEdit ? Colors.deepPurple : Colors.grey,
         ),
       ),
     );
@@ -307,8 +308,8 @@ class _EditUserViewState extends State<EditUserView> {
           },
           focusColor: Colors.red,
           value: currentFacilityTemp,
-          style: const TextStyle(
-            color: Colors.deepPurple,
+          style: TextStyle(
+            color: isEdit ? Colors.deepPurple : Colors.grey,
           ),
         ),
       ),

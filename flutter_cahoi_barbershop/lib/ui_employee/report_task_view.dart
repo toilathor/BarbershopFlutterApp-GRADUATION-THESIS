@@ -9,6 +9,7 @@ import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/loading_dialog.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ReportTaskView extends StatefulWidget {
@@ -26,6 +27,8 @@ class _ReportTaskViewState extends State<ReportTaskView> {
   bool status = false;
   double total = 0;
 
+  bool isReload = false;
+
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
@@ -33,274 +36,306 @@ class _ReportTaskViewState extends State<ReportTaskView> {
     arguments = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
     task = arguments.data;
 
-    return BaseView<ReportTaskModel>(
-      onModelReady: (model) async {
-        for (var element in task.products!) {
-          total += element.price;
-        }
+    if (task.status != null && task.status == 1) {
+      status = true;
+    } else {
+      status = false;
+    }
 
-        if (task.status != null && task.status == 1) {
-          status = true;
-        } else {
-          status = false;
+    return WillPopScope(
+      onWillPop: () async {
+        if (isReload) {
+          Navigator.pop(context, true);
         }
-
-        await model.changeTask(taskId: task.id ?? 0);
+        return true;
       },
-      builder: (context, model, child) => SafeArea(
-        child: Scaffold(
-          backgroundColor: backgroundColor,
-          appBar: AppBar(),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(
-                      parent: ClampingScrollPhysics()),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: size.height * 0.23,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Positioned(
-                              top: 0,
-                              child: Material(
-                                elevation: 8.0,
-                                child: SizedBox(
-                                  height: size.height * 0.15,
-                                  width: size.width,
-                                  child: Image.asset(
-                                    "assets/bg_cahoibarbershop.jpg",
-                                    fit: BoxFit.fitWidth,
-                                    color: Colors.black.withOpacity(0.7),
-                                    colorBlendMode: BlendMode.colorBurn,
+      child: BaseView<ReportTaskModel>(
+        onModelReady: (model) async {
+          for (var element in task.products!) {
+            total += element.price;
+          }
+
+          if (task.status != null && task.status == 1) {
+            status = true;
+          } else {
+            status = false;
+          }
+
+          await model.changeTask(taskId: task.id ?? 0);
+        },
+        builder: (context, model, child) => SafeArea(
+          child: Scaffold(
+            backgroundColor: backgroundColor,
+            appBar: AppBar(),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(
+                      parent: ClampingScrollPhysics(),
+                    ),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: size.height * 0.23,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Positioned(
+                                top: 0,
+                                child: Material(
+                                  elevation: 8.0,
+                                  child: SizedBox(
+                                    height: size.height * 0.15,
+                                    width: size.width,
+                                    child: Image.asset(
+                                      "assets/bg_cahoibarbershop.jpg",
+                                      fit: BoxFit.fitWidth,
+                                      color: Colors.black.withOpacity(0.7),
+                                      colorBlendMode: BlendMode.colorBurn,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              height: size.height * 0.15,
-                              child: ClipRRect(
-                                borderRadius:
-                                    BorderRadius.circular(size.height * 0.15),
-                                child: Image.network(
-                                  "${model.task?.customer?.avatar}",
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Container(),
+                              Positioned(
+                                bottom: 0,
+                                height: size.height * 0.15,
+                                child: ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.circular(size.height * 0.15),
+                                  child: Image.network(
+                                    "${model.task?.customer?.avatar}",
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Container(),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: size.height * 0.05,
-                        child: FittedBox(
-                          child: Text(
-                            model.task?.customer?.name ?? "No Name",
-                            style: const TextStyle(fontFamily: fontBold),
+                            ],
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "Task ${status ? "Successfully" : "Await"}",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: fontBold,
-                            color: status ? Colors.green : Colors.amber,
-                          ),
-                        ),
-                      ),
-                      const Divider(),
-                      _buildTileBill(
-                          title: "Time:", content: "${task.time?.time}"),
-                      const Divider(),
-                      _buildTileBill(title: "Date:", content: "${task.date}"),
-                      const Divider(),
-                      Container(
-                        padding: const EdgeInsets.all(20),
-                        child: Row(
-                          children: [
-                            const Expanded(
-                              flex: 1,
-                              child: Text(
-                                "Note",
-                                style: TextStyle(
-                                  fontFamily: fontBold,
-                                ),
-                              ),
-                            ),
-                            const Spacer(),
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                task.notes ?? "NONE",
-                                style: const TextStyle(
-                                  fontFamily: fontBold,
-                                ),
-                                textAlign: TextAlign.end,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Divider(),
-                      const Padding(
-                        padding: EdgeInsets.all(12.0),
-                        child: Text(
-                          "Product Use",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: fontBold,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                      Column(
-                        children: task.products!
-                            .map(
-                              (e) => _buildTileBill(
-                                title: e.name,
-                                content: "\$${e.price}",
-                              ),
-                            )
-                            .toList(),
-                      ),
-                      const Divider(),
-                      Container(
-                        padding: const EdgeInsets.all(20),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                "Total",
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  fontFamily: fontBold,
-                                  color: Colors.red.shade500,
-                                ),
-                              ),
-                            ),
-                            const Spacer(),
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                "\$$total",
-                                style: const TextStyle(
-                                  fontFamily: fontBold,
-                                  fontSize: 30,
-                                ),
-                                textAlign: TextAlign.end,
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Visibility(
-                visible: images.isNotEmpty,
-                child: Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  padding: const EdgeInsets.all(4.0),
-                  alignment: Alignment.centerLeft,
-                  height: 28,
-                  child: const FittedBox(
-                    child: Text(
-                      '*long press to delete',
-                      style: TextStyle(
-                        color: Colors.red,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: size.width * 0.5,
-                width: size.width,
-                child: ListView.builder(
-                  itemCount:
-                      images.length < 4 ? images.length + 1 : images.length,
-                  itemBuilder: (context, index) {
-                    if (images.length < 4 && index == 0) {
-                      return InkWell(
-                        onTap: () {
-                          showMenuPick();
-                        },
-                        borderRadius: borderRadius20,
-                        child: Center(
-                          child: AspectRatio(
-                            aspectRatio: 1 / 1,
-                            child: Container(
-                              margin: const EdgeInsets.all(8.0),
-                              child: const Icon(Icons.photo_camera),
-                              decoration: BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: borderRadius20,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-                    return _buildChooseImage(
-                      index: images.length < 4 ? index - 1 : index,
-                    );
-                  },
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                ),
-              ),
-              SizedBox(
-                height: 70,
-                width: size.width,
-                child: InkWell(
-                  onTap: () async {
-                    model.reportTask(images: images);
-                    AwesomeDialog(
-                      context: context,
-                      dialogType: DialogType.SUCCES,
-                      animType: AnimType.BOTTOMSLIDE,
-                      body: const Text("Task successfully!"),
-                      btnOkOnPress: () {
-                        Navigator.popUntil(
-                          context,
-                          (route) => route.isFirst,
-                        );
-                      },
-                    ).show();
-                  },
-                  child: Container(
-                    color: Colors.green.shade400,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(Icons.send),
                         SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          'Success Task',
-                          style: TextStyle(
-                            fontFamily: fontBold,
-                            color: Colors.white,
+                          height: size.height * 0.05,
+                          child: FittedBox(
+                            child: Text(
+                              model.task?.customer?.name ?? "No Name",
+                              style: const TextStyle(fontFamily: fontBold),
+                            ),
                           ),
                         ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Task ${status ? "Successfully" : "Await"}",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: fontBold,
+                              color: status ? Colors.green : Colors.amber,
+                            ),
+                          ),
+                        ),
+                        const Divider(),
+                        _buildTileBill(
+                            title: "Time:", content: "${task.time?.time}"),
+                        const Divider(),
+                        _buildTileBill(title: "Date:", content: "${task.date}"),
+                        const Divider(),
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          child: Row(
+                            children: [
+                              const Expanded(
+                                flex: 1,
+                                child: Text(
+                                  "Note",
+                                  style: TextStyle(
+                                    fontFamily: fontBold,
+                                  ),
+                                ),
+                              ),
+                              const Spacer(),
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  task.notes ?? "NONE",
+                                  style: const TextStyle(
+                                    fontFamily: fontBold,
+                                  ),
+                                  textAlign: TextAlign.end,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Divider(),
+                        const Padding(
+                          padding: EdgeInsets.all(12.0),
+                          child: Text(
+                            "Product Use",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: fontBold,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                        Column(
+                          children: task.products!
+                              .map(
+                                (e) => _buildTileBill(
+                                  title: e.name,
+                                  content: "\$${e.price}",
+                                ),
+                              )
+                              .toList(),
+                        ),
+                        const Divider(),
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  "Total",
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                    fontFamily: fontBold,
+                                    color: Colors.red.shade500,
+                                  ),
+                                ),
+                              ),
+                              const Spacer(),
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  "\$$total",
+                                  style: const TextStyle(
+                                    fontFamily: fontBold,
+                                    fontSize: 30,
+                                  ),
+                                  textAlign: TextAlign.end,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   ),
                 ),
-              )
-            ],
+                Visibility(
+                  visible: images.isNotEmpty,
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    padding: const EdgeInsets.all(4.0),
+                    alignment: Alignment.centerLeft,
+                    height: 28,
+                    child: const FittedBox(
+                      child: Text(
+                        '*long press to delete',
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: size.width * 0.5,
+                  width: size.width,
+                  child: ListView.builder(
+                    cacheExtent: 5000,
+                    itemCount:
+                        images.length < 4 ? images.length + 1 : images.length,
+                    itemBuilder: (context, index) {
+                      if (images.length < 4 && index == 0) {
+                        return InkWell(
+                          onTap: () {
+                            showMenuPick();
+                          },
+                          borderRadius: borderRadius20,
+                          child: Center(
+                            child: AspectRatio(
+                              aspectRatio: 1 / 1,
+                              child: Container(
+                                margin: const EdgeInsets.all(8.0),
+                                child: const Icon(Icons.photo_camera),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: borderRadius20,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                      return _buildChooseImage(
+                        index: images.length < 4 ? index - 1 : index,
+                      );
+                    },
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                  ),
+                ),
+                SizedBox(
+                  height: 70,
+                  width: size.width,
+                  child: Visibility(
+                    visible: images.isNotEmpty,
+                    child: InkWell(
+                      onTap: () async {
+                        LoadingDialog.show(context);
+                        var res = await model.reportTask(
+                          images: images,
+                          taskId: task.id ?? 0,
+                        );
+                        LoadingDialog.dismiss(context);
+                        if (res == true) {
+                          AwesomeDialog(
+                            context: context,
+                            dialogType: DialogType.SUCCES,
+                            animType: AnimType.BOTTOMSLIDE,
+                            body: const Text("Task successfully!"),
+                            btnOkOnPress: () {
+                              Navigator.pop(context, true);
+                            },
+                          ).show();
+                        } else {
+                          AwesomeDialog(
+                            context: context,
+                            dialogType: DialogType.ERROR,
+                            animType: AnimType.BOTTOMSLIDE,
+                            body: const Text("Error!"),
+                            btnOkOnPress: () {},
+                          ).show();
+                        }
+                      },
+                      child: Container(
+                        color: Colors.green.shade400,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.send),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              'Success Task',
+                              style: TextStyle(
+                                fontFamily: fontBold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -443,6 +478,7 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                       }
                     });
                   }
+                  Navigator.pop(context);
                 },
                 label: 'Gallery',
               ),

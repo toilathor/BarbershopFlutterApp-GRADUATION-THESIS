@@ -21,7 +21,7 @@ class AuthModel extends BaseModel {
   late Timer timer;
   int timeOut = 60;
 
-  Future<bool> checkUserExisted({required String phoneNumber}) async {
+  Future<bool?> checkUserExisted({required String phoneNumber}) async {
     return await _authService.checkUserExist(phoneNumber: phoneNumber);
   }
 

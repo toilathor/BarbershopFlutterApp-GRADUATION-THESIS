@@ -9,6 +9,7 @@ import 'package:flutter_cahoi_barbershop/ui_employee/report_task_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/your_story_view.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/home_admin_view.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/edit_user_view.dart';
+import 'package:flutter_cahoi_barbershop/ui_employee/show_task_view.dart';
 
 const String initialRoute = "/splash";
 
@@ -23,6 +24,7 @@ class Router {
 
     ///Employee
     '/report-task': (BuildContext ctx) => const ReportTaskView(),
+    '/show-task': (BuildContext ctx) => const ShowTaskView(),
     '/employee-home': (BuildContext ctx) => const EmployeeHomeView(),
 
     ///admin

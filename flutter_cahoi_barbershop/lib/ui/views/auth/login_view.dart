@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
@@ -270,8 +271,16 @@ class _LoginViewState extends State<LoginView> {
       phoneNumber: currentPhone,
     );
 
-    ///nếu đã tồn tại thì nhập pass, ngược lại thì đằng kí
-    if (res) {
+    if (res == null) {
+      LoadingDialog.dismiss(context);
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.ERROR,
+        btnOkOnPress: () {},
+        title: 'Error server!',
+      ).show();
+    } else if (res) {
+      ///nếu đã tồn tại thì nhập pass, ngược lại thì đằng kí
       LoadingDialog.dismiss(context);
       Navigator.of(context).push(
         MaterialPageRoute(
@@ -306,18 +315,6 @@ class _LoginViewState extends State<LoginView> {
               ),
             );
           });
-
-      if (res) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => RegisterView(
-              phoneNumber: currentPhone,
-            ),
-          ),
-          (route) => route.isFirst,
-        );
-      }
 
       LoadingDialog.dismiss(context);
     }

@@ -15,7 +15,7 @@ class ReportTaskModel extends BaseModel {
   bool isLoading = false;
   int currentPage = 1;
 
-  changeTasksToday(String? searchString) async {
+  changeTasks(String? searchString, {int addDay = 0, int type = 0}) async {
     if (currentPage == 0) {
       return;
     }
@@ -23,7 +23,12 @@ class ReportTaskModel extends BaseModel {
     isLoading = true;
     notifyListeners();
 
-    var res = await _taskService.searchTask(searchString, page: currentPage);
+    var res = await _taskService.searchTask(
+      searchString,
+      page: currentPage,
+      addDay: addDay,
+      status: type == 0 ? null : (type == 1)
+    );
 
     tasks += res;
 
@@ -46,16 +51,17 @@ class ReportTaskModel extends BaseModel {
     notifyListeners();
   }
 
-  Future reportTask({required List<PickedFile> images}) async {
+  Future<bool> reportTask(
+      {required List<PickedFile> images, required int taskId}) async {
     Map<String, dynamic> data = {
-      "task_id": 1,
+      "task_id": taskId,
     };
 
     for (int i = 0; i < images.length; i++) {
       String fileName = images[i].path.split('/').last;
       data.addAll({
         "images[$i]": await MultipartFile.fromFile(
-          images[0].path,
+          images[i].path,
           filename: fileName,
         )
       });
@@ -63,7 +69,7 @@ class ReportTaskModel extends BaseModel {
 
     FormData formData = FormData.fromMap(data);
 
-    _taskService.updateTaskStatus(data: formData);
+    return _taskService.updateTaskStatus(data: formData);
   }
 
   void changeIsLoading() {

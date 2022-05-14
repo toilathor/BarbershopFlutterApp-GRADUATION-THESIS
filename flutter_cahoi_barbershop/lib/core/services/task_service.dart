@@ -27,11 +27,21 @@ class TaskService {
     return null;
   }
 
-  Future<List<Task>> searchTask(String? searchString,
-      {required int page}) async {
+  Future<List<Task>> searchTask(
+    String? searchString, {
+    required int page,
+    int addDay = 0,
+    bool? status,
+  }) async {
     Map<String, dynamic> data = {
       "page": page,
+      "add_day": addDay,
     };
+
+    if (status != null) {
+      data['status'] = status ? 1 : 0;
+    }
+
     if (searchString != null && searchString.isNotEmpty) {
       data.addAll({"search_string": searchString});
     }

@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/auth_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
@@ -60,15 +61,19 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                       phoneNumber: currentPhone,
                     );
 
-                    ///nếu đã tồn tại thì nhập pass, ngược lại thì đằng kí
-                    if (!res) {
+                    if (res == null) {
+                      LoadingDialog.dismiss(context);
+                      AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.ERROR,
+                        btnOkOnPress: () {},
+                        title: 'Error server!',
+                      ).show();
+                    } else if (!res) {
+                      ///nếu đã tồn tại thì nhập pass, ngược lại thì đằng kí
                       LoadingDialog.dismiss(context);
                       Fluttertoast.showToast(msg: 'User not found!');
                     } else {
-                      //TODO update api
-                      // await model.sendOTPForgotPassword(
-                      //   phoneNumber: currentPhone,
-                      // );
                       LoadingDialog.dismiss(context);
                     }
                   },
