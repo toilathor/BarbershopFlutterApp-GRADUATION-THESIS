@@ -76,10 +76,11 @@ class MyDatePickerTimeline extends StatefulWidget {
     this.daysCount = 500,
     this.onDateChange,
     this.locale = "en_US",
-  }) : assert(
+  })  : assert(
             activeDates == null || inactiveDates == null,
             "Can't "
-            "provide both activated and deactivated dates List at the same time.");
+            "provide both activated and deactivated dates List at the same time."),
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() => _MyDatePickerTimelineState();

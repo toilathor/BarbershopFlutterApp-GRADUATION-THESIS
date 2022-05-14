@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/logout_dialog.dart';
 
 class AccountPageView extends StatefulWidget {
   const AccountPageView({Key? key}) : super(key: key);
@@ -12,6 +13,7 @@ class AccountPageView extends StatefulWidget {
 
 class _AccountPageViewState extends State<AccountPageView> {
   Size size = Size.zero;
+  final user = locator<AuthenticationService>().user;
 
   @override
   Widget build(BuildContext context) {
@@ -20,23 +22,73 @@ class _AccountPageViewState extends State<AccountPageView> {
     return Scaffold(
       body: Column(
         children: [
-          _buildTileSetting(
-            icon: Container(),
-            title: 'Đăng xuất',
-            onPress: () async {
-              var res = await locator<AuthenticationService>().logOut();
-              if (res) {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  '/login',
-                  (route) => false,
-                );
-                return;
-              }
-
-              Fluttertoast.showToast(msg: "Error!");
-            },
+          Container(
+            padding: const EdgeInsets.all(12),
+            height: size.height * 0.15,
+            child: Material(
+              elevation: 8.0,
+              borderRadius: BorderRadius.circular(12.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(100.0),
+                      child: Image.network("${user.avatar}"),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            const Text(
+                              'Welcome, ',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 18,
+                                fontFamily: fontBold,
+                              ),
+                            ),
+                            Text(
+                              '${user.name}',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 28,
+                                fontFamily: fontBold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(
+                parent: ClampingScrollPhysics(),
+              ),
+              child: Column(
+                children: [
+                  _buildTileSetting(
+                    icon: const Icon(
+                      Icons.logout,
+                      color: Colors.red,
+                    ),
+                    title: 'Logout',
+                    onPress: () {
+                      LogoutDialog.show(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          )
         ],
       ),
     );
@@ -47,29 +99,34 @@ class _AccountPageViewState extends State<AccountPageView> {
     required String title,
     required Function() onPress,
   }) {
-    Size size = MediaQuery.of(context).size;
-    return GestureDetector(
-      onTap: onPress,
-      child: SizedBox(
-        height: size.height * 0.1,
-        width: size.width,
-        child: Row(
-          children: [
-            const Icon(
-              Icons.person,
-              color: Colors.black,
+    return Container(
+      height: size.height * 0.1,
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+      width: size.width,
+      child: Material(
+        elevation: 8.0,
+        borderRadius: BorderRadius.circular(12.0),
+        child: InkWell(
+          onTap: onPress,
+          borderRadius: BorderRadius.circular(12.0),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                icon,
+                const SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(
-              width: 8,
-            ),
-            Text(
-              title,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

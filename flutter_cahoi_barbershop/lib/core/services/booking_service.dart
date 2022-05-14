@@ -137,4 +137,16 @@ class BookingService {
     }
     return false;
   }
+
+  Future<Facility?> findFacility({required int userId}) async {
+    var res = await _api.findFacility(data: {
+      "user_id" : userId
+    });
+
+    if(res != null && res.data != null) {
+      return Facility.fromJson(res.data);
+    }
+
+    return null;
+  }
 }

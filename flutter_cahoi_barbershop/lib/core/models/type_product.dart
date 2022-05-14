@@ -1,5 +1,3 @@
-import 'package:flutter_cahoi_barbershop/core/models/product.dart';
-
 class TypeProduct {
   int id;
   String name;
@@ -11,7 +9,6 @@ class TypeProduct {
 
   factory TypeProduct.fromJson(Map<String, dynamic> json) =>
       _$TypeProductFromJson(json);
-
 }
 
 TypeProduct _$TypeProductFromJson(Map<String, dynamic> json) => TypeProduct(

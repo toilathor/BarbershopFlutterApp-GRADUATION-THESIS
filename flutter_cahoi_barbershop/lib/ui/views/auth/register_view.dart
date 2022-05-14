@@ -46,6 +46,7 @@ class _RegisterViewState extends State<RegisterView> {
 
     return BaseView<AuthModel>(
       builder: (context, model, child) => Scaffold(
+        appBar: AppBar(),
         backgroundColor: backgroundColor,
         body: SingleChildScrollView(
           child: SafeArea(

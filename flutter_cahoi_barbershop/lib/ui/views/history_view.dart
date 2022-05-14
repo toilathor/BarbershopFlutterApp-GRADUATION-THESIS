@@ -3,8 +3,8 @@ import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/history_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
-import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/box_info.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/components/list_history.dart';
 
 class HistoryView extends StatefulWidget {
@@ -54,114 +54,33 @@ class _HistoryViewState extends State<HistoryView> {
                 width: size.width,
                 child: Column(
                   children: [
-                    SizedBox(
+                    BoxInfo(
                       height: size.height * 0.1,
-                      width: double.infinity,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              "Name",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontFamily: fontBold,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(8.0),
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "${user.name}",
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      title: "Name",
+                      content: "${user.name}",
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    BoxInfo(
+                      height: size.height * 0.1,
+                      title: "Email",
+                      content: "${user.email}",
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    BoxInfo(
+                      height: size.height * 0.1,
+                      title: "Phone Number",
+                      content: "${user.phoneNumber}",
                     ),
                     const SizedBox(
                       height: 20,
                     ),
                     SizedBox(
-                      height: size.height * 0.1,
-                      width: double.infinity,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              "Phone Number",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontFamily: fontBold,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(8.0),
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                user.phoneNumber ?? "Unknown",
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      height: size.height * 0.1,
-                      width: double.infinity,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              "Email",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontFamily: fontBold,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(8.0),
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                user.email ?? "Unknown",
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      height: size.height *0.5,
-                      child: ListHistory(),
+                      height: size.height * 0.5,
+                      child: const ListHistory(),
                     ),
                   ],
                 ),

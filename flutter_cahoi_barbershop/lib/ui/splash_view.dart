@@ -6,6 +6,7 @@ import 'package:flutter_cahoi_barbershop/core/models/user.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/router_login.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/server_config.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/store_secure.dart';
 
@@ -45,30 +46,11 @@ class _SplashViewState extends State<SplashView> {
           () {
             if (user != null) {
               Role role = Role.values[user.roles?.first.id ?? 1];
-              switch (role) {
-                case Role.none:
-                case Role.customer:
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/home',
-                    (route) => false,
-                  );
-                  break;
-                case Role.manager:
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/home-manager',
-                    (route) => false,
-                  );
-                  break;
-                case Role.superAdmin:
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/home-super-admin',
-                    (route) => false,
-                  );
-                  break;
-              }
+
+              RouterLogin.navigation(
+                context,
+                role: role,
+              );
             } else {
               Navigator.pushNamedAndRemoveUntil(
                 context,

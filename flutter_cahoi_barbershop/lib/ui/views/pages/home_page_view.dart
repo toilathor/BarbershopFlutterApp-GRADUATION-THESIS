@@ -146,7 +146,9 @@ class _HomePageViewState extends State<HomePageView> {
                     bottom: 12,
                     left: 12,
                     right: 12,
-                    child: Card(
+                    child: Material(
+                      elevation: 8.0,
+                      borderRadius: BorderRadius.circular(8.0),
                       child: SizedBox(
                         width: size.width,
                         height: size.height * 0.1,
@@ -238,15 +240,18 @@ class _HomePageViewState extends State<HomePageView> {
                           ),
                           SizedBox(
                             width: size.width,
-                            height: size.height * 0.32,
+                            height: size.height * 0.33,
                             child: ListView.builder(
-                              physics: const ClampingScrollPhysics(),
+                              physics: const BouncingScrollPhysics(),
                               scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.only(
+                                bottom: 10.0,
+                              ),
                               itemCount: model.clipInfoList.length > 5
                                   ? 5
                                   : model.clipInfoList.length,
                               itemBuilder: (context, index) {
-                                return _buildItemChanelYoutube(
+                                return _buildChanelYoutubeTile(
                                   model.clipInfoList[index],
                                 );
                               },
@@ -255,10 +260,6 @@ class _HomePageViewState extends State<HomePageView> {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: _buildLockBook(context, size),
-                    )
                   ],
                 ),
               ),
@@ -269,41 +270,6 @@ class _HomePageViewState extends State<HomePageView> {
     );
   }
 
-  Widget _buildLockBook(BuildContext context, Size size) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          "CAHOI Lookbook",
-          style: TextStyle(
-            fontSize: 16,
-            fontFamily: fontBold,
-          ),
-        ),
-        Flexible(
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return Card(
-                child: Container(
-                  width: size.width,
-                  height: size.height * 0.25,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.0),
-                    color: Colors.white,
-                  ),
-                ),
-              );
-            },
-          ),
-        )
-      ],
-    );
-  }
-
   Widget _buildNaviRoute({
     required BuildContext context,
     required String icons,
@@ -311,7 +277,9 @@ class _HomePageViewState extends State<HomePageView> {
     required Function() onTap,
   }) =>
       Expanded(
-        child: GestureDetector(
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -329,11 +297,10 @@ class _HomePageViewState extends State<HomePageView> {
               )
             ],
           ),
-          onTap: onTap,
         ),
       );
 
-  Widget _buildItemChanelYoutube(ClipYouTube item) {
+  Widget _buildChanelYoutubeTile(ClipYouTube item) {
     final width = size.width * 0.8;
     final heightImage = width * 9 / 16;
 
@@ -355,9 +322,8 @@ class _HomePageViewState extends State<HomePageView> {
                 height: heightImage - 12,
                 fit: BoxFit.cover,
               ),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(8.0),
-                topRight: Radius.circular(8.0),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(4.0),
               ),
             ),
             Positioned(

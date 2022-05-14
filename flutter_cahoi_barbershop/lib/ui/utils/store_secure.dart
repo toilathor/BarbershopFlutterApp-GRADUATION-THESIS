@@ -3,7 +3,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class StoreSecure {
   FlutterSecureStorage? _storage;
 
-  final _keyUser = 'user';
   final _keyToken = 'token';
   final _expiresIn = 'expires_in';
 

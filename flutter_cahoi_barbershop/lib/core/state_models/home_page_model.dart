@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/clip_youtube.dart';
-import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/services/youtube_service.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 

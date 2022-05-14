@@ -55,7 +55,8 @@ class _EnterPinViewState extends State<EnterPinView> {
         model.timer.cancel();
       },
       builder: (context, model, child) => Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
+        appBar: AppBar(),
+        backgroundColor: backgroundColor,
         body: SafeArea(
           child: Column(
             children: [

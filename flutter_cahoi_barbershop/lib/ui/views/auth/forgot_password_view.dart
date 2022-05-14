@@ -29,6 +29,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
 
     return BaseView<AuthModel>(
       builder: (context, model, child) => Scaffold(
+        appBar: AppBar(),
+        backgroundColor: backgroundColor,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20.0),

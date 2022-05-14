@@ -38,11 +38,12 @@ class AuthenticationService {
       password: password,
     );
 
-    if (res != null) {
+    if (res != null && res.data != null) {
       await saveSession(
         token: res.data['token'],
         expiresIn: res.data['expires_in'],
       );
+
       return true;
     }
 
@@ -131,7 +132,7 @@ class AuthenticationService {
 
     await _storeSecure.setExpiresIn(expiresIn);
 
-    _api.setToken(token);
+    await _api.setToken(token);
 
     await getMe();
   }

@@ -1,4 +1,5 @@
 import 'package:date_format/date_format.dart' as date_format;
+import 'package:dio/src/form_data.dart';
 import 'package:flutter_cahoi_barbershop/core/models/response.dart' as api_res;
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 
@@ -139,7 +140,7 @@ class Api extends ApiBase {
     }
   }
 
-  getTimeSlotSelected({
+  Future<api_res.Response?> getTimeSlotSelected({
     required int stylistId,
     required String date,
   }) async {
@@ -154,6 +155,7 @@ class Api extends ApiBase {
     }
   }
 
+  ///Task
   Future<api_res.Response?> createNewTask({
     required Map<String, dynamic> data,
   }) async {
@@ -162,6 +164,79 @@ class Api extends ApiBase {
         '/task',
         data: data,
       );
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> getDetailTask(
+      {required Map<String, int> data}) async {
+    try {
+      var res = await dio.get(
+        '/task/detail',
+        queryParameters: data,
+      );
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> updateTaskStatus({
+    // required Map<String, dynamic> data,
+    required FormData data,
+  }) async {
+    try {
+      var res = await dio.post(
+        '/update-status',
+        data: data,
+      );
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  ///User
+  Future<api_res.Response?> searchUser(Map<String, dynamic> data) async {
+    try {
+      var res = await dio.get(
+        '/user/search',
+        queryParameters: data,
+      );
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  ///Role
+  Future<api_res.Response?> getRoles() async {
+    try {
+      var res = await dio.get(
+        '/role/except',
+      );
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> syncRole(
+      {required Map<String, dynamic> data}) async {
+    try {
+      var res = await dio.post('/role/sync-role', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> findFacility(
+      {required Map<String, dynamic> data}) async {
+    try {
+      var res = await dio.get('/facility/stylist', queryParameters: data);
       return castRes(res);
     } catch (e) {
       return null;

@@ -40,6 +40,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
 
     return BaseView<AuthModel>(
       builder: (context, model, child) => Scaffold(
+        appBar: AppBar(),
+        backgroundColor: backgroundColor,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20.0),

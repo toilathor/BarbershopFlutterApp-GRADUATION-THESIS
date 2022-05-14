@@ -55,6 +55,8 @@ class Facility {
         image: image ?? _image,
       );
 
+  Facility.initial();
+
   int? get id => _id;
 
   String? get address => _address;

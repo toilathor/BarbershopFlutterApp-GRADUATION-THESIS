@@ -81,7 +81,7 @@ class BookingModel extends BaseModel {
   }
 
   void updateSelectedProduct(List<Product> selectedServices) {
-    this.selectedProducts = selectedServices;
+    selectedProducts = selectedServices;
 
     totalDuration = 0;
     for (int i = 0; i < selectedServices.length; i++) {

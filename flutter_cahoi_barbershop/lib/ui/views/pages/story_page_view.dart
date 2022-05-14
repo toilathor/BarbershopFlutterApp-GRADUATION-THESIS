@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/post.dart';
+import 'package:flutter_cahoi_barbershop/core/models/screen_arguments.dart';
+import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
+import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/post_tile.dart';
 
 class StoryPageView extends StatefulWidget {
@@ -12,6 +15,7 @@ class StoryPageView extends StatefulWidget {
 class _StoryPageViewState extends State<StoryPageView> {
   Size size = const Size(0, 0);
   bool like = true;
+  final user = locator<AuthenticationService>().user;
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +29,21 @@ class _StoryPageViewState extends State<StoryPageView> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.location_history_rounded,
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  '/your-story',
+                  arguments: ScreenArguments("hello", "ok"),
+                );
+              },
+              icon: ClipRRect(
+                borderRadius: BorderRadius.circular(100.0),
+                child: Image.network(
+                  '${user.avatar}',
+                  errorBuilder: (context, error, stackTrace) => const Icon(
+                    Icons.location_history_rounded,
+                  ),
+                ),
               ),
               tooltip: 'Your Story',
             ),

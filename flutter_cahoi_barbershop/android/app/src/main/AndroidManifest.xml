@@ -6,6 +6,9 @@
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.CAMERA" />
+  <uses-permission android:name="android.permission.FLASHLIGHT" />
 
   <queries>
     <provider android:authorities="com.facebook.katana.provider.PlatformProvider" />
@@ -33,7 +36,12 @@
       <data android:mimeType="*/*" />
     </intent>
   </queries>
-  <application android:label="Cá Hồi Barber" android:name="${applicationName}" android:icon="@mipmap/ic_launcher" android:usesCleartextTraffic="true">
+  <application
+      android:label="Cá Hồi Barber"
+      android:name="${applicationName}" android:icon="@mipmap/ic_launcher"
+      android:usesCleartextTraffic="true"
+      android:requestLegacyExternalStorage="true"
+      >
     <meta-data android:name="com.google.android.geo.API_KEY"
         android:value="AIzaSyDVr-0LtOAAbSRRbgQHNuQcWtxw0MeUlvs"/>
     <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id" />

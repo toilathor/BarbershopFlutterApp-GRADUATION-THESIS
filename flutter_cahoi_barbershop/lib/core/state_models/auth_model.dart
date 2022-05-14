@@ -9,7 +9,6 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 
 class AuthModel extends BaseModel {
   final _authService = locator<AuthenticationService>();
@@ -122,13 +121,13 @@ class AuthModel extends BaseModel {
     try {
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
           verificationId: verifyId, smsCode: currentPin);
-        await firebaseAuth.signInWithCredential(credential);
+      await firebaseAuth.signInWithCredential(credential);
 
-        if (firebaseAuth.currentUser != null) {
-          gotoRegister();
-        } else {
-          changeMessageValidate('*Please fill up all the cells properly');
-        }
+      if (firebaseAuth.currentUser != null) {
+        gotoRegister();
+      } else {
+        changeMessageValidate('*Please fill up all the cells properly');
+      }
     } catch (e) {
       changeMessageValidate('*Please fill up all the cells properly');
     }
@@ -162,9 +161,7 @@ class AuthModel extends BaseModel {
     return false;
   }
 
-  Future resendOTP() async {
-
-  }
+  Future resendOTP() async {}
 
   verifyPhoneNumber({
     required String phoneNumber,
