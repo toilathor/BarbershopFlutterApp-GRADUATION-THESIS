@@ -27,7 +27,7 @@ class _SplashViewState extends State<SplashView> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       setState(() {
-        position = size.width * 0.5;
+        position = size.width * 0.7;
         opacity = 1;
         scale = 1;
       });

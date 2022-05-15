@@ -1,49 +1,59 @@
+import 'package:flutter_cahoi_barbershop/core/models/task.dart';
+
+/// id : 2
+/// captions : "hello"
+/// like_count : 0
+/// public_at : "2022-05-13 02:07:41"
+/// deleted_at : null
+/// task_id : 79
+
 class Post {
-  int postId;
-  int userId;
-  int stylistId;
-  String userName;
-  String stylistName;
-  List<String> images;
-  String? caption;
-  String publicAt;
-  int likeCount;
+  Post({
+    this.id,
+    this.captions,
+    this.likeCount,
+    this.publicAt,
+    this.deletedAt,
+    this.taskId,
+    this.task,
+  });
 
-  Post(
-      {required this.postId,
-      required this.userId,
-      required this.stylistId,
-      required this.userName,
-      required this.stylistName,
-      required this.images,
-      required this.publicAt,
-      required this.likeCount,
-      this.caption});
+  Post.fromJson(dynamic json) {
+    id = json['id'];
+    captions = json['captions'];
+    likeCount = json['like_count'];
+    publicAt = json['public_at'];
+    deletedAt = json['deleted_at'];
+    taskId = json['task_id'];
+    if(json['task'] != null){
+      task = Task.fromJson(json['task']);
+    }
+  }
 
-  Post.initial()
-      : postId = 1,
-        userId = 1,
-        stylistId = 1,
-        userName = 'toilathor',
-        stylistName = 'Thuận Cahoi',
-        likeCount = 123,
-        images = [],
-        publicAt = '2022-01-01 12:00',
-        caption = '';
+  int? id;
+  String? captions;
+  int? likeCount;
+  String? publicAt;
+  dynamic deletedAt;
+  int? taskId;
+  Task? task;
 
-  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
-}
-
-Post _$PostFromJson(Map<String, dynamic> json) {
-  return Post(
-    postId: json['postId']?.toInt() ?? 0,
-    userId: json['userId']?.toInt() ?? 0,
-    stylistId: json['stylistId']?.toInt() ?? 0,
-    userName: json['userName'] ?? '',
-    stylistName: json['stylistName'] ?? '',
-    images: List<String>.from(json['images']),
-    likeCount: json['likeCount']?.toInt() ?? 0,
-    caption: json['caption'] ?? '',
-    publicAt: json['publicAt'] ?? '',
-  );
+  Post copyWith({
+    int? id,
+    String? captions,
+    int? likeCount,
+    String? publicAt,
+    dynamic deletedAt,
+    int? taskId,
+    Task? task,
+  }) =>
+      Post(
+        id: id ?? this.id,
+        captions: captions ?? this.captions,
+        likeCount: likeCount ?? this.likeCount,
+        publicAt: publicAt ?? this.publicAt,
+        deletedAt: deletedAt ?? this.deletedAt,
+        taskId: taskId ?? this.taskId,
+        task: task ?? this.task,
+      );
 }

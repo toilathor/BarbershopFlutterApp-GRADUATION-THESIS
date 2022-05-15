@@ -4,6 +4,7 @@ import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/server_config.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/logout_dialog.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/analysis_tab.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/business_tab.dart';
@@ -43,7 +44,7 @@ class _EmployeeHomeViewState extends State<EmployeeHomeView> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(size.width),
+                      borderRadius: borderRadiusCircle,
                       child: SizedBox(
                         width: size.width * 0.2,
                         child: Image.network(

@@ -4,6 +4,7 @@ import 'package:flutter_cahoi_barbershop/core/models/screen_arguments.dart';
 import 'package:flutter_cahoi_barbershop/core/models/user.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/admin_model/hr_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/box_info.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/button_login.dart';
@@ -111,8 +112,7 @@ class _EditUserViewState extends State<EditUserView> {
                                   bottom: 0,
                                   height: size.height * 0.15,
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(
-                                        size.height * 0.15),
+                                    borderRadius: borderRadiusCircle,
                                     child: Image.network(
                                       "${user.avatar}",
                                     ),

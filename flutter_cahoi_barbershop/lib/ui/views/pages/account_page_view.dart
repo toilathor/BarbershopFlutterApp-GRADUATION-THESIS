@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/logout_dialog.dart';
 
 class AccountPageView extends StatefulWidget {
@@ -33,7 +34,7 @@ class _AccountPageViewState extends State<AccountPageView> {
                 child: Row(
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(100.0),
+                      borderRadius: borderRadiusCircle,
                       child: Image.network("${user.avatar}"),
                     ),
                     Expanded(

@@ -1,15 +1,22 @@
+import 'package:flutter_cahoi_barbershop/core/models/bill.dart';
+import 'package:flutter_cahoi_barbershop/core/models/image_db.dart';
 import 'package:flutter_cahoi_barbershop/core/models/product.dart';
+import 'package:flutter_cahoi_barbershop/core/models/stylist.dart';
 import 'package:flutter_cahoi_barbershop/core/models/time_slot.dart';
 import 'package:flutter_cahoi_barbershop/core/models/user.dart';
 
-/// id : 1
+/// id : 80
 /// status : 1
-/// notes : "Asperiores ut autem enim quis. Quae rem perferendis rem tempore error vero. Odio consequatur quisquam voluptate eum nihil natus. Quia doloremque esse dolorem nobis consectetur."
-/// date : "2022-05-13"
-/// customer : {"id":76,"name":"Shirley Halvorson","email":null,"phone_number":"(660) 318-3360","provider_id":null,"type_provider":null,"email_verified_at":null,"status":1,"points":0,"remember_token":null,"avatar":"https://bit.ly/3kGo0rS","rank_id":1}
-/// products : [{"id":1,"name":"Aut harum modi rem et optio sed qui.","duration":138,"price":9,"sort_description":"Veniam enim dolorem culpa sunt.","description":"Neque quidem eaque atque culpa. Amet aut et quam. Aperiam harum quod et quas.","type_product_id":1,"pivot":{"task_id":1,"product_id":1}},{"id":8,"name":"Odio modi dolore ut temporibus est.","duration":138,"price":18,"sort_description":"Aperiam eius aliquam aut eum.","description":"Vel aperiam iusto delectus voluptate ab quod cumque qui. Facilis est autem rerum nulla consequuntur et. Laudantium eum neque est velit incidunt asperiores rem. Optio fuga saepe adipisci quod.","type_product_id":2,"pivot":{"task_id":1,"product_id":8}}]
-/// image : [{"id":2,"link":"/upload/task/Task-011652442680.jpg","task_id":1},{"id":3,"link":"/upload/task/Task-011652443338.jpg","task_id":1},{"id":4,"link":"/upload/task/Task-111652443338.jpg","task_id":1}]
+/// notes : "cắt đẹp cho anh"
+/// date : "2022-05-14"
+/// customer_id : 102
+/// stylist_id : 53
+/// time_slot_id : 2
+/// image : [{"id":39,"link":"/upload/task/Task-0801652541209.jpg","task_id":80}]
+/// products : [{"id":23,"name":"Vel consequuntur velit ratione doloribus.","duration":170,"price":9,"sort_description":"Ex est mollitia porro tenetur voluptate qui sit.","description":"Ab qui sint qui ratione est. Ut voluptas vitae non ratione occaecati. Eum autem pariatur aut sit iste ea est voluptatum.","type_product_id":4,"pivot":{"task_id":80,"product_id":23}}]
 /// time : {"id":2,"time":"08:30:00"}
+/// stylist : {"id":53,"user_id":103,"facility_id":5,"facility":{"id":5,"address":"1062 Kovacek Rest","description":null,"longitude":105.469448,"latitude":20.384227,"image":null}}
+/// bill : {"id":1,"total":7.11,"task_id":80,"discount_id":null}
 
 class Task {
   Task({
@@ -17,10 +24,15 @@ class Task {
     this.status,
     this.notes,
     this.date,
-    this.customer,
-    this.products,
+    this.customerId,
+    this.stylistId,
+    this.timeSlotId,
     this.image,
+    this.products,
     this.time,
+    this.stylist,
+    this.bill,
+    this.customer,
   });
 
   Task.fromJson(dynamic json) {
@@ -28,83 +40,70 @@ class Task {
     status = json['status'];
     notes = json['notes'];
     date = json['date'];
-    customer =
-        json['customer'] != null ? MUser.fromJson(json['customer']) : null;
+    customerId = json['customer_id'];
+    stylistId = json['stylist_id'];
+    timeSlotId = json['time_slot_id'];
+    if (json['image'] != null) {
+      image = [];
+      json['image'].forEach((v) {
+        image?.add(ImageDB.fromJson(v));
+      });
+    }
     if (json['products'] != null) {
       products = [];
       json['products'].forEach((v) {
         products?.add(Product.fromJson(v));
       });
     }
-    if (json['image'] != null) {
-      image = [];
-      json['image'].forEach((v) {
-        image?.add(ImageTask.fromJson(v));
-      });
-    }
     time = json['time'] != null ? TimeSlot.fromJson(json['time']) : null;
+    stylist = json['stylist']!= null ? Stylist.fromJson(json['stylist']) : null;
+    bill = json['bill'] != null ? Bill.fromJson(json['bill']) : null;
+    customer =
+        json['customer'] != null ? MUser.fromJson(json['customer']) : null;
   }
 
   int? id;
   int? status;
   String? notes;
   String? date;
-  MUser? customer;
+  int? customerId;
+  int? stylistId;
+  int? timeSlotId;
+  List<ImageDB>? image;
   List<Product>? products;
-  List<ImageTask>? image;
   TimeSlot? time;
+  Stylist? stylist;
+  Bill? bill;
+  MUser? customer;
 
   Task copyWith({
     int? id,
     int? status,
     String? notes,
     String? date,
-    MUser? customer,
+    int? customerId,
+    int? stylistId,
+    int? timeSlotId,
+    List<ImageDB>? image,
     List<Product>? products,
-    List<ImageTask>? image,
     TimeSlot? time,
+    Stylist? stylist,
+    Bill? bill,
+    MUser? customer,
   }) =>
       Task(
         id: id ?? this.id,
         status: status ?? this.status,
         notes: notes ?? this.notes,
         date: date ?? this.date,
-        customer: customer ?? this.customer,
-        products: products ?? this.products,
+        customerId: customerId ?? this.customerId,
+        stylistId: stylistId ?? this.stylistId,
+        timeSlotId: timeSlotId ?? this.timeSlotId,
         image: image ?? this.image,
+        products: products ?? this.products,
         time: time ?? this.time,
-      );
-}
-
-/// id : 2
-/// link : "/upload/task/Task-011652442680.jpg"
-/// task_id : 1
-
-class ImageTask {
-  ImageTask({
-    this.id,
-    this.link,
-    this.taskId,
-  });
-
-  ImageTask.fromJson(dynamic json) {
-    id = json['id'];
-    link = json['link'];
-    taskId = json['task_id'];
-  }
-
-  int? id;
-  String? link;
-  int? taskId;
-
-  ImageTask copyWith({
-    int? id,
-    String? link,
-    int? taskId,
-  }) =>
-      ImageTask(
-        id: id ?? this.id,
-        link: link ?? this.link,
-        taskId: taskId ?? this.taskId,
+        stylist: stylist ?? this.stylist,
+        bill: bill ?? this.bill,
+        customer: customer ?? this.customer,
       );
 }

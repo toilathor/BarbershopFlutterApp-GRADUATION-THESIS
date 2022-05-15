@@ -3,6 +3,7 @@ import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/history_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/box_info.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/components/list_history.dart';
@@ -17,12 +18,23 @@ class HistoryView extends StatefulWidget {
 class _HistoryViewState extends State<HistoryView> {
   Size size = Size.zero;
   final user = locator<AuthenticationService>().user;
+  ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
 
     return BaseView<HistoryModel>(
+      onModelReady: (model) async {
+        await model.changeTasksHistory();
+        scrollController.addListener(() async {
+          if (scrollController.position.pixels ==
+                  scrollController.position.maxScrollExtent &&
+              !model.isLoading) {
+            await model.changeTasksHistory();
+          }
+        });
+      },
       builder: (context, model, child) {
         return Scaffold(
           appBar: AppBar(
@@ -31,7 +43,7 @@ class _HistoryViewState extends State<HistoryView> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(size.height * 0.06),
+                  borderRadius: borderRadiusCircle,
                   child: Image.network(
                     '${user.avatar}',
                     errorBuilder: (context, error, stackTrace) => const Center(
@@ -50,7 +62,7 @@ class _HistoryViewState extends State<HistoryView> {
             child: SingleChildScrollView(
               child: Container(
                 padding: const EdgeInsets.only(top: 30, right: 10, left: 10),
-                height: size.height,
+                // height: size.height,
                 width: size.width,
                 child: Column(
                   children: [
@@ -79,8 +91,11 @@ class _HistoryViewState extends State<HistoryView> {
                       height: 20,
                     ),
                     SizedBox(
-                      height: size.height * 0.5,
-                      child: const ListHistory(),
+                      height: size.height * 0.6,
+                      child: ListHistory(
+                        controller: scrollController,
+                        tasks: model.tasks,
+                      ),
                     ),
                   ],
                 ),

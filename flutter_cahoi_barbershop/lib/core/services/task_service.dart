@@ -56,4 +56,14 @@ class TaskService {
 
     return [];
   }
+
+  Future<List<Task>> getTaskHistory({required int page}) async {
+    var res = await _api.getTaskHistory(data: {"page": page});
+
+    if (res != null) {
+      return List<Task>.from(res.data.map((e) => Task.fromJson(e)).toList());
+    }
+
+    return [];
+  }
 }

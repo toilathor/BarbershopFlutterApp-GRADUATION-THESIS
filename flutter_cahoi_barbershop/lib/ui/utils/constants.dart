@@ -1,7 +1,7 @@
 import 'package:date_format/date_format.dart';
 
 const hostLine = "0973271208";
-const localHost = 'http://192.168.1.12:8000';
+const localHost = 'http://192.168.1.11:8000';
 const baseLinkAPIYT = 'https://www.googleapis.com/youtube/v3';
 
 final timeStart = DateTime(2021, 1, 1, 9, 0);

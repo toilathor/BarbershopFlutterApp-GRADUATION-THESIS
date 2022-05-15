@@ -103,7 +103,7 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                                 height: size.height * 0.15,
                                 child: ClipRRect(
                                   borderRadius:
-                                      BorderRadius.circular(size.height * 0.15),
+                                  borderRadiusCircle,
                                   child: Image.network(
                                     "${model.task?.customer?.avatar}",
                                     errorBuilder:

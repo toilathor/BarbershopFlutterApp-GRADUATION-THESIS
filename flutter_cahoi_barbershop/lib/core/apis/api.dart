@@ -255,4 +255,43 @@ class Api extends ApiBase {
       return null;
     }
   }
+
+  Future<api_res.Response?> getTaskHistory(
+      {required Map<String, dynamic> data}) async {
+    try {
+      var res = await dio.get('/task/customer/history', queryParameters: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  ///Post
+  Future<api_res.Response?> sharePost(
+      {required Map<String, dynamic> data}) async {
+    try {
+      var res = await dio.post('/post', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> getPost({required Map<String, int> data}) async{
+    try {
+      var res = await dio.get('/post/in-month', queryParameters: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> likePost({required Map<String, int> data}) async{
+    try {
+      var res = await dio.post('/post/like', queryParameters: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
 }

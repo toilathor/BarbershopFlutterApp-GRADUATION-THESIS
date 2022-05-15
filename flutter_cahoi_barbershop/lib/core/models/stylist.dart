@@ -1,3 +1,6 @@
+import 'package:flutter_cahoi_barbershop/core/models/facility.dart';
+import 'package:flutter_cahoi_barbershop/core/models/user.dart';
+
 /// user_id : 4
 /// facility_id : 3
 /// stylist_id : 3
@@ -9,75 +12,35 @@ class Stylist {
     this.facilityId,
     this.stylistId,
     this.user,
+    this.facility,
   });
 
   Stylist.fromJson(dynamic json) {
     userId = json['user_id'];
     facilityId = json['facility_id'];
     stylistId = json['stylist_id'];
-    user = json['user'] != null ? User.fromJson(json['user']) : null;
+    user = json['user'] != null ? MUser.fromJson(json['user']) : null;
+    facility = json['facility'] != null ? Facility.fromJson(json['facility']) : null;
   }
 
   int? userId;
   int? facilityId;
   int? stylistId;
-  User? user;
+  MUser? user;
+  Facility? facility;
 
   Stylist copyWith({
     int? userId,
     int? facilityId,
     int? stylistId,
-    User? user,
+    MUser? user,
+    Facility? facility,
   }) =>
       Stylist(
         userId: userId ?? this.userId,
         facilityId: facilityId ?? this.facilityId,
         stylistId: stylistId ?? this.stylistId,
         user: user ?? this.user,
+        facility: facility ?? this.facility,
       );
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['user_id'] = userId;
-    map['facility_id'] = facilityId;
-    map['stylist_id'] = stylistId;
-    if (user != null) {
-      map['user'] = user?.toJson();
-    }
-    return map;
-  }
-}
-
-/// name : "Dr. Hardy Reinger"
-/// avatar : "https://bit.ly/3kGo0rS"
-
-class User {
-  User({
-    this.name,
-    this.avatar,
-  });
-
-  User.fromJson(dynamic json) {
-    name = json['name'];
-    avatar = json['avatar'];
-  }
-
-  String? name;
-  String? avatar;
-
-  User copyWith({
-    String? name,
-    String? avatar,
-  }) =>
-      User(
-        name: name ?? this.name,
-        avatar: avatar ?? this.avatar,
-      );
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['name'] = name;
-    map['avatar'] = avatar;
-    return map;
-  }
 }
