@@ -1,14 +1,7 @@
-import 'package:json_annotation/json_annotation.dart';
-
-@JsonSerializable()
 class Response {
-  @JsonKey(name: 'success')
   bool? success;
-  @JsonKey(name: 'errorCode')
   int? errorCode;
-  @JsonKey(name: 'message')
   String? message;
-  @JsonKey(name: 'data')
   dynamic data;
 
   Response({this.success, this.errorCode, this.message, this.data});

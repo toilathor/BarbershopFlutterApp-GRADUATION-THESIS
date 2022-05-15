@@ -5,8 +5,6 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class LoadingDialog {
   static show(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     showDialog(
       context: context,
       builder: (_) => Center(

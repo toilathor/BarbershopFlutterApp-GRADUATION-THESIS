@@ -25,13 +25,14 @@ class _AvatarState extends State<Avatar> {
         borderRadius: BorderRadius.circular(widget.height),
         color: Colors.grey.withOpacity(0.5),
         image: DecorationImage(
-            image: NetworkImage(
-              widget.src,
-            ),
-            onError: (exception, stackTrace) {
-              debugPrint(exception.toString());
-            },
-            fit: BoxFit.cover),
+          image: NetworkImage(
+            widget.src,
+          ),
+          onError: (exception, stackTrace) {
+            debugPrint(exception.toString());
+          },
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }

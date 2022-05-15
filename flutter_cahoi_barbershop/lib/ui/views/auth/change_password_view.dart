@@ -1,11 +1,9 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/state_models/login_model.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/auth_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/button_login.dart';
-import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/loading_dialog.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/text_regex.dart';
 
 class ChangePasswordView extends StatefulWidget {
@@ -40,8 +38,10 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
 
-    return BaseView<LoginModel>(
+    return BaseView<AuthModel>(
       builder: (context, model, child) => Scaffold(
+        appBar: AppBar(),
+        backgroundColor: backgroundColor,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
@@ -53,30 +53,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                     _buildHeader(),
                     _buildNewPasswordField(
                       onFieldSubmitted: (_) async {
-                        LoadingDialog.show(context);
-                        if (await model.changePassword(
-                            currentPassword: currentPassword,
-                            phoneNumber: widget.phoneNumber)) {
-                          LoadingDialog.dismiss(context);
-                          AwesomeDialog(
-                            context: context,
-                            dialogType: DialogType.SUCCES,
-                            title: 'Successful',
-                            btnOkOnPress: () {
-                              Navigator.of(context)
-                                  .popUntil((route) => route.isFirst);
-                            },
-                            dismissOnBackKeyPress: false,
-                            dismissOnTouchOutside: false,
-                          ).show();
-                        } else {
-                          LoadingDialog.dismiss(context);
-                          AwesomeDialog(
-                            context: context,
-                            dialogType: DialogType.ERROR,
-                            title: 'Fail',
-                          ).show();
-                        }
+                        //TODO reset API
+                        // _resetPass(mdoel: model);
                       },
                       validator: (_) {
                         RegExp regex = RegExp(
@@ -111,30 +89,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                 _buildButtonChangePass(
                   isAllReady: isLength && isNumeric && isUppercase,
                   onChangePassword: () async {
-                    LoadingDialog.show(context);
-                    if (await model.changePassword(
-                        currentPassword: currentPassword,
-                        phoneNumber: widget.phoneNumber)) {
-                      LoadingDialog.dismiss(context);
-                      AwesomeDialog(
-                        context: context,
-                        dialogType: DialogType.SUCCES,
-                        title: 'Successful',
-                        btnOkOnPress: () {
-                          Navigator.of(context)
-                              .popUntil((route) => route.isFirst);
-                        },
-                        dismissOnBackKeyPress: false,
-                        dismissOnTouchOutside: false,
-                      ).show();
-                    } else {
-                      LoadingDialog.dismiss(context);
-                      AwesomeDialog(
-                        context: context,
-                        dialogType: DialogType.ERROR,
-                        title: 'Fail',
-                      ).show();
-                    }
+                    //TODO reset API
+                    // _resetPass(model: model);
                   },
                 ),
               ],
@@ -264,4 +220,29 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
           ),
         ]),
       );
+
+// Future _resetPass({required LoginModel model}) async {
+//   LoadingDialog.show(context);
+//   if (await model.changePassword(
+//       currentPassword: currentPassword, phoneNumber: widget.phoneNumber)) {
+//     LoadingDialog.dismiss(context);
+//     AwesomeDialog(
+//       context: context,
+//       dialogType: DialogType.SUCCES,
+//       title: 'Successful',
+//       btnOkOnPress: () {
+//         Navigator.of(context).popUntil((route) => route.isFirst);
+//       },
+//       dismissOnBackKeyPress: false,
+//       dismissOnTouchOutside: false,
+//     ).show();
+//   } else {
+//     LoadingDialog.dismiss(context);
+//     AwesomeDialog(
+//       context: context,
+//       dialogType: DialogType.ERROR,
+//       title: 'Fail',
+//     ).show();
+//   }
+// }
 }

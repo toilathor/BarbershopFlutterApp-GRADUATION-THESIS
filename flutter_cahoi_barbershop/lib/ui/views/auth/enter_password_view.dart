@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/state_models/login_model.dart';
-import 'package:flutter_cahoi_barbershop/home_view.dart';
+import 'package:flutter_cahoi_barbershop/core/models/user.dart';
+import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/auth_model.dart';
+import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/router_login.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/server_config.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/auth/forgot_password_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/button_login.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/loading_dialog.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/text_regex.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class EnterPasswordView extends StatefulWidget {
   final String phoneNumber;
@@ -21,7 +26,7 @@ class EnterPasswordView extends StatefulWidget {
 
 class _EnterPasswordViewState extends State<EnterPasswordView> {
   final formPassKey = GlobalKey<FormState>();
-  final passEditingController = TextEditingController();
+  final passController = TextEditingController();
 
   String currentPassword = '';
   String currentName = '';
@@ -38,9 +43,10 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
 
-    return BaseView<LoginModel>(
+    return BaseView<AuthModel>(
       builder: (context, model, child) => Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
+        appBar: AppBar(),
+        backgroundColor: backgroundColor,
         body: SafeArea(
           child: Stack(
             children: [
@@ -91,20 +97,8 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
                         ),
                         _buildPasswordField(
                           onFieldSubmitted: (_) async {
-                            LoadingDialog.show(context);
-                            if (await model.login(
-                              phoneNumber: widget.phoneNumber,
-                              currentPassword: passEditingController.text,
-                            )) {
-                              LoadingDialog.dismiss(context);
-                              Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                  builder: (context) => const HomeView(),
-                                ),
-                                (route) => false,
-                              );
-                            } else {
-                              LoadingDialog.dismiss(context);
+                            if (isUppercase && isNumeric && isLength) {
+                              await _login(model: model);
                             }
                           },
                         ),
@@ -120,20 +114,8 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
               ),
               _buildBottomLogin(
                 onLogin: () async {
-                  LoadingDialog.show(context);
-                  if (await model.login(
-                    phoneNumber: widget.phoneNumber,
-                    currentPassword: passEditingController.text,
-                  )) {
-                    LoadingDialog.dismiss(context);
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (context) => const HomeView(),
-                      ),
-                      (route) => false,
-                    );
-                  } else {
-                    LoadingDialog.dismiss(context);
+                  if (isUppercase && isNumeric && isLength) {
+                    await _login(model: model);
                   }
                 },
               ),
@@ -154,7 +136,6 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
               color: Colors.black,
               fontSize: 24,
             ),
-            // autofillHints: const [AutofillHints.],
             textInputAction: TextInputAction.done,
             validator: (_) {
               RegExp regex = RegExp(
@@ -170,13 +151,13 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
               }
             },
             cursorColor: Colors.black,
-            controller: passEditingController,
+            controller: passController,
             keyboardType: TextInputType.visiblePassword,
             obscureText: isHidePassword,
-            obscuringCharacter: '*',
+            obscuringCharacter: '●',
             onChanged: (value) {
               setState(() {
-                currentPassword = passEditingController.text;
+                currentPassword = passController.text;
 
                 validateUppercase();
                 validateNumeric();
@@ -202,7 +183,7 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
                           splashColor: Colors.transparent,
                           onPressed: () {
                             setState(() {
-                              passEditingController.text = '';
+                              passController.text = '';
                             });
                           },
                           icon: const Icon(
@@ -237,11 +218,12 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
             children: [
               Center(
                 child: BaseButton(
-                    height: size.height * 0.06,
-                    width: size.width * 0.9,
-                    onPressed:
-                        isLength && isUppercase && isNumeric ? onLogin : null,
-                    title: "Login"),
+                  height: size.height * 0.06,
+                  width: size.width * 0.9,
+                  onPressed: onLogin,
+                  // isLength && isUppercase && isNumeric ? onLogin : null,
+                  title: "Login",
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -258,14 +240,9 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
                       },
                       child: const Text("Forgot password?"),
                       style: const ButtonStyle(
-                          splashFactory: NoSplash.splashFactory),
+                        splashFactory: NoSplash.splashFactory,
+                      ),
                     ),
-                    // TextButton(
-                    //   onPressed: () async {},
-                    //   child: const Text("Login by SMS"),
-                    //   style: const ButtonStyle(
-                    //       splashFactory: NoSplash.splashFactory),
-                    // ),
                   ],
                 ),
               )
@@ -321,6 +298,34 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
       isLength = false;
     } else {
       isLength = true;
+    }
+  }
+
+  Future _login({required AuthModel model}) async {
+    LoadingDialog.show(context);
+    if (await model.loginWithPhoneNumber(
+      phoneNumber: widget.phoneNumber,
+      currentPassword: passController.text,
+    )) {
+      LoadingDialog.dismiss(context);
+      MUser user = locator<AuthenticationService>().user;
+
+      Role role = Role.values[user.roles?.first.id ?? 1];
+
+      RouterLogin.navigation(
+        context,
+        role: role,
+      );
+    } else {
+      Fluttertoast.showToast(msg: 'Wrong password');
+      formPassKey.currentState!.validate();
+      setState(() {
+        passController.text = "";
+        validateUppercase();
+        validateLength();
+        validateNumeric();
+      });
+      LoadingDialog.dismiss(context);
     }
   }
 }

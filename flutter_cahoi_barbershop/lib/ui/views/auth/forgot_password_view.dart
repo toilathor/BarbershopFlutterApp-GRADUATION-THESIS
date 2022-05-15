@@ -1,5 +1,6 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/state_models/login_model.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/auth_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
@@ -27,8 +28,10 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
 
-    return BaseView<LoginModel>(
+    return BaseView<AuthModel>(
       builder: (context, model, child) => Scaffold(
+        appBar: AppBar(),
+        backgroundColor: backgroundColor,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
@@ -40,8 +43,9 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                     _buildHeader(),
                     _buildPhoneField(
                       onFieldSubmitted: () async {
-                        await model.sendOTPForgotPassword(
-                            phoneNumber: currentPhone);
+                        //TODO update api
+                        // await model.sendOTPForgotPassword(
+                        //     phoneNumber: currentPhone);
                       },
                     ),
                   ],
@@ -57,14 +61,19 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                       phoneNumber: currentPhone,
                     );
 
-                    ///nếu đã tồn tại thì nhập pass, ngược lại thì đằng kí
-                    if (!res) {
+                    if (res == null) {
+                      LoadingDialog.dismiss(context);
+                      AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.ERROR,
+                        btnOkOnPress: () {},
+                        title: 'Error server!',
+                      ).show();
+                    } else if (!res) {
+                      ///nếu đã tồn tại thì nhập pass, ngược lại thì đằng kí
                       LoadingDialog.dismiss(context);
                       Fluttertoast.showToast(msg: 'User not found!');
                     } else {
-                      await model.sendOTPForgotPassword(
-                        phoneNumber: currentPhone,
-                      );
                       LoadingDialog.dismiss(context);
                     }
                   },

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter_cahoi_barbershop/core/state_models/home_page_model.dart';
+import 'package:flutter_cahoi_barbershop/core/models/clip_youtube.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:http/http.dart';
 
@@ -8,7 +8,7 @@ class YoutubeService {
   Client client = Client();
 
   Future<Map<String, List<dynamic>>> getPlayListYouTube(
-      {String nextPageId = '', int maxResults = 50}) async {
+      {String nextPageId = '', int maxResults = 10}) async {
     String url = '$baseLinkAPIYT/playlistItems?part=snippet'
         '&maxResults=$maxResults'
         '&pageToken=$nextPageId'
@@ -27,7 +27,7 @@ class YoutubeService {
     return {'': []};
   }
 
-  Future<List<dynamic>> getInfoVideosYouTube(List<IdClipYoutube> idList) async {
+  Future<List<dynamic>> getInfoVideosYouTube(List<IdClipYouTube> idList) async {
     String url = '$baseLinkAPIYT/videos?part=statistics&part=snippet';
 
     for (var item in idList) {

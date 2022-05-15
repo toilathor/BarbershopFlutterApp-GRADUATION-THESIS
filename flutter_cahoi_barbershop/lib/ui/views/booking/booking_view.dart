@@ -1,19 +1,20 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/models/service_cut/service_cut.dart';
-import 'package:flutter_cahoi_barbershop/core/models/stylist/stylist.dart';
-import 'package:flutter_cahoi_barbershop/core/models/workplace/workplace.dart';
+import 'package:flutter_cahoi_barbershop/core/models/facility.dart';
+import 'package:flutter_cahoi_barbershop/core/models/product.dart';
+import 'package:flutter_cahoi_barbershop/core/models/rating.dart';
+import 'package:flutter_cahoi_barbershop/core/models/stylist.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/booking_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/booking/select_barbershop_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/booking/select_service_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/booking/select_facility_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/booking/select_product_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/widgets/select_stylist.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/booking/widgets/toggle_time.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/booking/widgets/time_slots.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/elevated_button_icon.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/my_date_picker_timeline.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/text_tag.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class BookingView extends StatefulWidget {
@@ -33,7 +34,9 @@ class _BookingViewState extends State<BookingView>
     size = MediaQuery.of(context).size;
 
     return BaseView<BookingModel>(
-      onModelReady: (model) {},
+      onModelReady: (model) async {
+        model.initTimeSlots();
+      },
       onModelDisposed: (model) {
         model.changeDisposed();
       },
@@ -84,36 +87,35 @@ class _BookingViewState extends State<BookingView>
                 controlsBuilder: (context, details) =>
                     _buildControl(context, details, model),
                 steps: [
-                  _buildStepSelectBarbershop(
+                  _buildStepSelectFacility(
                     currentStep: model.currentStep,
-                    workplace: model.workplace,
-                    onPressSelectWorkplace: () async {
+                    currrentFacility: model.selectedFacility,
+                    onPressSelect: () async {
                       var result = await Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const SelectBarbershopView(),
+                          builder: (context) => const SelectFacilityView(),
                         ),
                       );
 
                       if (result != null && result.containsKey('selection')) {
-                        debugPrint(result['selection'].toString());
-                        model.changeWorkplace(result['selection']);
+                        model.changeSelectedFacility(result['selection']);
                       }
                     },
                   ),
-                  _buildStepSelectService(
+                  _buildStepSelectProduct(
                     currentStep: model.currentStep,
-                    selectedServices: model.selectedServices,
-                    onPressSelectService: () async {
+                    selectedProducts: model.selectedProducts,
+                    onPressSelectProduct: () async {
                       var result = await Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => SelectServiceView(
+                          builder: (context) => SelectProductView(
                             model: model,
                           ),
                         ),
                       );
 
                       if (result != null && result['services'] != null) {
-                        model.setSelectedService(result['services']);
+                        model.updateSelectedProduct(result['services']);
                       }
                     },
                   ),
@@ -127,188 +129,93 @@ class _BookingViewState extends State<BookingView>
     );
   }
 
-  Widget _buildDescriptionStylist({required Stylist stylist}) => Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          RichText(
-            text: TextSpan(
-              text: 'Stylist: ',
-              style: const TextStyle(
-                color: textColorLight1,
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-              ),
-              children: [
-                TextSpan(
-                  text: stylist.name,
-                  style: TextStyle(
-                      color: Theme.of(context).textTheme.headline6!.color,
-                      fontWeight: FontWeight.w400),
-                ),
-              ],
-            ),
-          ),
-          RichText(
-            text: TextSpan(
-              text: '${stylist.skill} ',
-              style: Theme.of(context).textTheme.headline3,
-              children: [
-                WidgetSpan(
-                  child: RatingBarIndicator(
-                    rating: stylist.skill / 5,
-                    itemBuilder: (context, index) => const Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    itemCount: 1,
-                    itemSize: 24.0,
-                    direction: Axis.horizontal,
-                  ),
-                ),
-                TextSpan(
-                  text: " Skill",
-                  style: TextStyle(
-                      color: Theme.of(context).textTheme.headline6!.color,
-                      fontWeight: FontWeight.w400),
-                ),
-              ],
-            ),
-          ),
-          RichText(
-            text: TextSpan(
-              text: '${stylist.communication} ',
-              style: Theme.of(context).textTheme.headline3,
-              children: [
-                WidgetSpan(
-                  child: RatingBarIndicator(
-                    rating: stylist.communication / 5,
-                    itemBuilder: (context, index) => const Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    itemCount: 1,
-                    itemSize: 24.0,
-                    direction: Axis.horizontal,
-                  ),
-                ),
-                TextSpan(
-                  text: " Communicate",
-                  style: TextStyle(
-                      color: Theme.of(context).textTheme.headline6!.color,
-                      fontFamily: fontBold,
-                      fontWeight: FontWeight.w400),
-                ),
-              ],
-            ),
-          ),
-        ],
-      );
-
-  Widget _buildSelectTime(
-          {required int totalDuration,
-          required int currentIndexTime,
-          required Function(DateTime, int) changeSelectedTime}) =>
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 6,
-          child: ToggleTime(
-            timeStart: timeStart,
-            timeEnd: timeEnd,
-            duration: totalDuration,
-            currentIndex: currentIndexTime,
-            onPressed: changeSelectedTime,
-          ),
-        ),
-      );
-
-  List<Widget> _buildOptionMore({
-    required bool isAdvice,
-    Function(bool)? onChangedAdvice,
-    required bool isTakeAPhoto,
-    Function(bool)? changeTakeAPhoto,
-  }) {
-    return [
-      SizedBox(
-        width: size.width,
-        child: const Text(
-          "Notes",
-          style: TextStyle(
-            fontSize: 16,
-            fontFamily: fontBold,
-          ),
-        ),
-      ),
-      TextField(
-        maxLines: 3,
-        maxLength: 250,
-        controller: notesController,
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 16,
-        ),
-        onChanged: (_) {},
-        decoration: InputDecoration(
-          hintText: "EX: You go with 2 children, You go with you,"
-              " Wash your hands and so on...etc",
-          hintStyle: TextStyle(
-            fontSize: 14,
-            color: Colors.grey.withOpacity(0.5),
-          ),
-        ),
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text(
-            "Advice",
-            style: TextStyle(
-              fontSize: 16,
-              fontFamily: fontBold,
-            ),
-          ),
-          Switch(
-              activeColor: primaryColor2,
-              value: isAdvice,
-              onChanged: onChangedAdvice)
-        ],
-      ),
-      Text(
-        "You allow us to recommend the best promotion, service for you",
-        style: Theme.of(context).textTheme.subtitle2,
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text(
-            "Take a photo after haircut",
-            style: TextStyle(
-              fontSize: 16,
-              fontFamily: fontBold,
-            ),
-          ),
-          Switch(
-            activeColor: primaryColor2,
-            value: isTakeAPhoto,
-            onChanged: changeTakeAPhoto,
-          )
-        ],
-      ),
-      Text(
-        "You allow us to take photos to save the hairstyle,"
-        " so that next time you don't have to describe it to another stylist",
-        style: Theme.of(context).textTheme.subtitle2,
-      ),
-    ];
-  }
+// List<Widget> _buildOptionMore({
+//   required bool isAdvice,
+//   Function(bool)? onChangedAdvice,
+//   required bool isTakeAPhoto,
+//   Function(bool)? changeTakeAPhoto,
+// }) {
+// return [
+//   SizedBox(
+//     width: size.width,
+//     child: const Text(
+//       "Notes",
+//       style: TextStyle(
+//         fontSize: 16,
+//         fontFamily: fontBold,
+//       ),
+//     ),
+//   ),
+//   TextField(
+//     maxLines: 3,
+//     maxLength: 250,
+//     controller: notesController,
+//     style: const TextStyle(
+//       color: Colors.black,
+//       fontSize: 16,
+//     ),
+//     onChanged: (_) {},
+//     decoration: InputDecoration(
+//       hintText: "EX: You go with 2 children, You go with you,"
+//           " Wash your hands and so on...etc",
+//       hintStyle: TextStyle(
+//         fontSize: 14,
+//         color: Colors.grey.withOpacity(0.5),
+//       ),
+//     ),
+//   ),
+//   Row(
+//     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//     children: [
+//       const Text(
+//         "Advice",
+//         style: TextStyle(
+//           fontSize: 16,
+//           fontFamily: fontBold,
+//         ),
+//       ),
+//       Switch(
+//           activeColor: primaryColor2,
+//           value: isAdvice,
+//           onChanged: onChangedAdvice)
+//     ],
+//   ),
+//   Text(
+//     "You allow us to recommend the best promotion, service for you",
+//     style: Theme.of(context).textTheme.subtitle2,
+//   ),
+//   Row(
+//     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//     children: [
+//       const Text(
+//         "Take a photo after haircut",
+//         style: TextStyle(
+//           fontSize: 16,
+//           fontFamily: fontBold,
+//         ),
+//       ),
+//       Switch(
+//         activeColor: primaryColor2,
+//         value: isTakeAPhoto,
+//         onChanged: changeTakeAPhoto,
+//       )
+//     ],
+//   ),
+//   Text(
+//     "You allow us to take photos to save the hairstyle,"
+//     " so that next time you don't have to describe it to another stylist",
+//     style: Theme.of(context).textTheme.subtitle2,
+//   ),
+// ];
+// }
 
   Widget _buildControl(
       BuildContext context, ControlsDetails details, BookingModel model) {
-    if (details.currentStep == StepBooking.selectBarbershop.index) {
+    if (details.currentStep == StepBooking.selectFacility.index) {
       return ElevatedButtonIcon(
         title: 'Next step',
-        onPressed: model.workplace == null ? null : details.onStepContinue,
+        onPressed:
+            model.selectedFacility == null ? null : details.onStepContinue,
       );
     } else if (details.currentStep == StepBooking.selectStylistAndDate.index) {
       return Row(
@@ -323,9 +230,26 @@ class _BookingViewState extends State<BookingView>
             child: ElevatedButtonIcon(
               title: 'Completed',
               onPressed: model.checkCompleted()
-                  ? () {
-                      //Call api
-                      model.complete();
+                  ? () async {
+                      var res =
+                          await model.complete(notes: notesController.text);
+                      if (res) {
+                        AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.SUCCES,
+                          title: "Create Calendar Successful",
+                          btnOkOnPress: () {
+                            Navigator.pop(context);
+                          },
+                        ).show();
+                      } else {
+                        AwesomeDialog(
+                          context: context,
+                          title: "Create Calendar Fail! 🥲🥲🥲",
+                          dialogType: DialogType.ERROR,
+                          btnOkOnPress: () {},
+                        ).show();
+                      }
                     }
                   : null,
             ),
@@ -346,7 +270,7 @@ class _BookingViewState extends State<BookingView>
             flex: 1,
             child: ElevatedButtonIcon(
               title: 'Next Step',
-              onPressed: model.selectedServices.isEmpty
+              onPressed: model.selectedProducts.isEmpty
                   ? null
                   : details.onStepContinue,
             ),
@@ -356,53 +280,88 @@ class _BookingViewState extends State<BookingView>
     }
   }
 
-  Step _buildStepSelectBarbershop({
+  Step _buildStepSelectFacility({
     required StepBooking currentStep,
-    required Workplace? workplace,
-    required Function() onPressSelectWorkplace,
+    required Facility? currrentFacility,
+    required Function() onPressSelect,
   }) =>
       Step(
-        isActive: currentStep == StepBooking.selectBarbershop,
+        isActive: currentStep == StepBooking.selectFacility ||
+            currrentFacility != null,
         title: const Text(
-          "Select Barbershop",
+          "Select Facility",
           style: TextStyle(
-              color: textColorLight2,
-              fontSize: 24,
-              fontWeight: FontWeight.w500,
-              fontFamily: fontBold),
+            color: textColorLight2,
+            fontSize: 24,
+            fontWeight: FontWeight.w500,
+            fontFamily: fontBold,
+          ),
         ),
-        state: workplace == null ? StepState.indexed : StepState.complete,
+        state:
+            currrentFacility == null ? StepState.indexed : StepState.complete,
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            workplace == null
-                ? Container()
-                : Container(
-                    margin: const EdgeInsets.only(bottom: 20.0),
-                    child: TextTag(title: workplace.name),
+            if (currrentFacility == null)
+              Container()
+            else
+              Container(
+                height: size.width * 0.2,
+                width: size.width * 0.6,
+                margin: const EdgeInsets.only(bottom: 20.0),
+                child: Card(
+                  color: backgroundColor,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4.0),
+                          child: Image.asset(
+                            'assets/bg_cahoibarbershop.jpg',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "${currrentFacility.address}",
+                            // overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
+                ),
+              ),
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: onPressSelectWorkplace,
-                child: const Text('Select Barbershop'),
+                onPressed: onPressSelect,
+                child: const Text('Select Facility'),
               ),
             ),
           ],
         ),
       );
 
-  Step _buildStepSelectService({
+  Step _buildStepSelectProduct({
     required StepBooking currentStep,
-    required List<ServiceCut> selectedServices,
-    required Function() onPressSelectService,
+    required List<Product> selectedProducts,
+    required Function() onPressSelectProduct,
   }) =>
       Step(
-        isActive: currentStep == StepBooking.selectService,
+        isActive: currentStep == StepBooking.selectProduct ||
+            selectedProducts.isNotEmpty,
         state:
-            selectedServices.isEmpty ? StepState.indexed : StepState.complete,
+            selectedProducts.isEmpty ? StepState.indexed : StepState.complete,
         title: const Text(
-          "Select Service",
+          "Select Product",
           style: TextStyle(
             color: textColorLight2,
             fontSize: 24,
@@ -412,14 +371,20 @@ class _BookingViewState extends State<BookingView>
         ),
         content: Column(
           children: [
-            _buildSelectedService(
-              selectedServices: selectedServices,
+            Container(
+              margin: const EdgeInsets.only(bottom: 20.0),
+              child: Wrap(
+                children: _buildSelectedProduct(
+                  selectedProducts: selectedProducts,
+                ),
+              ),
             ),
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                  child: const Text('Select Service'),
-                  onPressed: onPressSelectService),
+                child: const Text('Select Service'),
+                onPressed: onPressSelectProduct,
+              ),
             ),
           ],
         ),
@@ -436,95 +401,213 @@ class _BookingViewState extends State<BookingView>
             fontFamily: fontBold,
           ),
         ),
-        state: model.checkSelectDateAndStylist()
-            ? StepState.indexed
-            : StepState.complete,
+        state: model.checkCompleted() ? StepState.complete : StepState.editing,
         content: Container(
           margin: const EdgeInsets.only(bottom: 20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-                  MyDatePickerTimeline(
-                    DateTime.now(),
-                    initialSelectedDate: model.selectedDate,
-                    daysCount: 7,
-                    height: size.height * 0.117,
-                    width: size.width * 0.17,
-                    selectedTextColor: Colors.white,
-                    selectionColor: secondaryColor,
-                    dateTextStyle: const TextStyle(
-                      fontSize: 12,
-                    ),
-                    dayTextStyle: const TextStyle(
-                      fontSize: 12,
-                    ),
-                    onDateChange: (selectedDate) {
-                      model.changeSelectedDate(selectedDate);
-                    },
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(8.0),
-                    margin: const EdgeInsets.only(bottom: 8.0),
-                    width: size.width,
-                    // height: size.width * 0.26,
-                    child: model.isDefaultStylist
-                        ? const Center(
-                            child: Text(
-                              "We will select help you the stylist the best",
-                              style: TextStyle(fontWeight: FontWeight.w400),
-                            ),
-                          )
-                        : _buildDescriptionStylist(
-                            stylist: model.stylists![model.selectedStylist]),
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  const SelectStylist(),
-                  _buildSelectTime(
-                    changeSelectedTime: (index, time) {
-                      model.changeSelectedTime(time, index);
-                    },
-                    totalDuration: model.totalDuration,
-                    currentIndexTime: model.currentIndexTime,
-                  ),
-                ] +
-                _buildOptionMore(
-                  isAdvice: model.isAdvice,
-                  onChangedAdvice: (value) {
-                    model.changeAdvice(value);
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            MyDatePickerTimeline(
+              DateTime.now(),
+              initialSelectedDate: model.selectedDate,
+              daysCount: 7,
+              height: size.height * 0.117,
+              width: size.width * 0.17,
+              selectedTextColor: Colors.white,
+              selectionColor: secondaryColor,
+              dateTextStyle: const TextStyle(
+                fontSize: 12,
+              ),
+              dayTextStyle: const TextStyle(
+                fontSize: 12,
+              ),
+              onDateChange: (selectedDate) {
+                model.changeSelectedDate(selectedDate);
+              },
+            ),
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              margin: const EdgeInsets.symmetric(vertical: 8.0),
+              width: size.width,
+              height: 100,
+              child: _buildDescriptionStylist(
+                stylist: model.selectedStylist,
+                rating: model.rating,
+              ),
+              decoration: BoxDecoration(
+                border: Border.all(),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+            ),
+            SelectStylist(
+              onSelected: (stylist) {
+                model.changeSelectedStylist(stylist);
+              },
+              current: model.selectedStylist,
+              stylists: model.stylists ?? [],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: size.width,
+                height: size.height * 0.15,
+                child: TimeSlots(
+                  currentTimeSlot: model.currentTimeSlot,
+                  onPressed: (timeSlot) {
+                    model.changeCurrentTimeSlot(timeSlot: timeSlot);
                   },
-                  isTakeAPhoto: model.isAdvice,
-                  changeTakeAPhoto: (value) {
-                    model.changeTakeAPhoto(value);
-                  },
+                  timeSlots: model.timeSlotsDefault,
                 ),
-          ),
+              ),
+            ),
+            SizedBox(
+              width: size.width,
+              child: const Text(
+                "Notes",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: fontBold,
+                ),
+              ),
+            ),
+            TextField(
+              maxLines: 3,
+              maxLength: 250,
+              controller: notesController,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+              ),
+              decoration: InputDecoration(
+                hintText: "EX: You go with 2 children, You go with you,"
+                    " Wash your hands and so on...etc",
+                hintStyle: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey.withOpacity(0.5),
+                ),
+              ),
+            ),
+          ]
+              // +
+              // _buildOptionMore(
+              //   isAdvice: model.isAdvice,
+              //   onChangedAdvice: (value) {
+              //     model.changeAdvice(value);
+              //   },
+              //   isTakeAPhoto: model.isAdvice,
+              //   changeTakeAPhoto: (value) {
+              //     model.changeTakeAPhoto(value);
+              //   },
+              // ),
+              ),
         ),
       );
 
-  Widget _buildSelectedService({required List<ServiceCut> selectedServices}) {
-    if (selectedServices.isEmpty) {
-      return Container();
-    } else {
-      List<Widget> items = [];
+  Widget _buildDescriptionStylist({
+    required Stylist? stylist,
+    required Rating rating,
+  }) {
+    return stylist == null
+        ? const Center(
+            child: Text(
+              "We will select help you the stylist the best",
+              style: TextStyle(fontWeight: FontWeight.w400),
+            ),
+          )
+        : Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                child: Text(
+                  "Stylist: ${stylist.user!.name ?? ""}",
+                  style: TextStyle(
+                    fontFamily: fontBold,
+                    shadows: [
+                      Shadow(
+                        color: Colors.grey.shade500,
+                        offset: const Offset(0, 0),
+                        blurRadius: 5,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Row(
+                  children: [
+                    Text(
+                        "Communications: ${rating.avgCommunicationRate ?? '5'}"),
+                    const Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Row(
+                  children: [
+                    Text("Skill: ${rating.avgSkillRate ?? '5'}"),
+                    const Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+  }
 
-      for (int i = 0; i < selectedServices.length; i++) {
-        items.add(
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextTag(title: selectedServices[i].name),
+  List<Widget> _buildSelectedProduct(
+      {required List<Product> selectedProducts}) {
+    List<Widget> items = [];
+    double price = 0;
+    for (int i = 0; i < selectedProducts.length; i++) {
+      price += selectedProducts[i].price;
+
+      items.add(
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextTag(
+            product: selectedProducts[i],
           ),
-        );
-      }
-
-      return Container(
-        margin: const EdgeInsets.only(bottom: 20.0),
-        child: Wrap(
-          children: items,
         ),
       );
     }
+
+    ///Add item total
+    items.add(Container(
+      height: 40,
+      padding: const EdgeInsets.all(4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            "Total: ",
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+                color: primaryColor, fontSize: 20, fontFamily: fontBold),
+          ),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100.0),
+              color: Colors.yellow,
+            ),
+            child: Text(
+              "\$$price",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: primaryColor),
+            ),
+          ),
+        ],
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20.0),
+        border: Border.all(color: Colors.black26),
+      ),
+    ));
+    return items;
   }
 }

@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/state_models/booking_model.dart';
+import 'package:flutter_cahoi_barbershop/core/models/stylist.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/avatar.dart';
-import 'package:provider/provider.dart';
 
 class SelectStylist extends StatefulWidget {
   const SelectStylist({
     Key? key,
+    this.stylists = const [],
+    required this.onSelected,
+    this.current,
   }) : super(key: key);
+
+  final List<Stylist> stylists;
+  final Stylist? current;
+  final Function(Stylist? stylist) onSelected;
 
   @override
   _SelectStylistState createState() => _SelectStylistState();
@@ -16,62 +22,71 @@ class _SelectStylistState extends State<SelectStylist> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Consumer<BookingModel>(
-      builder: (context, model, child) => Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Chúng tôi sẽ chọn cho bạn stylist thích hợp
-          GestureDetector(
-            onTap: () {
-              model.changeDefaultStylist();
-            },
-            child: _buildAvatarStylist(
-              size: size,
-              title: "We choose stylist for you",
-              src: "https://bit.ly/3FMV625",
-              index: 0,
-              isSelected: model.isDefaultStylist,
-            ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Chúng tôi sẽ chọn cho bạn stylist thích hợp
+        GestureDetector(
+          onTap: () {
+            // print('object');
+            widget.onSelected(null);
+          },
+          child: _buildAvatarStylist(
+            size: size,
+            title: "We choose stylist for you",
+            src: "https://bit.ly/3FMV625",
+            isSelected: widget.current == null,
           ),
+        ),
 
-          // Bạn tự chọn stylist thích hợp
-          SizedBox(
-            height: size.width * 0.44,
-            width: size.width * 0.56,
-            child: model.stylists == null
-                ? Container()
-                : ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) => GestureDetector(
-                      onTap: () {
-                        model.changeSelectedStylist(index);
-                      },
-                      child: _buildAvatarStylist(
-                        size: size,
-                        title: model.stylists![index].name,
-                        src: 'https://bit.ly/3JH8APa',
-                        index: index,
-                        isSelected: model.isDefaultStylist
-                            ? false
-                            : (model.selectedStylist == index),
-                      ),
+        // Bạn tự chọn stylist thích hợp
+        SizedBox(
+          height: size.width * 0.44,
+          width: size.width * 0.56,
+          child: widget.stylists.isEmpty
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text(
+                      'the facility you selected on the date you selected is not staffed',
+                      style: TextStyle(color: Colors.red, shadows: [
+                        Shadow(
+                          color: Colors.red.shade500,
+                          offset: const Offset(0, 0),
+                          blurRadius: 5,
+                        )
+                      ]),
                     ),
-                    itemCount: model.stylists!.length,
                   ),
-          )
-        ],
-      ),
+                )
+              : ListView.builder(
+                  itemCount: widget.stylists.length,
+                  physics: const BouncingScrollPhysics(),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () {
+                      widget.onSelected(widget.stylists[index]);
+                    },
+                    child: _buildAvatarStylist(
+                      size: size,
+                      title: "${widget.stylists[index].user!.name}",
+                      src: '${widget.stylists[index].user!.avatar}',
+                      isSelected: widget.current == widget.stylists[index],
+                    ),
+                  ),
+                ),
+        )
+      ],
     );
   }
 
-  Widget _buildAvatarStylist(
-          {required Size size,
-          required String title,
-          required String src,
-          required int index,
-          bool isSelected = false}) =>
+  Widget _buildAvatarStylist({
+    required Size size,
+    required String title,
+    required String src,
+    bool isSelected = false,
+  }) =>
       Column(
         children: [
           Container(
