@@ -4,10 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_cahoi_barbershop/core/models/user.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
+import 'package:flutter_cahoi_barbershop/test_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/router.dart' as router;
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
-import 'package:flutter_cahoi_barbershop/ui_employee/report_task_view.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -72,7 +72,7 @@ class _MyAppState extends State<MyApp> {
             titleTextStyle: TextStyle(
               color: backgroundColor,
               fontSize: 24,
-              fontFamily: "Jaapokki",
+              fontFamily: fontBold,
             ),
           ),
           floatingActionButtonTheme: const FloatingActionButtonThemeData(
@@ -98,7 +98,7 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
         ),
-        // home: const ReportTaskView(),
+        home: const TestView(),
       ),
     );
   }

@@ -134,6 +134,9 @@ class _HomeAdminViewState extends State<HomeAdminView> {
     required Icon icon,
   }) =>
       ListTile(
+        selected: currentTab == tab,
+        selectedTileColor: Colors.grey.shade300,
+        selectedColor: Colors.black,
         onTap: () {
           Navigator.pop(context);
           setState(() {

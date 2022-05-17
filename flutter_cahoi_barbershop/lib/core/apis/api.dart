@@ -95,7 +95,7 @@ class Api extends ApiBase {
   Future<api_res.Response?> getStylists(
       {required int facilityId, required DateTime date}) async {
     try {
-      var res = await dio.get('/stylist/$facilityId',
+      var res = await dio.get('/stylist/facility/$facilityId',
           queryParameters: {"date": date_format.formatDate(date, formatDate)});
       return castRes(res);
     } catch (e) {

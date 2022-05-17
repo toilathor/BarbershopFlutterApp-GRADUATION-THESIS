@@ -60,17 +60,17 @@ class _HomeViewState extends State<HomeView> {
               icon: Icon(
                 Icons.search,
               ),
-              label: "Discover",
+              label: "Khám phá",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.history_edu_rounded),
-              label: 'Story',
+              label: 'Bản tin',
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.person,
               ),
-              label: "Account",
+              label: "Tùy chọn",
             ),
           ],
         ),

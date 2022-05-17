@@ -45,7 +45,7 @@ class _AccountPageViewState extends State<AccountPageView> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             const Text(
-                              'Welcome, ',
+                              'Xin chào, ',
                               style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 18,
@@ -81,7 +81,7 @@ class _AccountPageViewState extends State<AccountPageView> {
                       Icons.logout,
                       color: Colors.red,
                     ),
-                    title: 'Logout',
+                    title: 'Đăng xuất',
                     onPress: () {
                       LogoutDialog.show(context);
                     },

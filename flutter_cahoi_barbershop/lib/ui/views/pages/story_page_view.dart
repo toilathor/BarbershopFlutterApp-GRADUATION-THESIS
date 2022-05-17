@@ -59,7 +59,7 @@ class _StoryPageViewState extends State<StoryPageView> {
                     ),
                   ),
                 ),
-                tooltip: 'Your Story',
+                tooltip: 'Trang cá nhân',
               ),
             )
           ],

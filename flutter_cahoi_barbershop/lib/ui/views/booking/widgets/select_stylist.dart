@@ -33,7 +33,7 @@ class _SelectStylistState extends State<SelectStylist> {
           },
           child: _buildAvatarStylist(
             size: size,
-            title: "We choose stylist for you",
+            title: "Chúng tôi chọn thợ cho bạn",
             src: "https://bit.ly/3FMV625",
             isSelected: widget.current == null,
           ),
@@ -48,7 +48,7 @@ class _SelectStylistState extends State<SelectStylist> {
                   padding: const EdgeInsets.all(8.0),
                   child: Center(
                     child: Text(
-                      'the facility you selected on the date you selected is not staffed',
+                      'Cơ sở bạn đã chọn vào ngày bạn chọn không có nhân viên',
                       style: TextStyle(color: Colors.red, shadows: [
                         Shadow(
                           color: Colors.red.shade500,
