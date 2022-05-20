@@ -2,7 +2,6 @@ import 'package:date_format/date_format.dart' as format_date;
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/facility.dart';
 import 'package:flutter_cahoi_barbershop/core/models/product.dart';
-import 'package:flutter_cahoi_barbershop/core/models/rating.dart';
 import 'package:flutter_cahoi_barbershop/core/models/stylist.dart';
 import 'package:flutter_cahoi_barbershop/core/models/time_slot.dart';
 import 'package:flutter_cahoi_barbershop/core/models/type_product.dart';
@@ -23,8 +22,7 @@ class BookingModel extends BaseModel {
   bool isTakeAPhoto = true;
   DateTime selectedDate = DateTime.now();
   Facility? selectedFacility;
-  Stylist? selectedStylist;
-  Rating rating = Rating(avgSkillRate: '0', avgCommunicationRate: '0');
+  StylistRate? selectedStylist;
   int totalDuration = 30;
   Position? position;
 
@@ -33,7 +31,7 @@ class BookingModel extends BaseModel {
   List<List<Product>> products = [];
   List<TypeProduct> typeProducts = [];
   List<TimeSlot> timeSlotsDefault = [];
-  List<Stylist>? stylists = [];
+  List<StylistRate>? stylists = [];
 
   ///Step Select Barbershop
   changeFacilities() async {
@@ -124,17 +122,8 @@ class BookingModel extends BaseModel {
     notifyListeners();
   }
 
-  Future changeSelectedStylist(Stylist? stylist) async {
+  Future changeSelectedStylist(StylistRate? stylist) async {
     selectedStylist = stylist;
-
-    if (stylist != null) {
-      rating = await _bookingService.getRating(
-        stylistId:
-            selectedStylist != null ? (selectedStylist!.stylistId ?? 0) : 0,
-      );
-    } else {
-      rating = Rating(avgSkillRate: '0', avgCommunicationRate: '0');
-    }
 
     //TODO change time
     // initTimeSlots();
@@ -143,7 +132,7 @@ class BookingModel extends BaseModel {
 
     if (stylist != null) {
       res = await _bookingService.getTimeSlotSelected(
-        stylistId: stylist.stylistId ?? 0,
+        stylistId: stylist.id ?? 0,
         date: format_date.formatDate(selectedDate, formatDate),
       );
     }
@@ -214,7 +203,7 @@ class BookingModel extends BaseModel {
   Future complete({
     String notes = "",
   }) async {
-    debugPrint('task: ${selectedStylist!.stylistId ?? 0}, '
+    debugPrint('task: ${selectedStylist!.id ?? 0}, '
         '$notes, '
         '${selectedDate.toString()}, '
         '${currentTimeSlot!.time ?? ""}');
@@ -222,7 +211,7 @@ class BookingModel extends BaseModel {
       "time_slot_id": currentTimeSlot!.id,
       "date": format_date.formatDate(selectedDate, formatDate),
       "notes": notes,
-      "stylist_id": selectedStylist!.stylistId ?? 0,
+      "stylist_id": selectedStylist!.id ?? 0,
       'products': selectedProducts.map((e) => e.id).toList()
     };
 
@@ -231,7 +220,6 @@ class BookingModel extends BaseModel {
 
   void reset() {
     currentStep = StepBooking.selectFacility;
-    rating = Rating(avgSkillRate: '0', avgCommunicationRate: '0');
     selectedStylist = null;
     currentTimeSlot = null;
     isAdvice = true;

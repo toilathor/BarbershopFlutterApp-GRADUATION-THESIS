@@ -56,6 +56,7 @@ class _PostTileState extends State<PostTile> {
                       child: Image.network(
                         '${widget.post.task?.customer?.avatar}',
                         height: 50,
+                        errorBuilder: (context, _, ___) => Container(),
                       ),
                     ),
                     const SizedBox(
@@ -123,6 +124,7 @@ class _PostTileState extends State<PostTile> {
               child: CarouselSlider.builder(
                 itemBuilder: (context, index, realIndex) => Image.network(
                     "$localHost/${widget.post.task?.image![index].link}",
+                    errorBuilder: (context, _, ___) => Container(),
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: double.infinity,

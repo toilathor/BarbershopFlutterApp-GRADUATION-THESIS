@@ -9,8 +9,8 @@ class LogoutDialog {
       context: context,
       dialogType: DialogType.QUESTION,
       animType: AnimType.BOTTOMSLIDE,
-      title: 'Logout',
-      desc: 'Are you sure you want to sign out?',
+      title: 'Đăng xuất',
+      desc: 'Bạn có chắc chắn muốn đăng xuất?',
       btnCancelOnPress: () {},
       btnOkOnPress: () {
         locator<AuthenticationService>().logOut();

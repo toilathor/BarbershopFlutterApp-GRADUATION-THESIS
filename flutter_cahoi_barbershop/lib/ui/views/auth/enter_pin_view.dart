@@ -64,7 +64,7 @@ class _EnterPinViewState extends State<EnterPinView> {
               const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
-                  'Phone Number Verification',
+                  'Xác minh số điện thoại',
                   style: TextStyle(
                     fontSize: 36,
                     fontFamily: fontBold,
@@ -78,7 +78,7 @@ class _EnterPinViewState extends State<EnterPinView> {
                 padding: const EdgeInsets.all(8.0),
                 child: RichText(
                   text: TextSpan(
-                    text: "Enter the code sent to ",
+                    text: "Mã xác thực đã được gửi tới ",
                     children: [
                       TextSpan(
                         text: widget.phoneNumber,
@@ -124,7 +124,7 @@ class _EnterPinViewState extends State<EnterPinView> {
                     animationType: AnimationType.fade,
                     validator: (v) {
                       if (v!.length < 6) {
-                        return "Enter 6 characters";
+                        return "Nhập đủ 6 số";
                       } else {
                         return null;
                       }
@@ -215,11 +215,11 @@ class _EnterPinViewState extends State<EnterPinView> {
                 child: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
-                    text: "Didn't receive the code? ",
+                    text: "Không nhận được mã xác thực? ",
                     style: const TextStyle(color: Colors.black54, fontSize: 15),
                     children: [
                       TextSpan(
-                          text: " RESEND",
+                          text: " Gửi lại",
                           style: TextStyle(
                               color: model.timeOut == 0
                                   ? const Color(0xFF91D3B3)

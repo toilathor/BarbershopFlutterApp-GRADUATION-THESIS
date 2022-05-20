@@ -61,6 +61,7 @@ class TaskService {
     var res = await _api.getTaskHistory(data: {"page": page});
 
     if (res != null) {
+      print("object");
       return List<Task>.from(res.data.map((e) => Task.fromJson(e)).toList());
     }
 

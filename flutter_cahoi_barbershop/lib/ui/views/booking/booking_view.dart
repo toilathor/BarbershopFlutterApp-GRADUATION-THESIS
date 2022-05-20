@@ -2,7 +2,6 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/facility.dart';
 import 'package:flutter_cahoi_barbershop/core/models/product.dart';
-import 'package:flutter_cahoi_barbershop/core/models/rating.dart';
 import 'package:flutter_cahoi_barbershop/core/models/stylist.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/booking_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
@@ -157,7 +156,7 @@ class _BookingViewState extends State<BookingView>
                         AwesomeDialog(
                           context: context,
                           dialogType: DialogType.SUCCES,
-                          title: "Đặ lịch thành công",
+                          title: "Đặt lịch thành công",
                           btnOkOnPress: () {
                             Navigator.pop(context);
                           },
@@ -354,7 +353,6 @@ class _BookingViewState extends State<BookingView>
                 height: 100,
                 child: _buildDescriptionStylist(
                   stylist: model.selectedStylist,
-                  rating: model.rating,
                 ),
                 decoration: BoxDecoration(
                   border: Border.all(),
@@ -415,8 +413,7 @@ class _BookingViewState extends State<BookingView>
       );
 
   Widget _buildDescriptionStylist({
-    required Stylist? stylist,
-    required Rating rating,
+    required StylistRate? stylist,
   }) {
     return stylist == null
         ? const Center(
@@ -430,7 +427,7 @@ class _BookingViewState extends State<BookingView>
             children: [
               Expanded(
                 child: Text(
-                  "Stylist: ${stylist.user!.name ?? ""}",
+                  "Stylist: ${stylist.name ?? ""}",
                   style: TextStyle(
                     fontFamily: fontBold,
                     shadows: [
@@ -446,8 +443,7 @@ class _BookingViewState extends State<BookingView>
               Expanded(
                 child: Row(
                   children: [
-                    Text(
-                        "Giao tiếp: ${rating.avgCommunicationRate ?? '5'}"),
+                    Text("Giao tiếp: ${stylist.communication ?? '5'}"),
                     const Icon(
                       Icons.star,
                       color: Colors.amber,
@@ -458,7 +454,7 @@ class _BookingViewState extends State<BookingView>
               Expanded(
                 child: Row(
                   children: [
-                    Text("Kĩ năng: ${rating.avgSkillRate ?? '5'}"),
+                    Text("Kĩ năng: ${stylist.skill ?? '5'}"),
                     const Icon(
                       Icons.star,
                       color: Colors.amber,

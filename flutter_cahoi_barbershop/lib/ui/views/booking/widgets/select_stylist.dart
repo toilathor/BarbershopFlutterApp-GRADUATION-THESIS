@@ -10,9 +10,9 @@ class SelectStylist extends StatefulWidget {
     this.current,
   }) : super(key: key);
 
-  final List<Stylist> stylists;
-  final Stylist? current;
-  final Function(Stylist? stylist) onSelected;
+  final List<StylistRate> stylists;
+  final StylistRate? current;
+  final Function(StylistRate? stylist) onSelected;
 
   @override
   _SelectStylistState createState() => _SelectStylistState();
@@ -70,8 +70,8 @@ class _SelectStylistState extends State<SelectStylist> {
                     },
                     child: _buildAvatarStylist(
                       size: size,
-                      title: "${widget.stylists[index].user!.name}",
-                      src: '${widget.stylists[index].user!.avatar}',
+                      title: "${widget.stylists[index].name}",
+                      src: '${widget.stylists[index].avatar}',
                       isSelected: widget.current == widget.stylists[index],
                     ),
                   ),

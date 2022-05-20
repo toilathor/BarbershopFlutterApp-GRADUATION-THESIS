@@ -74,28 +74,17 @@ class BookingService {
   }
 
   //Stylist
-  Future<List<Stylist>> getStylists(
+  Future<List<StylistRate>> getStylists(
       {required int facilityId, required DateTime date}) async {
     var response = await _api.getStylists(facilityId: facilityId, date: date);
 
     if (response != null) {
-      return List<Stylist>.from(
-          response.data.map((i) => Stylist.fromJson(i)).toList());
+      return List<StylistRate>.from(
+          response.data.map((i) => StylistRate.fromJson(i)).toList());
     }
 
     Fluttertoast.showToast(msg: "error");
     return [];
-  }
-
-  Future<Rating> getRating({required int stylistId}) async {
-    var res = await _api.getRating(stylistId: stylistId);
-
-    if (res != null) {
-      return Rating.fromJson(res.data);
-    }
-
-    Fluttertoast.showToast(msg: "error");
-    return Rating(avgCommunicationRate: '0', avgSkillRate: '0');
   }
 
   Future<List<TimeSlot>> getTimeSlot() async {

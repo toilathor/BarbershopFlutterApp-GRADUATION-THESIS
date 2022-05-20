@@ -5,20 +5,20 @@ enum Role { none, customer, stylist, manager, superAdmin }
 enum AdminTab { hr, business, product, analysis }
 
 List<String> filDay = [
-  'today',
-  'tomorrow',
-  '+2 day',
-  '+3 day',
-  '+4 day',
-  '+5 day',
-  '+6 day',
-  '+7 day'
+  'Hôm nay',
+  'Ngày mai',
+  '+2 ngày',
+  '+3 ngày',
+  '+4 ngày',
+  '+5 ngày',
+  '+6 ngày',
+  '+7 ngày'
 ];
 
 List<String> filTypeTask = [
-  'All',
-  'Only Success',
-  'Only Wait',
+  'Tất cả',
+  'Đã xong',
+  'Đang đợi',
 ];
 
 // List<String> typeProducts = [

@@ -126,10 +126,10 @@ class AuthModel extends BaseModel {
       if (firebaseAuth.currentUser != null) {
         gotoRegister();
       } else {
-        changeMessageValidate('*Please fill up all the cells properly');
+        changeMessageValidate('*Vui lòng nhập lại ');
       }
     } catch (e) {
-      changeMessageValidate('*Please fill up all the cells properly');
+      changeMessageValidate('*Vui lòng nhập lại ');
     }
   }
 

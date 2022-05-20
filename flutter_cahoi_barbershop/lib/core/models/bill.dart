@@ -19,13 +19,13 @@ class Bill {
   }
 
   int? id;
-  double? total;
+  dynamic total;
   int? taskId;
   dynamic discountId;
 
   Bill copyWith({
     int? id,
-    double? total,
+    dynamic total,
     int? taskId,
     dynamic discountId,
   }) =>

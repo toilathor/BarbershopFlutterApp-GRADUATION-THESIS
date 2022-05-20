@@ -122,15 +122,6 @@ class Api extends ApiBase {
     }
   }
 
-  Future<api_res.Response?> getRating({required int stylistId}) async {
-    try {
-      var res = await dio.get('/stylist/rating/$stylistId');
-      return castRes(res);
-    } catch (e) {
-      return null;
-    }
-  }
-
   Future<api_res.Response?> getTimeSlot() async {
     try {
       var res = await dio.get('/time-slot');

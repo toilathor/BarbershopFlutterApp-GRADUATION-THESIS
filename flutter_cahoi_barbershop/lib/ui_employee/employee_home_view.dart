@@ -6,11 +6,6 @@ import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/server_config.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/logout_dialog.dart';
-import 'package:flutter_cahoi_barbershop/ui_admin/views/analysis_tab.dart';
-import 'package:flutter_cahoi_barbershop/ui_admin/views/business_tab.dart';
-import 'package:flutter_cahoi_barbershop/ui_admin/views/hr_tab.dart';
-import 'package:flutter_cahoi_barbershop/ui_admin/views/product_tab.dart';
-import 'package:flutter_cahoi_barbershop/ui_employee/report_task_view.dart';
 import 'package:flutter_cahoi_barbershop/ui_employee/task_tab.dart';
 
 class EmployeeHomeView extends StatefulWidget {
@@ -76,7 +71,7 @@ class _EmployeeHomeViewState extends State<EmployeeHomeView> {
                     },
                     leading: Icon(Icons.cut),
                     title: const Text(
-                      'Task',
+                      'Nhiệm vụ',
                     ),
                   ),
                   const Divider(),
@@ -88,7 +83,7 @@ class _EmployeeHomeViewState extends State<EmployeeHomeView> {
                       Icons.logout,
                       color: Colors.red,
                     ),
-                    title: const Text('Logout'),
+                    title: const Text('Đăng xuất'),
                   ),
                 ],
               ),

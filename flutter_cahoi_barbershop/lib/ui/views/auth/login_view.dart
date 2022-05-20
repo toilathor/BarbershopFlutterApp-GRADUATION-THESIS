@@ -136,12 +136,16 @@ class _LoginViewState extends State<LoginView> {
                   ? Column(
                       children: [
                         Text(
-                          "Hoặc tiếp tự với",
+                          "Hoặc tiếp tục với",
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.black.withOpacity(0.5),
                             fontFamily: fontBold,
                           ),
+                        ),
+                        Divider(
+                          indent: 50,
+                          endIndent: 50,
                         ),
                         SizedBox(
                           height: size.height * 0.03,
@@ -214,7 +218,7 @@ class _LoginViewState extends State<LoginView> {
         height: 50,
         width: size.width * 0.9,
         onPressed: isValidatePhoneNumber ? onCheckUserExisted : null,
-        title: "Continue",
+        title: "Tiếp tục",
       );
 
   Widget _buildSocials({

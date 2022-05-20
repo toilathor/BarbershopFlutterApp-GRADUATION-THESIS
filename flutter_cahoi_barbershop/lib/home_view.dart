@@ -27,10 +27,7 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: IndexedStack(
-          children: _listPage,
-          index: _currentIndex,
-        ),
+        body: _listPage[_currentIndex],
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: Theme.of(context).primaryColor,
           type: BottomNavigationBarType.fixed,
@@ -43,12 +40,8 @@ class _HomeViewState extends State<HomeView> {
               _currentIndex = value;
             });
           },
-          selectedLabelStyle: const TextStyle(
-            fontFamily: fontBold
-          ),
-          unselectedLabelStyle: const TextStyle(
-            fontFamily: fontBold
-          ),
+          selectedLabelStyle: const TextStyle(fontFamily: fontBold),
+          unselectedLabelStyle: const TextStyle(fontFamily: fontBold),
           items: const [
             BottomNavigationBarItem(
               icon: Icon(

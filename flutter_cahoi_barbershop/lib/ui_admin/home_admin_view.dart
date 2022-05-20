@@ -70,25 +70,25 @@ class _HomeAdminViewState extends State<HomeAdminView> {
                 children: [
                   _drawerTile(
                     tab: AdminTab.hr,
-                    title: 'HR',
+                    title: 'Nhân sự',
                     icon: const Icon(Icons.lock),
                   ),
                   const Divider(),
                   _drawerTile(
                     tab: AdminTab.business,
-                    title: 'Business',
+                    title: 'Công việc',
                     icon: const Icon(Icons.business_center),
                   ),
                   const Divider(),
                   _drawerTile(
                     tab: AdminTab.product,
-                    title: 'Product',
+                    title: 'Sản phẩm',
                     icon: const Icon(Icons.cut),
                   ),
                   const Divider(),
                   _drawerTile(
                     tab: AdminTab.analysis,
-                    title: 'Analysis',
+                    title: 'Phân tích',
                     icon: const Icon(Icons.bar_chart),
                   ),
                   ListTile(
@@ -99,7 +99,7 @@ class _HomeAdminViewState extends State<HomeAdminView> {
                       Icons.logout,
                       color: Colors.red,
                     ),
-                    title: const Text('Logout'),
+                    title: const Text('Đăng xuất'),
                   ),
                 ],
               ),
