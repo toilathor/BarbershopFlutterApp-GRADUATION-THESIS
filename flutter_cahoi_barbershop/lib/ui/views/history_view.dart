@@ -101,6 +101,9 @@ class _HistoryViewState extends State<HistoryView> {
                           : ListHistory(
                               controller: scrollController,
                               tasks: model.tasks,
+                              onCancelTask: (int taskId) async {
+                                await model.cancelTask(id: taskId);
+                              },
                             ),
                     ),
                   ],

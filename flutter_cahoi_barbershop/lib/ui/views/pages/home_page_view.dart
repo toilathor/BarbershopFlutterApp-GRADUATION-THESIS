@@ -351,7 +351,7 @@ class _HomePageViewState extends State<HomePageView> {
                           Text(
                             date_format.formatDate(
                                 DateTime.tryParse(item.publishedAt) ??
-                                    timeStart,
+                                    DateTime.now(),
                                 fullFormatDatetime),
                           ),
                         ],

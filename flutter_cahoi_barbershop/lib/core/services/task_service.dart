@@ -67,4 +67,14 @@ class TaskService {
 
     return [];
   }
+
+  Future<bool> cancelTask({required int id}) async {
+    var res = await _api.cancelTask(data: {"task_id": id});
+
+    if (res != null && res.data) {
+      return true;
+    }
+
+    return false;
+  }
 }

@@ -377,6 +377,7 @@ class _BookingViewState extends State<BookingView>
                       model.changeCurrentTimeSlot(timeSlot: timeSlot);
                     },
                     timeSlots: model.timeSlotsDefault,
+                    selectedDate: model.selectedDate,
                   ),
                 ),
               ),

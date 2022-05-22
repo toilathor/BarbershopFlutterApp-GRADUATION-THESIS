@@ -133,7 +133,7 @@ class BookingModel extends BaseModel {
     if (stylist != null) {
       res = await _bookingService.getTimeSlotSelected(
         stylistId: stylist.id ?? 0,
-        date: format_date.formatDate(selectedDate, formatDate),
+        date: format_date.formatDate(selectedDate, fDate),
       );
     }
 
@@ -209,7 +209,7 @@ class BookingModel extends BaseModel {
         '${currentTimeSlot!.time ?? ""}');
     Map<String, dynamic> data = {
       "time_slot_id": currentTimeSlot!.id,
-      "date": format_date.formatDate(selectedDate, formatDate),
+      "date": format_date.formatDate(selectedDate, fDate),
       "notes": notes,
       "stylist_id": selectedStylist!.id ?? 0,
       'products': selectedProducts.map((e) => e.id).toList()

@@ -96,7 +96,7 @@ class Api extends ApiBase {
       {required int facilityId, required DateTime date}) async {
     try {
       var res = await dio.get('/stylist/facility/$facilityId',
-          queryParameters: {"date": date_format.formatDate(date, formatDate)});
+          queryParameters: {"date": date_format.formatDate(date, fDate)});
       return castRes(res);
     } catch (e) {
       return null;
@@ -268,7 +268,7 @@ class Api extends ApiBase {
     }
   }
 
-  Future<api_res.Response?> getPost({required Map<String, int> data}) async{
+  Future<api_res.Response?> getPost({required Map<String, int> data}) async {
     try {
       var res = await dio.get('/post/in-month', queryParameters: data);
       return castRes(res);
@@ -277,9 +277,18 @@ class Api extends ApiBase {
     }
   }
 
-  Future<api_res.Response?> likePost({required Map<String, int> data}) async{
+  Future<api_res.Response?> likePost({required Map<String, int> data}) async {
     try {
       var res = await dio.post('/post/like', queryParameters: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> cancelTask({required Map<String, dynamic> data}) async {
+    try {
+      var res = await dio.delete('/task', data: data);
       return castRes(res);
     } catch (e) {
       return null;

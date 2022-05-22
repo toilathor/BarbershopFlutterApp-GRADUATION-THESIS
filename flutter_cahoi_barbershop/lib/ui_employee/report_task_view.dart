@@ -127,7 +127,7 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "${status ? "Xong" : "Đang đợi"}",
+                            status ? "Xong" : "Đang đợi",
                             style: TextStyle(
                               fontSize: 20,
                               fontFamily: fontBold,

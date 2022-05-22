@@ -11,11 +11,16 @@ import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ListHistory extends StatefulWidget {
-  const ListHistory({Key? key, required this.controller, this.tasks = const []})
+  const ListHistory(
+      {Key? key,
+      required this.controller,
+      this.tasks = const [],
+      required this.onCancelTask})
       : super(key: key);
 
   final ScrollController controller;
   final List<Task> tasks;
+  final Function(int taskId) onCancelTask;
 
   @override
   State<ListHistory> createState() => _ListHistoryState();
@@ -31,15 +36,20 @@ class _ListHistoryState extends State<ListHistory> {
       itemCount: widget.tasks.length,
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
-        return HistoryTile(task: widget.tasks[index]);
+        return HistoryTile(
+          task: widget.tasks[index],
+          onCancelTask: widget.onCancelTask,
+        );
       },
     );
   }
 }
 
 class HistoryTile extends StatefulWidget {
-  const HistoryTile({Key? key, required this.task}) : super(key: key);
+  const HistoryTile({Key? key, required this.task, required this.onCancelTask})
+      : super(key: key);
   final Task task;
+  final Function(int taskId) onCancelTask;
 
   @override
   State<HistoryTile> createState() => _HistoryTileState();
@@ -204,15 +214,18 @@ class _HistoryTileState extends State<HistoryTile> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Expanded(
-                              child: ElevatedButton.icon(
-                                onPressed: () {
-                                  _shareImage(task: widget.task);
-                                },
-                                icon: const Icon(
-                                  Icons.share,
-                                ),
-                                label: const Text(
-                                  "Chia sẻ",
+                              child: Visibility(
+                                visible: widget.task.status == 1,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    _shareImage(task: widget.task);
+                                  },
+                                  icon: const Icon(
+                                    Icons.share,
+                                  ),
+                                  label: const Text(
+                                    "Chia sẻ",
+                                  ),
                                 ),
                               ),
                             ),
@@ -236,7 +249,23 @@ class _HistoryTileState extends State<HistoryTile> {
                       Visibility(
                         visible: widget.task.status != 1,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            AwesomeDialog(
+                              context: context,
+                              title: "Hủy lịch",
+                              body: const Text(
+                                "Bạn có chắc chắn muốn hủy lịch không",
+                                style: TextStyle(
+                                  fontFamily: fontBold,
+                                ),
+                              ),
+                              btnOkOnPress: () {
+                                widget.onCancelTask(widget.task.id ?? 0);
+                              },
+                              btnCancelOnPress: () {},
+                              dialogType: DialogType.QUESTION,
+                            ).show();
+                          },
                           child: const Text(
                             'Hủy lịch',
                             style: TextStyle(

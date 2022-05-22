@@ -11,11 +11,13 @@ class TimeSlots extends StatefulWidget {
     this.currentTimeSlot,
     required this.onPressed,
     this.timeSlots = const [],
+    required this.selectedDate,
   }) : super(key: key);
 
   final TimeSlot? currentTimeSlot;
   final Function(TimeSlot timeSlot) onPressed;
   final List<TimeSlot> timeSlots;
+  final DateTime selectedDate;
 
   @override
   _TimeSlotsState createState() => _TimeSlotsState();
@@ -24,10 +26,16 @@ class TimeSlots extends StatefulWidget {
 class _TimeSlotsState extends State<TimeSlots> {
   Size size = Size.zero;
 
-  String dateTemp = "2020-02-02 ";
+  String dateTemp = "2020-02-02";
 
   @override
   void initState() {
+    final day = widget.selectedDate.day.toString().padLeft(2, "0");
+    final month = widget.selectedDate.month.toString().padLeft(2, "0");
+    final year = widget.selectedDate.year;
+
+    dateTemp = "$year-$month-$day";
+
     super.initState();
   }
 
@@ -51,11 +59,11 @@ class _TimeSlotsState extends State<TimeSlots> {
               childAspectRatio: 2 / 4,
             ),
             itemBuilder: (BuildContext context, int index) => GestureDetector(
-              onTap: widget.timeSlots[index].isSelected ?? false
-                  ? null
-                  : () {
+              onTap: canSelect(widget.timeSlots[index])
+                  ? () {
                       widget.onPressed(widget.timeSlots[index]);
-                    },
+                    }
+                  : null,
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 245),
                 decoration: BoxDecoration(
@@ -64,7 +72,7 @@ class _TimeSlotsState extends State<TimeSlots> {
                       ? primaryColor
                       : null,
                   border: Border.all(
-                    color: widget.timeSlots[index].isSelected ?? false
+                    color: !canSelect(widget.timeSlots[index])
                         ? primaryColor.withOpacity(0.1)
                         : primaryColor,
                     width: 2,
@@ -74,7 +82,7 @@ class _TimeSlotsState extends State<TimeSlots> {
                   child: Text(
                     format_date.formatDate(
                       DateTime.parse(
-                          "$dateTemp${widget.timeSlots[index].time}"),
+                          "$dateTemp ${widget.timeSlots[index].time}"),
                       [HH, ':', nn],
                     ).toString(),
                     style: TextStyle(
@@ -89,10 +97,32 @@ class _TimeSlotsState extends State<TimeSlots> {
   }
 
   Color _getColorText(TimeSlot timeSlot) {
-    if (timeSlot.isSelected ?? false) {
+    if (!canSelect(timeSlot)) {
       return primaryColor.withOpacity(0.1);
     } else {
       return (widget.currentTimeSlot != timeSlot ? primaryColor : Colors.white);
+    }
+  }
+
+  bool canSelect(TimeSlot timeSlot) {
+    DateTime dateTime = DateTime.parse("$dateTemp ${timeSlot.time}");
+
+    // print();
+    if (format_date
+            .formatDate(widget.selectedDate, fDate)
+            .compareTo(format_date.formatDate(DateTime.now(), fDate)) ==
+        0) {
+      if (dateTime.isAfter(DateTime.now()) && !(timeSlot.isSelected ?? false)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (!(timeSlot.isSelected ?? false)) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 }
