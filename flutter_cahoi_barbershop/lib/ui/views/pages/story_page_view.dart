@@ -65,20 +65,24 @@ class _StoryPageViewState extends State<StoryPageView> {
           ],
           title: Text("Top ${date_format.formatDate(DateTime.now(), [MM])}"),
         ),
-        body: RefreshIndicator(
-          onRefresh: () async {
-            model.resetList();
-            await model.changePosts();
-          },
-          child: ListView.builder(
-            controller: scrollController,
-            physics: const BouncingScrollPhysics(),
-            itemCount: model.posts.length,
-            itemBuilder: (context, index) => PostTile(
-              post: model.posts[index],
-              onLikePost: () async {
-                return await model.likePost(model.posts[index].id ?? 0);
-              },
+        body: Center(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              model.resetList();
+              await model.changePosts();
+            },
+            child: ListView.builder(
+              controller: scrollController,
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
+              itemCount: model.posts.length,
+              itemBuilder: (context, index) => PostTile(
+                post: model.posts[index],
+                onLikePost: () async {
+                  return await model.likePost(model.posts[index].id ?? 0);
+                },
+              ),
             ),
           ),
         ),

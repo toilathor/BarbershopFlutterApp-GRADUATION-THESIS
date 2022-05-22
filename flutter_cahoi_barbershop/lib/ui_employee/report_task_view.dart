@@ -102,8 +102,7 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                                 bottom: 0,
                                 height: size.height * 0.15,
                                 child: ClipRRect(
-                                  borderRadius:
-                                  borderRadiusCircle,
+                                  borderRadius: borderRadiusCircle,
                                   child: Image.network(
                                     "${model.task?.customer?.avatar}",
                                     errorBuilder:
@@ -210,7 +209,7 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                               Expanded(
                                 flex: 2,
                                 child: Text(
-                                  "$total""K",
+                                  "$total" "K",
                                   style: const TextStyle(
                                     fontFamily: fontBold,
                                     fontSize: 30,
@@ -389,6 +388,11 @@ class _ReportTaskViewState extends State<ReportTaskView> {
               title: 'Xóa',
               body: const Text("Bạn có muốn xóa ảnh này?"),
               btnOkOnPress: () {
+                setState(() {
+                  images.removeAt(index);
+                });
+              },
+              btnCancelOnPress: () {
                 setState(() {
                   images.removeAt(index);
                 });

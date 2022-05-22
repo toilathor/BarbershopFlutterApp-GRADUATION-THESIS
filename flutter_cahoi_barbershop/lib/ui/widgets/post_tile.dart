@@ -90,7 +90,7 @@ class _PostTileState extends State<PostTile> {
             ],
           ),
           Visibility(
-            visible: widget.post.captions!.isNotEmpty,
+            visible: widget.post.captions != null,
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),

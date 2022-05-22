@@ -65,7 +65,9 @@ class _YourStoryViewState extends State<YourStoryView> {
           },
           child: ListView.builder(
             controller: scrollController,
-            physics: const BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
             itemCount: model.posts.length,
             itemBuilder: (context, index) => PostTile(
               post: model.posts[index],

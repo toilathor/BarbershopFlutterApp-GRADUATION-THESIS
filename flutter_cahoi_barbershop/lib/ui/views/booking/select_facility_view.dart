@@ -47,22 +47,27 @@ class _SelectFacilityViewState extends State<SelectFacilityView> {
                 ? const Center(
                     child: Text('Đã có lỗi sảy ra!'),
                   )
-                : ListView.builder(
-                    itemCount: model.facilities.length,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) => FacilityTile(
-                      facility: model.facilities[index],
-                      isFirst: index == 0,
-                      distance: Geolocator.distanceBetween(
-                          model.position!.latitude,
-                          model.position!.longitude,
-                          model.facilities[index].latitude ?? 0,
-                          model.facilities[index].longitude ?? 0),
-                      onPress: () {
-                        Navigator.of(context).pop(
-                          {'selection': model.facilities[index]},
-                        );
-                      },
+                : RefreshIndicator(
+                    onRefresh: () async {
+                      await model.changeFacilities();
+                    },
+                    child: ListView.builder(
+                      itemCount: model.facilities.length,
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index) => FacilityTile(
+                        facility: model.facilities[index],
+                        isFirst: index == 0,
+                        distance: Geolocator.distanceBetween(
+                            model.position!.latitude,
+                            model.position!.longitude,
+                            model.facilities[index].latitude ?? 0,
+                            model.facilities[index].longitude ?? 0),
+                        onPress: () {
+                          Navigator.of(context).pop(
+                            {'selection': model.facilities[index]},
+                          );
+                        },
+                      ),
                     ),
                   )),
       ),
