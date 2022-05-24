@@ -443,6 +443,8 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                       // ignore: invalid_use_of_visible_for_testing_member
                       await ImagePicker.platform.pickImage(
                     source: ImageSource.camera,
+                    maxHeight: 1080,
+                    maxWidth: 1080,
                   );
 
                   if (imagePicked != null) {
@@ -472,7 +474,10 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                 onTap: () async {
                   var imagePicked =
                       // ignore: invalid_use_of_visible_for_testing_member
-                      await ImagePicker.platform.pickMultiImage();
+                      await ImagePicker.platform.pickMultiImage(
+                    maxHeight: 1080,
+                    maxWidth: 1080,
+                  );
                   if (imagePicked != null) {
                     setState(() {
                       if (images.isEmpty) {

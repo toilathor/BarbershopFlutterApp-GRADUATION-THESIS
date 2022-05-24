@@ -7,8 +7,8 @@ import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 class ApiBase {
   var options = BaseOptions(
     baseUrl: "$localHost/api",
-    connectTimeout: 5000,
-    receiveTimeout: 3000,
+    connectTimeout: 30000,
+    receiveTimeout: 30000,
   );
 
   late Dio dio;
