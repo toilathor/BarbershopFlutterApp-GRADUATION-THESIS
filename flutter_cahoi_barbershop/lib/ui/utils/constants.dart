@@ -5,6 +5,7 @@ const localHost = 'http://192.168.1.11:8000';
 const baseLinkAPIYT = 'https://www.googleapis.com/youtube/v3';
 
 final fDate = [yyyy, '-', mm, '-', dd];
+final dateVI = [dd, '-', mm, ' ', hh, ':', nn];
 final fullFormatDatetime = [yyyy, '-', mm, '-', dd, ' ', hh, ':', mm, ':', ss];
 final formatTime = [hh, ':', mm];
 final fullFormatTime = [hh, ':', mm, ':', ss];

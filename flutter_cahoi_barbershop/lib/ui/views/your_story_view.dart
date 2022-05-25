@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cahoi_barbershop/core/models/post.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/story_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/post_tile.dart';
 
@@ -20,61 +23,105 @@ class _YourStoryViewState extends State<YourStoryView> {
 
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
+
     return BaseView<StoryModel>(
       onModelReady: (model) async {
-        await model.changePosts();
+        await model.changePosts(userId: user.id);
 
         scrollController.addListener(() async {
           if (scrollController.position.pixels ==
                   scrollController.position.maxScrollExtent &&
               !model.isLoading) {
-            await model.changePosts();
+            await model.changePosts(userId: user.id);
           }
         });
       },
       builder: (context, model, child) => Scaffold(
-        appBar: AppBar(
-          actions: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    '/your-story',
-                  );
-                },
-                icon: ClipRRect(
-                  borderRadius: BorderRadius.circular(100.0),
-                  child: Image.network(
-                    '${user.avatar}',
-                    errorBuilder: (context, error, stackTrace) => const Icon(
-                      Icons.location_history_rounded,
-                    ),
-                  ),
-                ),
-                tooltip: 'Your Story',
-              ),
-            )
-          ],
-        ),
+        appBar: AppBar(),
         body: RefreshIndicator(
           onRefresh: () async {
             model.resetList();
-            await model.changePosts();
+            await model.changePosts(userId: user.id);
           },
           child: ListView.builder(
-            controller: scrollController,
             physics: const BouncingScrollPhysics(
               parent: AlwaysScrollableScrollPhysics(),
             ),
-            itemCount: model.posts.length,
-            itemBuilder: (context, index) => PostTile(
-              post: model.posts[index],
-              onLikePost: () async {
-                await model.likePost(model.posts[index].id ?? 0);
-              },
-            ),
+            itemCount: model.posts.length + 1,
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 50.0),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: size.height * 0.23,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Positioned(
+                              top: 0,
+                              child: Material(
+                                elevation: 8.0,
+                                child: SizedBox(
+                                  height: size.height * 0.15,
+                                  width: size.width,
+                                  child: Image.asset(
+                                    "assets/bg_cahoibarbershop.jpg",
+                                    fit: BoxFit.fitWidth,
+                                    color: Colors.black.withOpacity(0.7),
+                                    colorBlendMode: BlendMode.colorBurn,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              height: size.height * 0.15,
+                              child: ClipRRect(
+                                borderRadius: borderRadiusCircle,
+                                child: Image.network(
+                                  "${user.avatar}",
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.05,
+                        child: FittedBox(
+                          child: Text(
+                            '${user.name}',
+                            style: const TextStyle(fontFamily: fontBold),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              Post post = model.posts[index - 1];
+              int isLiked = model.likedPost.firstWhere(
+                (element) => element == post.id,
+                orElse: () => -1,
+              );
+
+              return PostTile(
+                post: post,
+                isLiked: isLiked != -1,
+                onLikePost: () async {
+                  return await model.likePost(post.id ?? 0);
+                },
+                onDelete: () {
+                  // model.deletePost();
+                },
+                onEdit: () {
+                  // model.onEdit();
+                },
+              );
+            },
           ),
         ),
       ),

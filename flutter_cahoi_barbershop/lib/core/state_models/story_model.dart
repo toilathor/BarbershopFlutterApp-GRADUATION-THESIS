@@ -1,3 +1,4 @@
+import 'package:flutter_cahoi_barbershop/core/models/data_post.dart';
 import 'package:flutter_cahoi_barbershop/core/models/post.dart';
 import 'package:flutter_cahoi_barbershop/core/services/post_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/base.dart';
@@ -8,11 +9,12 @@ class StoryModel extends BaseModel {
   final _postService = locator<PostService>();
 
   List<Post> posts = [];
+  List<int> likedPost = [];
 
   bool isLoading = false;
   int currentPage = 1;
 
-  Future changePosts() async {
+  Future changePosts({int? userId}) async {
     if (currentPage == 0) {
       return;
     }
@@ -20,16 +22,28 @@ class StoryModel extends BaseModel {
     isLoading = true;
     notifyListeners();
 
-    var res = await _postService.getPost(
-      page: currentPage,
-    );
+    DataPost? res;
+    if (userId != null) {
+      res = await _postService.getWall(
+        userId: userId,
+        page: currentPage,
+      );
+    } else {
+      res = await _postService.getPost(
+        page: currentPage,
+      );
+    }
 
-    posts += res;
-
-    currentPage++;
-
-    if (res.isEmpty) {
-      currentPage = 0;
+    if (res != null && res.posts != null) {
+      if (res.posts!.isNotEmpty) {
+        posts.addAll(res.posts ?? []);
+        likedPost.addAll(res.likedPost ?? []);
+        currentPage++;
+      } else {
+        currentPage = 0;
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Error!");
     }
 
     isLoading = false;
@@ -38,25 +52,34 @@ class StoryModel extends BaseModel {
 
   Future<bool> likePost(int postId) async {
     var res = await _postService.likePost(postId: postId);
-
+    int indexPost =
+        posts.indexOf(posts.firstWhere((element) => element.id == postId));
+    int indexLikedPost = likedPost.indexOf(
+      likedPost.firstWhere((element) => element == postId, orElse: () => -1),
+    );
     if (res == null) {
       Fluttertoast.showToast(msg: 'Error!');
       return false;
     } else if (res == true) {
-      posts.firstWhere((element) => element.id == postId).likeCount =
-          (posts.firstWhere((element) => element.id == postId).likeCount ?? 0) +
-              1;
+      posts[indexPost].likeCount = (posts[indexPost].likeCount ?? 0) + 1;
+      if (indexLikedPost == -1) {
+        likedPost.add(postId);
+      }
+      notifyListeners();
       return true;
     } else {
-      posts.firstWhere((element) => element.id == postId).likeCount =
-          (posts.firstWhere((element) => element.id == postId).likeCount ?? 0) -
-              1;
+      posts[indexPost].likeCount = (posts[indexPost].likeCount ?? 0) - 1;
+      if (indexLikedPost != -1) {
+        likedPost.removeAt(indexLikedPost);
+      }
+      notifyListeners();
       return false;
     }
   }
 
   resetList() {
     posts.clear();
+    likedPost.clear();
     isLoading = false;
     currentPage = 1;
     notifyListeners();

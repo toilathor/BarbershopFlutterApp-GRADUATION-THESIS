@@ -1,6 +1,7 @@
 import 'package:date_format/date_format.dart';
 import 'package:date_format/date_format.dart' as date_format;
 import 'package:flutter/material.dart';
+import 'package:flutter_cahoi_barbershop/core/models/post.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/story_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
@@ -77,12 +78,27 @@ class _StoryPageViewState extends State<StoryPageView> {
                 parent: AlwaysScrollableScrollPhysics(),
               ),
               itemCount: model.posts.length,
-              itemBuilder: (context, index) => PostTile(
-                post: model.posts[index],
-                onLikePost: () async {
-                  return await model.likePost(model.posts[index].id ?? 0);
-                },
-              ),
+              itemBuilder: (context, index) {
+                Post post = model.posts[index];
+                int isLiked = model.likedPost.firstWhere(
+                  (element) => element == post.id,
+                  orElse: () => -1,
+                );
+
+                return PostTile(
+                  post: post,
+                  isLiked: isLiked != -1,
+                  onLikePost: () async {
+                    return await model.likePost(model.posts[index].id ?? 0);
+                  },
+                  onDelete: () {
+                    // model.deletePost();
+                  },
+                  onEdit: () {
+                    // model.onEdit();
+                  },
+                );
+              },
             ),
           ),
         ),

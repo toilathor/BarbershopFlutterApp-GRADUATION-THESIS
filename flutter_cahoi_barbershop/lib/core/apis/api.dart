@@ -277,6 +277,16 @@ class Api extends ApiBase {
     }
   }
 
+  Future<api_res.Response?> getWall(
+      {required Map<String, int> data}) async {
+    try {
+      var res = await dio.get('/post/wall', queryParameters: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<api_res.Response?> likePost({required Map<String, int> data}) async {
     try {
       var res = await dio.post('/post/like', queryParameters: data);
@@ -286,7 +296,8 @@ class Api extends ApiBase {
     }
   }
 
-  Future<api_res.Response?> cancelTask({required Map<String, dynamic> data}) async {
+  Future<api_res.Response?> cancelTask(
+      {required Map<String, dynamic> data}) async {
     try {
       var res = await dio.delete('/task', data: data);
       return castRes(res);

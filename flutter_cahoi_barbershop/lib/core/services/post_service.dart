@@ -1,5 +1,5 @@
 import 'package:flutter_cahoi_barbershop/core/apis/api.dart';
-import 'package:flutter_cahoi_barbershop/core/models/post.dart';
+import 'package:flutter_cahoi_barbershop/core/models/data_post.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 
 class PostService {
@@ -23,14 +23,19 @@ class PostService {
     return false;
   }
 
-  Future<List<Post>> getPost({required int page}) async {
+  /// return map
+  /// {
+  ///   "posts" => List<Post>,
+  ///   "likedPost" => List<int>
+  /// }
+  Future<DataPost?> getPost({required int page}) async {
     var res = await _api.getPost(data: {"page": page});
 
     if (res != null) {
-      return List<Post>.from(res.data.map((e) => Post.fromJson(e)).toList());
+      return DataPost.fromJson(res.data);
     }
 
-    return [];
+    return null;
   }
 
   Future<bool?> likePost({required int postId}) async {
@@ -41,6 +46,21 @@ class PostService {
     if (res != null) {
       return res.data;
     }
+    return null;
+  }
+
+  Future<DataPost?> getWall({
+    required int userId,
+    required int page,
+  }) async {
+    var res = await _api.getWall(
+      data: {"page": page, "user_id": userId},
+    );
+
+    if (res != null) {
+      return DataPost.fromJson(res.data);
+    }
+
     return null;
   }
 }
