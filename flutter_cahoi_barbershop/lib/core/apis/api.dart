@@ -1,5 +1,6 @@
 import 'package:date_format/date_format.dart' as date_format;
 import 'package:dio/src/form_data.dart';
+import 'package:flutter_cahoi_barbershop/core/models/post.dart';
 import 'package:flutter_cahoi_barbershop/core/models/response.dart' as api_res;
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 
@@ -95,8 +96,8 @@ class Api extends ApiBase {
   Future<api_res.Response?> getStylists(
       {required int facilityId, required DateTime date}) async {
     try {
-      var res = await dio.get('/stylist/$facilityId',
-          queryParameters: {"date": date_format.formatDate(date, formatDate)});
+      var res = await dio.get('/stylist/facility/$facilityId',
+          queryParameters: {"date": date_format.formatDate(date, fDate)});
       return castRes(res);
     } catch (e) {
       return null;
@@ -116,15 +117,6 @@ class Api extends ApiBase {
   Future<api_res.Response?> getProduct({required int typeProductId}) async {
     try {
       var res = await dio.get('/product/$typeProductId');
-      return castRes(res);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  Future<api_res.Response?> getRating({required int stylistId}) async {
-    try {
-      var res = await dio.get('/stylist/rating/$stylistId');
       return castRes(res);
     } catch (e) {
       return null;
@@ -277,7 +269,7 @@ class Api extends ApiBase {
     }
   }
 
-  Future<api_res.Response?> getPost({required Map<String, int> data}) async{
+  Future<api_res.Response?> getPost({required Map<String, int> data}) async {
     try {
       var res = await dio.get('/post/in-month', queryParameters: data);
       return castRes(res);
@@ -286,9 +278,38 @@ class Api extends ApiBase {
     }
   }
 
-  Future<api_res.Response?> likePost({required Map<String, int> data}) async{
+  Future<api_res.Response?> getWall(
+      {required Map<String, int> data}) async {
+    try {
+      var res = await dio.get('/post/wall', queryParameters: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> likePost({required Map<String, int> data}) async {
     try {
       var res = await dio.post('/post/like', queryParameters: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> cancelTask(
+      {required Map<String, dynamic> data}) async {
+    try {
+      var res = await dio.delete('/task', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> deletePost({required Map<String, dynamic> data}) async {
+    try {
+      var res = await dio.delete('/post', data: data);
       return castRes(res);
     } catch (e) {
       return null;

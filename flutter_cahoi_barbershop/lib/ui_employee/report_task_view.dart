@@ -102,8 +102,7 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                                 bottom: 0,
                                 height: size.height * 0.15,
                                 child: ClipRRect(
-                                  borderRadius:
-                                  borderRadiusCircle,
+                                  borderRadius: borderRadiusCircle,
                                   child: Image.network(
                                     "${model.task?.customer?.avatar}",
                                     errorBuilder:
@@ -127,7 +126,7 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "Task ${status ? "Successfully" : "Await"}",
+                            status ? "Xong" : "Đang đợi",
                             style: TextStyle(
                               fontSize: 20,
                               fontFamily: fontBold,
@@ -137,9 +136,9 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                         ),
                         const Divider(),
                         _buildTileBill(
-                            title: "Time:", content: "${task.time?.time}"),
+                            title: "Giờ:", content: "${task.time?.time}"),
                         const Divider(),
-                        _buildTileBill(title: "Date:", content: "${task.date}"),
+                        _buildTileBill(title: "Ngày:", content: "${task.date}"),
                         const Divider(),
                         Container(
                           padding: const EdgeInsets.all(20),
@@ -148,7 +147,7 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                               const Expanded(
                                 flex: 1,
                                 child: Text(
-                                  "Note",
+                                  "Ghi chú:",
                                   style: TextStyle(
                                     fontFamily: fontBold,
                                   ),
@@ -172,7 +171,7 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                         const Padding(
                           padding: EdgeInsets.all(12.0),
                           child: Text(
-                            "Product Use",
+                            "Dịch vụ sử dụng",
                             style: TextStyle(
                               fontSize: 20,
                               fontFamily: fontBold,
@@ -198,7 +197,7 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                               Expanded(
                                 flex: 1,
                                 child: Text(
-                                  "Total",
+                                  "Tổng",
                                   style: TextStyle(
                                     fontSize: 30,
                                     fontFamily: fontBold,
@@ -210,7 +209,7 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                               Expanded(
                                 flex: 2,
                                 child: Text(
-                                  "\$$total",
+                                  "$total" "K",
                                   style: const TextStyle(
                                     fontFamily: fontBold,
                                     fontSize: 30,
@@ -234,7 +233,7 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                     height: 28,
                     child: const FittedBox(
                       child: Text(
-                        '*long press to delete',
+                        '*nhấn giữ để xóa',
                         style: TextStyle(
                           color: Colors.red,
                         ),
@@ -297,7 +296,7 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                             context: context,
                             dialogType: DialogType.SUCCES,
                             animType: AnimType.BOTTOMSLIDE,
-                            body: const Text("Task successfully!"),
+                            body: const Text("Hoàn thành!"),
                             btnOkOnPress: () {
                               Navigator.pop(context, true);
                             },
@@ -307,7 +306,7 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                             context: context,
                             dialogType: DialogType.ERROR,
                             animType: AnimType.BOTTOMSLIDE,
-                            body: const Text("Error!"),
+                            body: const Text("Lỗi!"),
                             btnOkOnPress: () {},
                           ).show();
                         }
@@ -322,7 +321,7 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                               width: 10,
                             ),
                             Text(
-                              'Success Task',
+                              'Xong',
                               style: TextStyle(
                                 fontFamily: fontBold,
                                 color: Colors.white,
@@ -386,9 +385,14 @@ class _ReportTaskViewState extends State<ReportTaskView> {
               context: context,
               dialogType: DialogType.QUESTION,
               animType: AnimType.BOTTOMSLIDE,
-              title: 'Delete',
-              body: const Text("Do you want delete image from list image?"),
+              title: 'Xóa',
+              body: const Text("Bạn có muốn xóa ảnh này?"),
               btnOkOnPress: () {
+                setState(() {
+                  images.removeAt(index);
+                });
+              },
+              btnCancelOnPress: () {
                 setState(() {
                   images.removeAt(index);
                 });
@@ -439,6 +443,8 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                       // ignore: invalid_use_of_visible_for_testing_member
                       await ImagePicker.platform.pickImage(
                     source: ImageSource.camera,
+                    maxHeight: 1080,
+                    maxWidth: 1080,
                   );
 
                   if (imagePicked != null) {
@@ -468,7 +474,10 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                 onTap: () async {
                   var imagePicked =
                       // ignore: invalid_use_of_visible_for_testing_member
-                      await ImagePicker.platform.pickMultiImage();
+                      await ImagePicker.platform.pickMultiImage(
+                    maxHeight: 1080,
+                    maxWidth: 1080,
+                  );
                   if (imagePicked != null) {
                     setState(() {
                       if (images.isEmpty) {
@@ -480,7 +489,7 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                   }
                   Navigator.pop(context);
                 },
-                label: 'Gallery',
+                label: 'Thư viện',
               ),
             ],
           ),

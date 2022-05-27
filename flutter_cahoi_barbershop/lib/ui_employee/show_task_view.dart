@@ -95,7 +95,7 @@ class _ShowTaskViewState extends State<ShowTaskView> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "Task ${task.status! == 1 ? "Successfully" : "Await"}",
+                    "${task.status! == 1 ? "Đã xong" : "Đợi"}",
                     style: TextStyle(
                       fontSize: 20,
                       fontFamily: fontBold,
@@ -104,15 +104,15 @@ class _ShowTaskViewState extends State<ShowTaskView> {
                   ),
                 ),
                 const Divider(),
-                _buildTileBill(title: "Time:", content: "${task.time?.time}"),
+                _buildTileBill(title: "Giờ:", content: "${task.time?.time}"),
                 const Divider(),
-                _buildTileBill(title: "Date:", content: "${task.date}"),
+                _buildTileBill(title: "Ngày:", content: "${task.date}"),
                 const Divider(),
                 Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.all(12),
                   child: Text(
-                    "Note: ${task.notes ?? "NONE"}",
+                    "Ghi chú: ${task.notes ?? "NONE"}",
                     style: const TextStyle(
                       fontFamily: fontBold,
                       color: Colors.grey,
@@ -124,7 +124,7 @@ class _ShowTaskViewState extends State<ShowTaskView> {
                 const Padding(
                   padding: EdgeInsets.all(12.0),
                   child: Text(
-                    "Product Use",
+                    "Dịch vụ sử dụng",
                     style: TextStyle(
                       fontSize: 20,
                       fontFamily: fontBold,
@@ -150,7 +150,7 @@ class _ShowTaskViewState extends State<ShowTaskView> {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          "Total",
+                          "Tổng",
                           style: TextStyle(
                             fontSize: 30,
                             fontFamily: fontBold,

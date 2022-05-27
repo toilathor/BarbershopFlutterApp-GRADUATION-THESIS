@@ -11,11 +11,16 @@ import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ListHistory extends StatefulWidget {
-  const ListHistory({Key? key, required this.controller, this.tasks = const []})
+  const ListHistory(
+      {Key? key,
+      required this.controller,
+      this.tasks = const [],
+      required this.onCancelTask})
       : super(key: key);
 
   final ScrollController controller;
   final List<Task> tasks;
+  final Function(int taskId) onCancelTask;
 
   @override
   State<ListHistory> createState() => _ListHistoryState();
@@ -31,15 +36,20 @@ class _ListHistoryState extends State<ListHistory> {
       itemCount: widget.tasks.length,
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
-        return HistoryTile(task: widget.tasks[index]);
+        return HistoryTile(
+          task: widget.tasks[index],
+          onCancelTask: widget.onCancelTask,
+        );
       },
     );
   }
 }
 
 class HistoryTile extends StatefulWidget {
-  const HistoryTile({Key? key, required this.task}) : super(key: key);
+  const HistoryTile({Key? key, required this.task, required this.onCancelTask})
+      : super(key: key);
   final Task task;
+  final Function(int taskId) onCancelTask;
 
   @override
   State<HistoryTile> createState() => _HistoryTileState();
@@ -65,11 +75,11 @@ class _HistoryTileState extends State<HistoryTile> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _buildCoupleText(
-                      first: 'Time: ',
+                      first: 'Giờ: ',
                       last: "${widget.task.time?.time}",
                     ),
                     _buildCoupleText(
-                      first: 'Date: ',
+                      first: 'Ngày: ',
                       last: "${widget.task.date}",
                     ),
                   ],
@@ -88,7 +98,7 @@ class _HistoryTileState extends State<HistoryTile> {
                             children: [
                               const Expanded(
                                 child: Text(
-                                  'Rating Skill: ',
+                                  'Đ.g kĩ năng: ',
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -109,7 +119,7 @@ class _HistoryTileState extends State<HistoryTile> {
                             children: [
                               const Expanded(
                                 child: Text(
-                                  'Rating Communication: ',
+                                  'Đ.g Giao tiếp: ',
                                   overflow: TextOverflow.clip,
                                 ),
                               ),
@@ -131,7 +141,7 @@ class _HistoryTileState extends State<HistoryTile> {
                             last: "${widget.task.stylist!.user?.name}",
                           ),
                           _buildCoupleText(
-                            first: "Facility: ",
+                            first: "Cơ sở: ",
                             last: "${widget.task.stylist?.facility?.address}",
                           )
                         ],
@@ -180,9 +190,8 @@ class _HistoryTileState extends State<HistoryTile> {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    "Since you haven't come yet, "
-                                    "you don't have any photos, please come to "
-                                    "us as soon as possible",
+                                    "Vì bạn chưa đến nên chưa có ảnh, "
+                                    "nhớ tới đúng giờ nhé!",
                                     style: TextStyle(
                                       color: Colors.grey.shade500,
                                     ),
@@ -205,15 +214,18 @@ class _HistoryTileState extends State<HistoryTile> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Expanded(
-                              child: ElevatedButton.icon(
-                                onPressed: () {
-                                  _shareImage(task: widget.task);
-                                },
-                                icon: const Icon(
-                                  Icons.share,
-                                ),
-                                label: const Text(
-                                  "Share",
+                              child: Visibility(
+                                visible: widget.task.status == 1,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    _shareImage(task: widget.task);
+                                  },
+                                  icon: const Icon(
+                                    Icons.share,
+                                  ),
+                                  label: const Text(
+                                    "Chia sẻ",
+                                  ),
                                 ),
                               ),
                             ),
@@ -227,7 +239,7 @@ class _HistoryTileState extends State<HistoryTile> {
                                   Icons.info_outline,
                                 ),
                                 label: const Text(
-                                  "Show detail",
+                                  "Chi tiết",
                                 ),
                               ),
                             ),
@@ -237,9 +249,25 @@ class _HistoryTileState extends State<HistoryTile> {
                       Visibility(
                         visible: widget.task.status != 1,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            AwesomeDialog(
+                              context: context,
+                              title: "Hủy lịch",
+                              body: const Text(
+                                "Bạn có chắc chắn muốn hủy lịch không",
+                                style: TextStyle(
+                                  fontFamily: fontBold,
+                                ),
+                              ),
+                              btnOkOnPress: () {
+                                widget.onCancelTask(widget.task.id ?? 0);
+                              },
+                              btnCancelOnPress: () {},
+                              dialogType: DialogType.QUESTION,
+                            ).show();
+                          },
                           child: const Text(
-                            'Cancel booking',
+                            'Hủy lịch',
                             style: TextStyle(
                               decoration: TextDecoration.underline,
                             ),
@@ -251,7 +279,7 @@ class _HistoryTileState extends State<HistoryTile> {
                         child: TextButton(
                           onPressed: () {},
                           child: const Text(
-                            'I want delete image!',
+                            'Tôi muốn xóa ảnh!',
                             style: TextStyle(
                               decoration: TextDecoration.underline,
                             ),
@@ -297,7 +325,7 @@ class _HistoryTileState extends State<HistoryTile> {
           color: widget.task.status == 1 ? Colors.green : Colors.yellow,
         ),
         Text(
-          widget.task.status == 1 ? 'Successful' : "Waiting",
+          widget.task.status == 1 ? 'Đã xong' : "Đang chờ",
         )
       ],
     );
@@ -309,7 +337,7 @@ class _HistoryTileState extends State<HistoryTile> {
         builder: (_) {
           return Center(
             child: Image.network(
-              "$localHost/${e.link}",
+              "$localHost${e.link}",
               fit: BoxFit.cover,
               errorBuilder: (context, _, __) => Container(),
             ),
@@ -359,8 +387,7 @@ class _HistoryTileState extends State<HistoryTile> {
                 fontSize: 16,
               ),
               decoration: InputDecoration(
-                hintText: "EX: You go with 2 children, You go with you,"
-                    " Wash your hands and so on...etc",
+                hintText: "Bạn có đang nghĩ gì...?",
                 hintStyle: TextStyle(
                   fontSize: 14,
                   color: Colors.grey.withOpacity(0.5),
@@ -380,6 +407,7 @@ class _HistoryTileState extends State<HistoryTile> {
                       borderRadius: borderRadius12,
                       child: Image.network(
                         "$localHost/${task.image![index].link}",
+                        errorBuilder: (context, _, __) => Container(),
                       ),
                     ),
                   ),
@@ -415,7 +443,7 @@ class _HistoryTileState extends State<HistoryTile> {
                     }
                   },
                   child: const Text(
-                    "Share now",
+                    "Chia sẻ ngay",
                     style: TextStyle(
                       fontFamily: fontBold,
                     ),

@@ -68,7 +68,7 @@ class _HistoryViewState extends State<HistoryView> {
                   children: [
                     BoxInfo(
                       height: size.height * 0.1,
-                      title: "Name",
+                      title: "Họ Tên",
                       content: "${user.name}",
                     ),
                     const SizedBox(
@@ -84,7 +84,7 @@ class _HistoryViewState extends State<HistoryView> {
                     ),
                     BoxInfo(
                       height: size.height * 0.1,
-                      title: "Phone Number",
+                      title: "Số điện thoại",
                       content: "${user.phoneNumber}",
                     ),
                     const SizedBox(
@@ -92,10 +92,19 @@ class _HistoryViewState extends State<HistoryView> {
                     ),
                     SizedBox(
                       height: size.height * 0.6,
-                      child: ListHistory(
-                        controller: scrollController,
-                        tasks: model.tasks,
-                      ),
+                      child: model.tasks.isEmpty
+                          ? const Center(
+                              child: Text(
+                                'Bạn chưa bao giờ trải nghiệm dịch vụ của chúng tôi..🥲🥲🥲',
+                              ),
+                            )
+                          : ListHistory(
+                              controller: scrollController,
+                              tasks: model.tasks,
+                              onCancelTask: (int taskId) async {
+                                await model.cancelTask(id: taskId);
+                              },
+                            ),
                     ),
                   ],
                 ),

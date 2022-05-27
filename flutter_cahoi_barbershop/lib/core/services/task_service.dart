@@ -61,9 +61,20 @@ class TaskService {
     var res = await _api.getTaskHistory(data: {"page": page});
 
     if (res != null) {
+      print("object");
       return List<Task>.from(res.data.map((e) => Task.fromJson(e)).toList());
     }
 
     return [];
+  }
+
+  Future<bool> cancelTask({required int id}) async {
+    var res = await _api.cancelTask(data: {"task_id": id});
+
+    if (res != null && res.data) {
+      return true;
+    }
+
+    return false;
   }
 }

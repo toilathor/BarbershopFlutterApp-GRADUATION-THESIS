@@ -6,7 +6,6 @@ import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/widgets/product_tile.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/elevated_button_icon.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class SelectProductView extends StatefulWidget {
   final BookingModel model;
@@ -57,7 +56,7 @@ class _SelectProductViewState extends State<SelectProductView>
                   ),
                 ),
           title: const Text(
-            "Select Service",
+            "Chọn dịch vụ",
           ),
         ),
         body: Stack(
@@ -73,19 +72,20 @@ class _SelectProductViewState extends State<SelectProductView>
               left: 0,
               right: 0,
               child: Container(
-                  height: size.height * 0.08,
-                  padding: const EdgeInsets.all(8.0),
-                  color: Theme.of(context).backgroundColor,
-                  child: ElevatedButtonIcon(
-                    onPressed: () {
-                      Navigator.of(context)
-                          .pop({'services': model.selectedProducts});
-                    },
-                    title: model.selectedProducts.isEmpty
-                        ? 'Select service'.toUpperCase()
-                        : 'Select ${model.selectedProducts.length} service'
-                            .toUpperCase(),
-                  )),
+                height: size.height * 0.08,
+                padding: const EdgeInsets.all(8.0),
+                color: Theme.of(context).backgroundColor,
+                child: ElevatedButtonIcon(
+                  onPressed: model.selectedProducts.isEmpty
+                      ? null
+                      : () {
+                          Navigator.of(context)
+                              .pop({'services': model.selectedProducts});
+                        },
+                  title: 'Đã chọn ${model.selectedProducts.length} dịch vụ'
+                      .toUpperCase(),
+                ),
+              ),
             )
           ],
         ),
@@ -109,7 +109,7 @@ class _SelectProductViewState extends State<SelectProductView>
     final paddingW = size.width * 0.01;
 
     List<Widget> tabBarViews = [];
-    for (int i = 0; i < model.typeProducts.length; i++) {
+    for (int i = model.typeProducts.length - 1; i >= 0; i--) {
       tabBarViews.add(
         model.products[i].isEmpty
             ? Center(
@@ -119,7 +119,7 @@ class _SelectProductViewState extends State<SelectProductView>
                   // width: ,
                 ),
               )
-            : MasonryGridView.builder(
+            : GridView.builder(
                 physics: const BouncingScrollPhysics(),
                 padding: EdgeInsets.only(
                   left: paddingW,
@@ -127,12 +127,12 @@ class _SelectProductViewState extends State<SelectProductView>
                   top: paddingW,
                   bottom: size.height * 0.1,
                 ),
-                crossAxisSpacing: paddingW,
-                mainAxisSpacing: paddingW,
                 itemCount: model.products[i].length,
-                gridDelegate:
-                    const SliverMasonryGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
+                  childAspectRatio: 4 / 7,
                 ),
                 itemBuilder: (context, index) {
                   final productTemp = model.products[i][index];
@@ -142,12 +142,9 @@ class _SelectProductViewState extends State<SelectProductView>
                     onPressSelect: () {
                       model.selectedProduct(productTemp);
                     },
-                    onPressInfo: () {
-                      //TODO: Go to Info Service
-                    },
                     width: size.width / 2,
                     height: size.height / 2.7,
-                    serviceCut: productTemp,
+                    product: productTemp,
                   );
                 },
               ),

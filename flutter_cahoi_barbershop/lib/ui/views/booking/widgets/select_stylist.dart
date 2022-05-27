@@ -10,9 +10,9 @@ class SelectStylist extends StatefulWidget {
     this.current,
   }) : super(key: key);
 
-  final List<Stylist> stylists;
-  final Stylist? current;
-  final Function(Stylist? stylist) onSelected;
+  final List<StylistRate> stylists;
+  final StylistRate? current;
+  final Function(StylistRate? stylist) onSelected;
 
   @override
   _SelectStylistState createState() => _SelectStylistState();
@@ -33,7 +33,7 @@ class _SelectStylistState extends State<SelectStylist> {
           },
           child: _buildAvatarStylist(
             size: size,
-            title: "We choose stylist for you",
+            title: "Chúng tôi chọn thợ cho bạn",
             src: "https://bit.ly/3FMV625",
             isSelected: widget.current == null,
           ),
@@ -48,7 +48,7 @@ class _SelectStylistState extends State<SelectStylist> {
                   padding: const EdgeInsets.all(8.0),
                   child: Center(
                     child: Text(
-                      'the facility you selected on the date you selected is not staffed',
+                      'Cơ sở bạn đã chọn vào ngày bạn chọn không có nhân viên',
                       style: TextStyle(color: Colors.red, shadows: [
                         Shadow(
                           color: Colors.red.shade500,
@@ -70,8 +70,8 @@ class _SelectStylistState extends State<SelectStylist> {
                     },
                     child: _buildAvatarStylist(
                       size: size,
-                      title: "${widget.stylists[index].user!.name}",
-                      src: '${widget.stylists[index].user!.avatar}',
+                      title: "${widget.stylists[index].name}",
+                      src: '${widget.stylists[index].avatar}',
                       isSelected: widget.current == widget.stylists[index],
                     ),
                   ),

@@ -60,7 +60,7 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
                         const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 12.0),
                           child: Text(
-                            "Enter Password",
+                            "Nhập mật khẩu",
                             style: TextStyle(
                               fontSize: 36,
                               fontFamily: fontBold,
@@ -69,10 +69,10 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          padding: const EdgeInsets.all(12.0),
                           child: RichText(
                             text: TextSpan(
-                              text: "Please enter password of phone number ",
+                              text: "Vui lòng nhập mật khẩu của số điện thoại ",
                               children: [
                                 TextSpan(
                                   text: widget.phoneNumber,
@@ -141,10 +141,10 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
               RegExp regex = RegExp(
                   r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$');
               if (currentPassword.isEmpty) {
-                return 'Please enter password';
+                return 'Vui lòng nhập mật khẩu';
               } else {
                 if (!regex.hasMatch(currentPassword)) {
-                  return 'Enter valid password';
+                  return 'Mật khẩu không hợp lệ';
                 } else {
                   return null;
                 }
@@ -169,7 +169,7 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
             autocorrect: true,
             onFieldSubmitted: onFieldSubmitted,
             decoration: InputDecoration(
-              hintText: "Password",
+              hintText: "Mật khẩu",
               counterText: "",
               hintStyle: TextStyle(
                 fontSize: 24,
@@ -201,7 +201,7 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
                     },
                     style: const ButtonStyle(
                         splashFactory: NoSplash.splashFactory),
-                    child: Text(isHidePassword ? 'Show' : 'Hide'),
+                    child: Text(isHidePassword ? 'Hiện' : 'Ẩn'),
                   ),
                 ],
               ),
@@ -222,7 +222,7 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
                   width: size.width * 0.9,
                   onPressed: onLogin,
                   // isLength && isUppercase && isNumeric ? onLogin : null,
-                  title: "Login",
+                  title: "Đăng nhập",
                 ),
               ),
               Padding(
@@ -238,7 +238,7 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
                           ),
                         );
                       },
-                      child: const Text("Forgot password?"),
+                      child: const Text("Quên mật khẩu?"),
                       style: const ButtonStyle(
                         splashFactory: NoSplash.splashFactory,
                       ),
@@ -260,15 +260,15 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
         padding: const EdgeInsets.all(12.0),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           TextRegex(
-            title: "• contains 1 uppercase character",
+            title: "• ít nhất 1 kí tự viết hoa",
             validated: isUppercase,
           ),
           TextRegex(
-            title: "• contains 1 numeric character",
+            title: "• ít nhất một kí tự số",
             validated: isNumeric,
           ),
           TextRegex(
-            title: "• length must be greater than or equal to 8 characters",
+            title: "• độ dài tối thiểu là 8",
             validated: isLength,
           ),
         ]),

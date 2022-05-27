@@ -130,7 +130,7 @@ class _HomePageViewState extends State<HomePageView> {
                                   height: 8,
                                 ),
                                 Text(
-                                  "your rank is ${user.rank?.rankName}",
+                                  "Hạng của bạn là ${user.rank?.rankName}",
                                   style: const TextStyle(
                                     color: Colors.white54,
                                   ),
@@ -158,14 +158,14 @@ class _HomePageViewState extends State<HomePageView> {
                             _buildNaviRoute(
                                 context: context,
                                 icons: "assets/ic_calendar.png",
-                                title: "Booking",
+                                title: "Đặt lịch",
                                 onTap: () {
                                   Navigator.pushNamed(context, '/booking');
                                 }),
                             _buildNaviRoute(
                               context: context,
                               icons: "assets/ic_history.png",
-                              title: "History",
+                              title: "Lịch sử",
                               onTap: () {
                                 Navigator.pushNamed(context, '/history');
                               },
@@ -173,13 +173,13 @@ class _HomePageViewState extends State<HomePageView> {
                             _buildNaviRoute(
                               context: context,
                               icons: "assets/ic_membership.png",
-                              title: "Membership",
+                              title: "Thành viên",
                               onTap: () => null,
                             ),
                             _buildNaviRoute(
                               context: context,
                               icons: "assets/ic_gift.png",
-                              title: "Rewards",
+                              title: "Ưu đãi",
                               onTap: () => null,
                             ),
                           ],
@@ -228,7 +228,7 @@ class _HomePageViewState extends State<HomePageView> {
                                   );
                                 },
                                 child: const Text(
-                                  "More >",
+                                  "Thêm >",
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontFamily: fontBold,
@@ -351,7 +351,7 @@ class _HomePageViewState extends State<HomePageView> {
                           Text(
                             date_format.formatDate(
                                 DateTime.tryParse(item.publishedAt) ??
-                                    timeStart,
+                                    DateTime.now(),
                                 fullFormatDatetime),
                           ),
                         ],

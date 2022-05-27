@@ -16,7 +16,7 @@ class _DiscoverPageViewState extends State<DiscoverPageView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Discover".toUpperCase()),
+        title: Text("Khám phá".toUpperCase()),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -24,7 +24,7 @@ class _DiscoverPageViewState extends State<DiscoverPageView> {
           Container(
             padding: const EdgeInsets.all(12.0),
             child: const Text(
-              'Discover the most popular hairstyles with CAHOI BARBERSHOP',
+              'Khám phá những kiểu tóc phổ biến nhất với CAHOI BARBERSHOP',
               style: TextStyle(
                 fontFamily: fontBold,
                 fontSize: 20,
@@ -42,7 +42,8 @@ class _DiscoverPageViewState extends State<DiscoverPageView> {
               crossAxisSpacing: 20.0,
               gridDelegate:
                   const SliverMasonryGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
+                crossAxisCount: 2,
+              ),
               itemBuilder: (context, index) => GestureDetector(
                 onTap: () {
                   Navigator.push(

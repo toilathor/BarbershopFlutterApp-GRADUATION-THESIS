@@ -1,12 +1,11 @@
 import 'package:date_format/date_format.dart';
 
 const hostLine = "0973271208";
-const localHost = 'http://192.168.1.11:8000';
+const localHost = 'http://192.168.1.14:8000';
 const baseLinkAPIYT = 'https://www.googleapis.com/youtube/v3';
 
-final timeStart = DateTime(2021, 1, 1, 9, 0);
-final timeEnd = DateTime(2021, 1, 1, 19, 0);
-final formatDate = [yyyy, '-', mm, '-', dd];
+final fDate = [yyyy, '-', mm, '-', dd];
+final dateVI = [dd, '-', mm, ' ', hh, ':', nn];
 final fullFormatDatetime = [yyyy, '-', mm, '-', dd, ' ', hh, ':', mm, ':', ss];
 final formatTime = [hh, ':', mm];
 final fullFormatTime = [hh, ':', mm, ':', ss];

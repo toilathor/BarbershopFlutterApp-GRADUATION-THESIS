@@ -51,32 +51,26 @@ class _RegisterViewState extends State<RegisterView> {
         body: SingleChildScrollView(
           child: SafeArea(
             child: SizedBox(
-              height: size.height - viewPadding.top - viewPadding.bottom,
+              height: size.height * 0.9 - viewPadding.top - viewPadding.bottom,
               width: size.width,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12.0),
-                          child: Text(
-                            "Register",
-                            style: TextStyle(
-                              fontSize: 36,
-                              fontFamily: fontBold,
-                              color: headerColor1,
-                            ),
-                          ),
-                        ),
-                        _buildNameField(),
-                        _buildPasswordField(),
-                        _buildRegex(),
-                      ],
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Text(
+                      "Đăng ký",
+                      style: TextStyle(
+                        fontSize: 36,
+                        fontFamily: fontBold,
+                        color: headerColor1,
+                      ),
                     ),
                   ),
+                  _buildNameField(),
+                  _buildPasswordField(),
+                  _buildRegex(),
+                  const Spacer(),
                   _buildButtonRegister(
                     onRegister: () async {
                       _gotoHome(model: model);
@@ -107,7 +101,7 @@ class _RegisterViewState extends State<RegisterView> {
                 return 'Name is too long';
               } else if (currentName.split(" ").length < 2) {
                 isValidatedName = false;
-                return 'Name must have at least 2 words';
+                return 'Tên tối thiểu 2 từ';
               } else {
                 isValidatedName = true;
                 return null;
@@ -126,14 +120,14 @@ class _RegisterViewState extends State<RegisterView> {
             maxLength: 30,
             autocorrect: true,
             decoration: InputDecoration(
-              labelText: "Please indicate your name",
+              labelText: "Họ Tên",
               floatingLabelBehavior: FloatingLabelBehavior.always,
               labelStyle: TextStyle(
                 color: Colors.black.withOpacity(0.5),
                 fontWeight: FontWeight.bold,
                 fontSize: 24,
               ),
-              hintText: "Name: Contains at least 2 words",
+              hintText: "Tên ít nhất 2 từ",
               counterText: "",
               hintStyle: TextStyle(
                 fontSize: 18,
@@ -158,10 +152,10 @@ class _RegisterViewState extends State<RegisterView> {
               RegExp regex = RegExp(
                   r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$');
               if (currentPassword.isEmpty) {
-                return 'Please enter password';
+                return 'Vui lòng nhập mật khẩu';
               } else {
                 if (!regex.hasMatch(currentPassword)) {
-                  return 'Enter valid password';
+                  return 'Mật khẩu không hợp lệ';
                 } else {
                   return null;
                 }
@@ -184,14 +178,14 @@ class _RegisterViewState extends State<RegisterView> {
             maxLength: 250,
             autocorrect: true,
             decoration: InputDecoration(
-              labelText: "Please enter a password",
+              labelText: "Mật khẩu",
               floatingLabelBehavior: FloatingLabelBehavior.always,
               labelStyle: TextStyle(
                 color: Colors.black.withOpacity(0.5),
                 fontWeight: FontWeight.bold,
                 fontSize: 24,
               ),
-              hintText: "Password",
+              hintText: "Mật khẩu",
               counterText: "",
               hintStyle: TextStyle(
                 fontSize: 18,
@@ -243,15 +237,15 @@ class _RegisterViewState extends State<RegisterView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextRegex(
-              title: "• contains 1 uppercase character",
+              title: "• ít nhất 1 kí tự viết hoa",
               validated: isUppercase,
             ),
             TextRegex(
-              title: "• contains 1 numeric character",
+              title: "• ít nhất một kí tự số",
               validated: isNumeric,
             ),
             TextRegex(
-              title: "• length must be greater than or equal to 8 characters",
+              title: "• độ dài tối thiểu là 8",
               validated: isLength,
             ),
           ],
@@ -271,7 +265,7 @@ class _RegisterViewState extends State<RegisterView> {
                     isLength && isUppercase && isValidatedName && isNumeric
                         ? onRegister
                         : null,
-                title: "Register",
+                title: "Đăng kí",
               ),
             ),
           ],

@@ -144,7 +144,7 @@ class _EditUserViewState extends State<EditUserView> {
                                 ),
                                 BoxInfo(
                                   height: size.height * 0.1,
-                                  title: "Phone Number",
+                                  title: "Số điện thoại",
                                   content: user.phoneNumber,
                                 ),
                                 Row(
@@ -154,7 +154,7 @@ class _EditUserViewState extends State<EditUserView> {
                                     const Expanded(
                                       child: Center(
                                         child: Text(
-                                          "Role",
+                                          "Vai trò",
                                         ),
                                       ),
                                     ),
@@ -176,7 +176,7 @@ class _EditUserViewState extends State<EditUserView> {
                                         visible: canSelectFacility,
                                         child: const Center(
                                           child: Text(
-                                            "Facility",
+                                            "Cơ sở",
                                           ),
                                         ),
                                       ),
@@ -217,15 +217,15 @@ class _EditUserViewState extends State<EditUserView> {
                               isEdit = false;
                               isReload = true;
                             });
-                            Fluttertoast.showToast(msg: 'Successfully!');
+                            Fluttertoast.showToast(msg: 'Thành công!');
                           } else {
-                            Fluttertoast.showToast(msg: 'Error!');
+                            Fluttertoast.showToast(msg: 'Lỗi!');
                           }
 
                           isReload = true;
                           LoadingDialog.dismiss(context);
                         },
-                        title: "Save",
+                        title: "Lưu",
                       ),
                     ),
                   ),

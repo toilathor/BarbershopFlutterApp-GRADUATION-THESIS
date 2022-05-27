@@ -67,7 +67,7 @@ class _ItemClipYoutubeState extends State<ItemClipYoutube> {
                           child: Text('${widget.item.viewCount} views ▶ '
                               '${date_format.formatDate(
                             DateTime.tryParse(widget.item.publishedAt) ??
-                                timeStart,
+                                DateTime.now(),
                             fullFormatDatetime,
                           )}'),
                         ),

@@ -56,7 +56,7 @@ class _LoginViewState extends State<LoginView> {
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 12.0),
                         child: Text(
-                          "Hello,",
+                          "Xin chào,",
                           style: TextStyle(
                             color: headerColor1,
                             fontSize: 36,
@@ -67,7 +67,7 @@ class _LoginViewState extends State<LoginView> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: Text(
-                          "Login or Register",
+                          "Đăng nhập hoặc đăng ký",
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                             fontSize: 18,
@@ -91,10 +91,10 @@ class _LoginViewState extends State<LoginView> {
                             return null;
                           } else if (phoneController.text.isEmpty) {
                             isValidatePhoneNumber = false;
-                            return "Please enter mobile number";
+                            return "Vui lòng nhập số điện thoại";
                           } else {
                             isValidatePhoneNumber = false;
-                            return "Please enter valid mobile number";
+                            return "Số điện thoại không hợp lệ";
                           }
                         },
                         onFieldSubmitted: (_) async {
@@ -136,12 +136,16 @@ class _LoginViewState extends State<LoginView> {
                   ? Column(
                       children: [
                         Text(
-                          "Or continue with",
+                          "Hoặc tiếp tục với",
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.black.withOpacity(0.5),
                             fontFamily: fontBold,
                           ),
+                        ),
+                        Divider(
+                          indent: 50,
+                          endIndent: 50,
                         ),
                         SizedBox(
                           height: size.height * 0.03,
@@ -174,14 +178,16 @@ class _LoginViewState extends State<LoginView> {
                                   color: Colors.black.withOpacity(0.5),
                                   fontFamily: fontBold,
                                 ),
-                                text: 'By continuing, you have accepted',
+                                text: 'Bằng cách tiếp tục, bạn đã chấp nhận',
                               ),
                               TextSpan(
                                 style: const TextStyle(
-                                    color: Colors.blue,
-                                    decoration: TextDecoration.underline,
-                                    fontStyle: FontStyle.italic),
-                                text: ' terms of use',
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline,
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 12
+                                ),
+                                text: ' điều khoản sử dụng',
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () async {
                                     var url =
@@ -212,7 +218,7 @@ class _LoginViewState extends State<LoginView> {
         height: 50,
         width: size.width * 0.9,
         onPressed: isValidatePhoneNumber ? onCheckUserExisted : null,
-        title: "Continue",
+        title: "Tiếp tục",
       );
 
   Widget _buildSocials({

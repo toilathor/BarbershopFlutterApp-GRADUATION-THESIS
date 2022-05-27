@@ -30,7 +30,7 @@ class TextTag extends StatelessWidget {
               color: Colors.yellow,
             ),
             child: Text(
-              "\$${product.price}",
+              "${product.price}K",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(color: primaryColor),

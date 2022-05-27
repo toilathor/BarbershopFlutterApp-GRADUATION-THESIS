@@ -69,7 +69,7 @@ class ReportTaskModel extends BaseModel {
 
     FormData formData = FormData.fromMap(data);
 
-    return _taskService.updateTaskStatus(data: formData);
+    return await _taskService.updateTaskStatus(data: formData);
   }
 
   void changeIsLoading() {

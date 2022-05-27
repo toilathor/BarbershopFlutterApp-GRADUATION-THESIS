@@ -21,7 +21,7 @@ class _SelectFacilityViewState extends State<SelectFacilityView> {
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
-          title: const Text("Select Facility"),
+          title: const Text("Chọn cơ sở"),
           automaticallyImplyLeading: false,
           leading: CupertinoNavigationBarBackButton(
             color: Theme.of(context).backgroundColor,
@@ -37,7 +37,7 @@ class _SelectFacilityViewState extends State<SelectFacilityView> {
                       height: 20.0,
                     ),
                     Text(
-                      'Loading...',
+                      'Đang tải...',
                       style: Theme.of(context).textTheme.subtitle2,
                     )
                   ],
@@ -45,24 +45,29 @@ class _SelectFacilityViewState extends State<SelectFacilityView> {
               )
             : (model.facilities.isEmpty || model.position == null
                 ? const Center(
-                    child: Text('Sad!'),
+                    child: Text('Đã có lỗi sảy ra!'),
                   )
-                : ListView.builder(
-                    itemCount: model.facilities.length,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) => FacilityTile(
-                      facility: model.facilities[index],
-                      isFirst: index == 0,
-                      distance: Geolocator.distanceBetween(
-                          model.position!.latitude,
-                          model.position!.longitude,
-                          model.facilities[index].latitude ?? 0,
-                          model.facilities[index].longitude ?? 0),
-                      onPress: () {
-                        Navigator.of(context).pop(
-                          {'selection': model.facilities[index]},
-                        );
-                      },
+                : RefreshIndicator(
+                    onRefresh: () async {
+                      await model.changeFacilities();
+                    },
+                    child: ListView.builder(
+                      itemCount: model.facilities.length,
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index) => FacilityTile(
+                        facility: model.facilities[index],
+                        isFirst: index == 0,
+                        distance: Geolocator.distanceBetween(
+                            model.position!.latitude,
+                            model.position!.longitude,
+                            model.facilities[index].latitude ?? 0,
+                            model.facilities[index].longitude ?? 0),
+                        onPress: () {
+                          Navigator.of(context).pop(
+                            {'selection': model.facilities[index]},
+                          );
+                        },
+                      ),
                     ),
                   )),
       ),
