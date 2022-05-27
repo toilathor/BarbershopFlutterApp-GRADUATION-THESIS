@@ -1,5 +1,5 @@
 import 'package:flutter_cahoi_barbershop/core/models/data_post.dart';
-import 'package:flutter_cahoi_barbershop/core/models/post.dart';
+import 'package:flutter_cahoi_barbershop/core/models/post2.dart';
 import 'package:flutter_cahoi_barbershop/core/services/post_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/base.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
@@ -8,7 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 class StoryModel extends BaseModel {
   final _postService = locator<PostService>();
 
-  List<Post> posts = [];
+  List<Post2> posts = [];
   List<int> likedPost = [];
 
   bool isLoading = false;
@@ -74,6 +74,16 @@ class StoryModel extends BaseModel {
       }
       notifyListeners();
       return false;
+    }
+  }
+
+  Future deletePost({required int postId}) async {
+    var res = await _postService.deletePost(postId: postId);
+
+    if (res) {
+      Fluttertoast.showToast(msg: "Đã xóa bài viết!");
+    } else {
+      Fluttertoast.showToast(msg: "Đã có lỗi sảy ra!");
     }
   }
 

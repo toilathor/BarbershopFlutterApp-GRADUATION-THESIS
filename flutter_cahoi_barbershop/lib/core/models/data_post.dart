@@ -1,4 +1,4 @@
-import 'package:flutter_cahoi_barbershop/core/models/post.dart';
+import 'package:flutter_cahoi_barbershop/core/models/post2.dart';
 
 class DataPost {
   DataPost({
@@ -8,19 +8,19 @@ class DataPost {
 
   DataPost.fromJson(dynamic json) {
     posts = json['posts']["data"] != null
-        ? List<Post>.from(
-            json['posts']["data"].map((e) => Post.fromJson(e)).toList())
+        ? List<Post2>.from(
+            json['posts']["data"].map((e) => Post2.fromJson(e)).toList())
         : null;
     if (json['likedPost'] != null) {
       likedPost = List<int>.from(json["likedPost"].map((e) => e).toList());
     }
   }
 
-  List<Post>? posts;
+  List<Post2>? posts;
   List<int>? likedPost;
 
   DataPost copyWith({
-    List<Post>? posts,
+    List<Post2>? posts,
     List<int>? likedPost,
   }) =>
       DataPost(

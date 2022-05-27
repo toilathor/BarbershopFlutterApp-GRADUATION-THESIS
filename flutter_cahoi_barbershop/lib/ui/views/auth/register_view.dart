@@ -51,7 +51,7 @@ class _RegisterViewState extends State<RegisterView> {
         body: SingleChildScrollView(
           child: SafeArea(
             child: SizedBox(
-              height: size.height - viewPadding.top - viewPadding.bottom,
+              height: size.height * 0.9 - viewPadding.top - viewPadding.bottom,
               width: size.width,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,7 +101,7 @@ class _RegisterViewState extends State<RegisterView> {
                 return 'Name is too long';
               } else if (currentName.split(" ").length < 2) {
                 isValidatedName = false;
-                return 'Name must have at least 2 words';
+                return 'Tên tối thiểu 2 từ';
               } else {
                 isValidatedName = true;
                 return null;

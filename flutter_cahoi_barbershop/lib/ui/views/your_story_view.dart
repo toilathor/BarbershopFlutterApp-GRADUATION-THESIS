@@ -1,5 +1,6 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/models/post.dart';
+import 'package:flutter_cahoi_barbershop/core/models/post2.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/story_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
@@ -102,7 +103,7 @@ class _YourStoryViewState extends State<YourStoryView> {
                   ),
                 );
               }
-              Post post = model.posts[index - 1];
+              Post2 post = model.posts[index - 1];
               int isLiked = model.likedPost.firstWhere(
                 (element) => element == post.id,
                 orElse: () => -1,
@@ -115,7 +116,18 @@ class _YourStoryViewState extends State<YourStoryView> {
                   return await model.likePost(post.id ?? 0);
                 },
                 onDelete: () {
-                  // model.deletePost();
+                  AwesomeDialog(
+                    context: context,
+                    dialogType: DialogType.QUESTION,
+                    btnOkOnPress: () async {
+                      await model.deletePost(postId: post.id!);
+                    },
+                    btnCancelOnPress: () {},
+                    body: const Text(
+                      "Bạn có chắc chắn muốn xóa vĩnh viễn bài viết này không?",
+                    ),
+                    title: "Xác nhận",
+                  ).show();
                 },
                 onEdit: () {
                   // model.onEdit();

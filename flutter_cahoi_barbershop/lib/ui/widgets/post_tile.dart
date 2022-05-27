@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:date_format/date_format.dart' as format_date;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/models/post.dart';
+import 'package:flutter_cahoi_barbershop/core/models/post2.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
@@ -18,10 +18,12 @@ class PostTile extends StatefulWidget {
     required this.isLiked,
     this.onDelete,
     this.onEdit,
+    this.top,
   }) : super(key: key);
 
-  final Post post;
+  final Post2 post;
   final bool isLiked;
+  final int? top;
   final Function() onLikePost;
   final Function()? onDelete;
   final Function()? onEdit;
@@ -49,7 +51,7 @@ class _PostTileState extends State<PostTile> {
     size = MediaQuery.of(context).size;
 
     return Container(
-      height: size.width * 1.3,
+      height: size.width * 1.5,
       width: size.width,
       margin: const EdgeInsets.only(bottom: 25.0),
       padding: const EdgeInsets.only(bottom: 25.0),
@@ -73,7 +75,7 @@ class _PostTileState extends State<PostTile> {
                   children: [
                     ClipRect(
                       child: Image.network(
-                        '${widget.post.customer?.avatar}',
+                        '${widget.post.task?.customer?.avatar}',
                         height: 50,
                         errorBuilder: (context, _, ___) => Container(),
                       ),
@@ -85,7 +87,7 @@ class _PostTileState extends State<PostTile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.post.customer?.name ?? "no name",
+                          widget.post.task?.customer?.name ?? "no name",
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -107,7 +109,7 @@ class _PostTileState extends State<PostTile> {
                 ),
               ),
               Visibility(
-                visible: widget.post.customer?.id ==
+                visible: widget.post.task?.customer?.id ==
                     locator<AuthenticationService>().user.id,
                 child: InkWell(
                   borderRadius: borderRadiusCircle,
@@ -189,13 +191,13 @@ class _PostTileState extends State<PostTile> {
               },
               child: CarouselSlider.builder(
                 itemBuilder: (context, index, realIndex) => Image.network(
-                    "$localHost/${widget.post.image![index].link}",
+                    "$localHost/${widget.post.task?.image![index].link}",
                     errorBuilder: (context, _, ___) => Container(),
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: double.infinity,
                     cacheHeight: 1080),
-                itemCount: widget.post.image!.length,
+                itemCount: widget.post.task?.image!.length,
                 options: CarouselOptions(
                   scrollPhysics: const BouncingScrollPhysics(),
                   initialPage: 1,
@@ -255,7 +257,7 @@ class _PostTileState extends State<PostTile> {
                 Center(
                   child: AnimatedSmoothIndicator(
                     activeIndex: activeIndex,
-                    count: widget.post.image?.length ?? 0,
+                    count: widget.post.task?.image?.length ?? 0,
                     effect: const WormEffect(
                       activeDotColor: Colors.blue,
                       dotColor: Color(0xFFC4C4C4),

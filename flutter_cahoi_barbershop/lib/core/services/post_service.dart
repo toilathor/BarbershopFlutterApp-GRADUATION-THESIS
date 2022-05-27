@@ -1,5 +1,6 @@
 import 'package:flutter_cahoi_barbershop/core/apis/api.dart';
 import 'package:flutter_cahoi_barbershop/core/models/data_post.dart';
+import 'package:flutter_cahoi_barbershop/core/models/post.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 
 class PostService {
@@ -62,5 +63,17 @@ class PostService {
     }
 
     return null;
+  }
+
+  Future<bool> deletePost({required int postId}) async {
+    var res = await _api.deletePost(data: {
+      "post" : postId,
+    });
+
+    if(res!= null){
+      return res.data;
+    }
+
+    return false;
   }
 }

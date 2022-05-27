@@ -1,5 +1,6 @@
 import 'package:date_format/date_format.dart' as date_format;
 import 'package:dio/src/form_data.dart';
+import 'package:flutter_cahoi_barbershop/core/models/post.dart';
 import 'package:flutter_cahoi_barbershop/core/models/response.dart' as api_res;
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 
@@ -300,6 +301,15 @@ class Api extends ApiBase {
       {required Map<String, dynamic> data}) async {
     try {
       var res = await dio.delete('/task', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> deletePost({required Map<String, dynamic> data}) async {
+    try {
+      var res = await dio.delete('/post', data: data);
       return castRes(res);
     } catch (e) {
       return null;
