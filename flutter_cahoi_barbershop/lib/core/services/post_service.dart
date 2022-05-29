@@ -76,4 +76,17 @@ class PostService {
 
     return false;
   }
+
+  Future<bool> updatePost({required int postId, required String captions}) async {
+    var res = await _api.updatePost(data: {
+      "post_id" : postId,
+      "captions" : captions
+    });
+
+    if(res != null){
+      return res.data;
+    }
+
+    return false;
+  }
 }

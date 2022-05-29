@@ -7,6 +7,7 @@ import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/components/bottom_sheet_edit_post.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/post_tile.dart';
 
 class YourStoryView extends StatefulWidget {
@@ -129,8 +130,10 @@ class _YourStoryViewState extends State<YourStoryView> {
                     title: "Xác nhận",
                   ).show();
                 },
-                onEdit: () {
-                  // model.onEdit();
+                onEdit: () async {
+                  await _showEditPost(post: post);
+                  await model.resetList();
+                  await model.changePosts();
                 },
               );
             },
@@ -140,8 +143,8 @@ class _YourStoryViewState extends State<YourStoryView> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
+  Future _showEditPost({required Post2 post}) async {
+    await BottomSheetEditPost.show(context, post);
+    Navigator.pop(context);
   }
 }

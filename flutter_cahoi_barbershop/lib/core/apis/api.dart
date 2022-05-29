@@ -1,6 +1,5 @@
 import 'package:date_format/date_format.dart' as date_format;
 import 'package:dio/src/form_data.dart';
-import 'package:flutter_cahoi_barbershop/core/models/post.dart';
 import 'package:flutter_cahoi_barbershop/core/models/response.dart' as api_res;
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 
@@ -278,8 +277,7 @@ class Api extends ApiBase {
     }
   }
 
-  Future<api_res.Response?> getWall(
-      {required Map<String, int> data}) async {
+  Future<api_res.Response?> getWall({required Map<String, int> data}) async {
     try {
       var res = await dio.get('/post/wall', queryParameters: data);
       return castRes(res);
@@ -307,9 +305,20 @@ class Api extends ApiBase {
     }
   }
 
-  Future<api_res.Response?> deletePost({required Map<String, dynamic> data}) async {
+  Future<api_res.Response?> deletePost(
+      {required Map<String, dynamic> data}) async {
     try {
       var res = await dio.delete('/post', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> updatePost(
+      {required Map<String, dynamic> data}) async {
+    try {
+      var res = await dio.post('/post/edit', data: data);
       return castRes(res);
     } catch (e) {
       return null;

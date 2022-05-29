@@ -87,6 +87,16 @@ class StoryModel extends BaseModel {
     }
   }
 
+  Future updatePost({required int postId, required String captions}) async {
+    var res = await _postService.updatePost(postId: postId, captions: captions);
+
+    if (res) {
+      Fluttertoast.showToast(msg: "Thành công!");
+    } else {
+      Fluttertoast.showToast(msg: "Đã có lỗi sảy ra!");
+    }
+  }
+
   resetList() {
     posts.clear();
     likedPost.clear();

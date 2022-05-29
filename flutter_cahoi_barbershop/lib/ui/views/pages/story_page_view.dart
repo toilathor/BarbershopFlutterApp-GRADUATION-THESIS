@@ -2,12 +2,12 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:date_format/date_format.dart';
 import 'package:date_format/date_format.dart' as date_format;
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/models/post.dart';
 import 'package:flutter_cahoi_barbershop/core/models/post2.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/story_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/components/bottom_sheet_edit_post.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/post_tile.dart';
 
 class StoryPageView extends StatefulWidget {
@@ -107,8 +107,10 @@ class _StoryPageViewState extends State<StoryPageView> {
                       title: "Xác nhận",
                     ).show();
                   },
-                  onEdit: () {
-                    // model.onEdit();
+                  onEdit: () async {
+                    await _showEditPost(post: post);
+                    await model.resetList();
+                    await model.changePosts();
                   },
                 );
               },
@@ -117,5 +119,10 @@ class _StoryPageViewState extends State<StoryPageView> {
         ),
       ),
     );
+  }
+
+  Future _showEditPost({required Post2 post}) async {
+    await BottomSheetEditPost.show(context, post);
+    Navigator.pop(context);
   }
 }
