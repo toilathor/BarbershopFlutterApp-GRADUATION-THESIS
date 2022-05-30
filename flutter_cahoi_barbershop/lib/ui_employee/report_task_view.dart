@@ -423,8 +423,10 @@ class _ReportTaskViewState extends State<ReportTaskView> {
 
   void showMenuPick() {
     showModalBottomSheet<void>(
-      shape: RoundedRectangleBorder(
-        borderRadius: borderRadius20,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(8),
+        ),
       ),
       context: context,
       builder: (BuildContext context) {

@@ -192,6 +192,24 @@ class AuthModel extends BaseModel {
     });
   }
 
+  Future<bool> checkPassword({required String oldPassword}) async {
+    var res = await _authService.checkPassword(oldPassword: oldPassword);
+    if (res != null) {
+      return res;
+    }
+
+    Fluttertoast.showToast(msg: "error!");
+    return false;
+  }
+
+  Future<bool> changePassword({required String newPassword}) async {
+    var res = await _authService.changePassword(newPassword: newPassword);
+    if (res != null) {
+      return res;
+    }
+    return true;
+  }
+
   loginOut() async {
     return _authService.logOut();
   }

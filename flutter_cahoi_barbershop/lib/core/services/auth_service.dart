@@ -152,6 +152,30 @@ class AuthenticationService {
     return null;
   }
 
+  Future<bool?> checkPassword({required String oldPassword}) async {
+    var res = await _api.checkPassword(data: {
+      "password": oldPassword,
+    });
+
+    if (res != null) {
+      return res.data;
+    }
+
+    return null;
+  }
+
+  Future<bool?> changePassword({required String newPassword}) async {
+    var res = await _api.changePassword(data: {
+      "password": newPassword,
+    });
+
+    if (res != null) {
+      return res.data;
+    }
+
+    return null;
+  }
+
   addResponseUser(MUser user) {
     addUserResponse(user);
   }

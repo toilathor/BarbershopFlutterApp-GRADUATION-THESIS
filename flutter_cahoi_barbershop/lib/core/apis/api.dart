@@ -215,6 +215,26 @@ class Api extends ApiBase {
     }
   }
 
+  Future<api_res.Response?> checkPassword(
+      {required Map<String, String> data}) async {
+    try {
+      var res = await dio.post('/user/check-password', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> changePassword(
+      {required Map<String, String> data}) async {
+    try {
+      var res = await dio.post('/user/change-password', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
   ///Role
   Future<api_res.Response?> getRoles() async {
     try {
