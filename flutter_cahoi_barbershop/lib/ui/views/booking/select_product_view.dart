@@ -29,8 +29,10 @@ class _SelectProductViewState extends State<SelectProductView>
       onModelReady: (model) async {
         await model.changeTypeProduct();
 
-        tabController =
-            TabController(length: model.typeProducts.length, vsync: this);
+        tabController = TabController(
+          length: model.typeProducts.length,
+          vsync: this,
+        );
       },
       builder: (context, model, child) => Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,

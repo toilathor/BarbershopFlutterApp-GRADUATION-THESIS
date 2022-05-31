@@ -21,11 +21,10 @@ class _HRTabState extends State<HRTab> {
   TextEditingController searchController = TextEditingController();
   final ScrollController scrollController = ScrollController();
 
-
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
-    });
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {});
+    super.initState();
   }
 
   @override
@@ -81,17 +80,23 @@ class _HRTabState extends State<HRTab> {
                         // width: ,
                       ),
                     )
-                  : ListView.builder(
-                      controller: scrollController,
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.only(bottom: 100),
-                      itemCount: model.users.length,
-                      itemBuilder: (context, index) => _buildUserTile(
-                        model.users[index],
-                        onReload: () async {
-                          model.resetData();
-                          await model.changeUsers('');
-                        },
+                  : RefreshIndicator(
+                      onRefresh: () async {
+                        model.resetData();
+                        await model.changeUsers(searchController.text);
+                      },
+                      child: ListView.builder(
+                        controller: scrollController,
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.only(bottom: 100),
+                        itemCount: model.users.length,
+                        itemBuilder: (context, index) => _buildUserTile(
+                          model.users[index],
+                          onReload: () async {
+                            model.resetData();
+                            await model.changeUsers('');
+                          },
+                        ),
                       ),
                     ),
             ),

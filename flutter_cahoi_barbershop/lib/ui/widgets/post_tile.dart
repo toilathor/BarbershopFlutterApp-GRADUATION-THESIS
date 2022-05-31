@@ -176,6 +176,9 @@ class _PostTileState extends State<PostTile> {
           Expanded(
             child: GestureDetector(
               onDoubleTap: () {
+                if (widget.isLiked) {
+                  return;
+                }
                 setState(() {
                   heiHeart = 24 / 2;
                 });

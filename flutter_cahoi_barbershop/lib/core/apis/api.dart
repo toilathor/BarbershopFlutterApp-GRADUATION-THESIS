@@ -113,6 +113,15 @@ class Api extends ApiBase {
     }
   }
 
+  Future<api_res.Response?> getAllProduct() async {
+    try {
+      var res = await dio.get('/product');
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<api_res.Response?> getProduct({required int typeProductId}) async {
     try {
       var res = await dio.get('/product/$typeProductId');

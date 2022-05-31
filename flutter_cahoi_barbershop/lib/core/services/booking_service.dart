@@ -1,10 +1,10 @@
 import 'package:flutter_cahoi_barbershop/core/apis/api.dart';
 import 'package:flutter_cahoi_barbershop/core/models/facility.dart';
 import 'package:flutter_cahoi_barbershop/core/models/product.dart';
-import 'package:flutter_cahoi_barbershop/core/models/rating.dart';
 import 'package:flutter_cahoi_barbershop/core/models/stylist.dart';
 import 'package:flutter_cahoi_barbershop/core/models/time_slot.dart';
 import 'package:flutter_cahoi_barbershop/core/models/type_product.dart';
+import 'package:flutter_cahoi_barbershop/core/models/type_product_2.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
@@ -12,6 +12,8 @@ import 'package:permission_handler/permission_handler.dart';
 
 class BookingService {
   final Api _api = locator<Api>();
+
+  List<TypeProduct2> typeProducts = [];
 
   ///Facility
   Future<Position?> getCurrentLocation() async {
@@ -128,14 +130,22 @@ class BookingService {
   }
 
   Future<Facility?> findFacility({required int userId}) async {
-    var res = await _api.findFacility(data: {
-      "user_id" : userId
-    });
+    var res = await _api.findFacility(data: {"user_id": userId});
 
-    if(res != null && res.data != null) {
+    if (res != null && res.data != null) {
       return Facility.fromJson(res.data);
     }
 
     return null;
+  }
+
+  Future getAllProduct() async {
+    var res = await _api.getAllProduct();
+
+    if (res != null) {
+      typeProducts = List<TypeProduct2>.from(
+        res.data.map((i) => TypeProduct2.fromJson(i)).toList(),
+      );
+    }
   }
 }
