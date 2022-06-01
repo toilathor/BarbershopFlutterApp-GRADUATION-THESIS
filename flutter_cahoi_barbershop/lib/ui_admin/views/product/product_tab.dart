@@ -3,8 +3,11 @@ import 'package:flutter_cahoi_barbershop/core/models/product.dart';
 import 'package:flutter_cahoi_barbershop/core/services/booking_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/admin_model/product_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
+import 'package:flutter_cahoi_barbershop/ui_admin/views/product/add_product.dart';
+import 'package:flutter_cahoi_barbershop/ui_admin/views/product/edit_product.dart';
 
 class ProductTab extends StatefulWidget {
   const ProductTab({Key? key}) : super(key: key);
@@ -31,7 +34,13 @@ class _ProductTabState extends State<ProductTab>
         );
       },
       builder: (context, model, child) => Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: backgroundColor,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.pushNamed(context, AddProductView.name);
+          },
+          child: const Icon(Icons.add),
+        ),
         appBar: AppBar(
           title: typeProducts.isEmpty
               ? null
@@ -203,6 +212,27 @@ class _ProductTabState extends State<ProductTab>
                     ),
                   ),
                 ),
+                Row(
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        // TODO xóa dịch vụ
+                      },
+                      child: const Text("Xóa"),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        // TODO sửa dịch vụ
+                        Navigator.pushNamed(
+                          context,
+                          EditProductView.name,
+                          arguments: product,
+                        );
+                      },
+                      child: const Text("Sửa"),
+                    ),
+                  ],
+                )
               ],
             ),
           ),

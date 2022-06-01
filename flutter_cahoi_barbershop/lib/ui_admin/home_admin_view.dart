@@ -9,7 +9,7 @@ import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/logout_dialog.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/analysis_tab.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/business_tab.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/hr_tab.dart';
-import 'package:flutter_cahoi_barbershop/ui_admin/views/product_tab.dart';
+import 'package:flutter_cahoi_barbershop/ui_admin/views/product/product_tab.dart';
 
 class HomeAdminView extends StatefulWidget {
   const HomeAdminView({Key? key}) : super(key: key);
