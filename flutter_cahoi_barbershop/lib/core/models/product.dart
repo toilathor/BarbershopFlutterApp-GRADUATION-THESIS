@@ -4,7 +4,7 @@ class Product {
   String image;
   dynamic price;
   int duration;
-  String shortDescription;
+  String sortDescription;
   String fullDescription;
   int typeProductId;
 
@@ -13,7 +13,7 @@ class Product {
     required this.name,
     required this.price,
     required this.duration,
-    required this.shortDescription,
+    required this.sortDescription,
     required this.fullDescription,
     required this.typeProductId,
     required this.image,
@@ -24,11 +24,11 @@ class Product {
 }
 
 Product _$ProductFromJson(Map<String, dynamic> json) => Product(
-      id: json['id'] as int,
+  id: json['id'] as int,
       name: json['name'] as String,
       price: json['price'] as dynamic,
       duration: json['duration'] as int,
-      shortDescription: json['sort_description'] as String,
+      sortDescription: json['sort_description'] as String,
       fullDescription: json['description'] as String,
       typeProductId: json['type_product_id'] as int,
       image: json['image'] as String,

@@ -145,22 +145,6 @@ class AuthModel extends BaseModel {
     );
   }
 
-  Future<bool> loginOutGoogle() async {
-    if (await loginOut()) {
-      googleAccount = await _googleAuth.signOut();
-      return true;
-    }
-    return false;
-  }
-
-  Future<bool> loginOutFacebook() async {
-    if (await loginOut()) {
-      FacebookAuth.instance.logOut();
-      return true;
-    }
-    return false;
-  }
-
   Future resendOTP() async {}
 
   verifyPhoneNumber({
@@ -208,9 +192,5 @@ class AuthModel extends BaseModel {
       return res;
     }
     return true;
-  }
-
-  loginOut() async {
-    return _authService.logOut();
   }
 }

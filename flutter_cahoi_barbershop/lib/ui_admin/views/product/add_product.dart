@@ -115,7 +115,6 @@ class _AddProductViewState extends State<AddProductView> {
                       label: const Text("Mô tả chi tiết"),
                     ),
                     maxLines: 4,
-                    maxLength: 250,
                   ),
                   SizedBox(
                     height: 100,

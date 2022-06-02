@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/product.dart';
 import 'package:flutter_cahoi_barbershop/core/services/booking_service.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/product/add_product.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/product/edit_product.dart';
+import 'package:flutter_cahoi_barbershop/ui_admin/views/product/show_product_view.dart';
 
 class ProductTab extends StatefulWidget {
   const ProductTab({Key? key}) : super(key: key);
@@ -45,24 +47,24 @@ class _ProductTabState extends State<ProductTab>
           title: typeProducts.isEmpty
               ? null
               : TabBar(
-                  labelStyle: const TextStyle(
-                    fontFamily: fontBold,
-                  ),
-                  physics: const BouncingScrollPhysics(),
-                  isScrollable: true,
-                  controller: tabController,
-                  automaticIndicatorColorAdjustment: true,
-                  tabs: _buildTabBar(),
-                ),
+            labelStyle: const TextStyle(
+              fontFamily: fontBold,
+            ),
+            physics: const BouncingScrollPhysics(),
+            isScrollable: true,
+            controller: tabController,
+            automaticIndicatorColorAdjustment: true,
+            tabs: _buildTabBar(),
+          ),
         ),
         body: Stack(
           children: [
             typeProducts.isEmpty
                 ? Container()
                 : TabBarView(
-                    children: _buildTabBarView(),
-                    controller: tabController,
-                  ),
+              children: _buildTabBarView(),
+              controller: tabController,
+            ),
           ],
         ),
       ),
@@ -89,32 +91,32 @@ class _ProductTabState extends State<ProductTab>
       tabBarViews.add(
         typeProducts[i].products!.isEmpty
             ? Center(
-                child: Image.asset(
-                  'assets/not_item.png',
-                  height: size.width * 0.3,
-                  // width: ,
-                ),
-              )
+          child: Image.asset(
+            'assets/not_item.png',
+            height: size.width * 0.3,
+            // width: ,
+          ),
+        )
             : GridView.builder(
-                physics: const BouncingScrollPhysics(),
-                padding: EdgeInsets.only(
-                  left: paddingW,
-                  right: paddingW,
-                  top: paddingW,
-                  bottom: size.height * 0.1,
-                ),
-                itemCount: typeProducts[i].products!.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 5,
-                  mainAxisSpacing: 5,
-                  childAspectRatio: 4 / 7,
-                ),
-                itemBuilder: (context, index) {
-                  final product = typeProducts[i].products![index];
-                  return _buildProductTile(product: product);
-                },
-              ),
+          physics: const BouncingScrollPhysics(),
+          padding: EdgeInsets.only(
+            left: paddingW,
+            right: paddingW,
+            top: paddingW,
+            bottom: size.height * 0.1,
+          ),
+          itemCount: typeProducts[i].products!.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 5,
+            mainAxisSpacing: 5,
+            childAspectRatio: 4 / 7,
+          ),
+          itemBuilder: (context, index) {
+            final product = typeProducts[i].products![index];
+            return _buildProductTile(product: product);
+          },
+        ),
       );
     }
     return tabBarViews;
@@ -125,7 +127,7 @@ class _ProductTabState extends State<ProductTab>
       onTap: () async {
         await Navigator.pushNamed(
           context,
-          '/info-product',
+          ShowProductView.name,
           arguments: product,
         );
       },
@@ -169,7 +171,7 @@ class _ProductTabState extends State<ProductTab>
                     alignment: Alignment.topLeft,
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      product.shortDescription,
+                      product.sortDescription,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -213,10 +215,20 @@ class _ProductTabState extends State<ProductTab>
                   ),
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     TextButton(
                       onPressed: () {
-                        // TODO xóa dịch vụ
+                        AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.QUESTION,
+                          title: "Xác nhận",
+                          desc: "Bạn có muốn xóa sản phẩm này không?",
+                          btnOkOnPress: () {
+                            //TODO xóa sản phẩm
+                          },
+                          btnCancelOnPress: () {},
+                        ).show();
                       },
                       child: const Text("Xóa"),
                     ),

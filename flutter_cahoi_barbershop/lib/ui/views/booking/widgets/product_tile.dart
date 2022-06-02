@@ -78,7 +78,7 @@ class _ProductTileState extends State<ProductTile> {
                     alignment: Alignment.topLeft,
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      widget.product.shortDescription,
+                      widget.product.sortDescription,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(

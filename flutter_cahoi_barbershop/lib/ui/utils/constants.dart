@@ -1,7 +1,7 @@
 import 'package:date_format/date_format.dart';
 
 const hostLine = "0973271208";
-const localHost = 'http://192.168.1.13:8000';
+const localHost = 'http://192.168.1.2:8000';
 // const localHost = 'http://192.168.37.206:8000';
 const baseLinkAPIYT = 'https://www.googleapis.com/youtube/v3';
 
