@@ -8,6 +8,7 @@ import 'package:flutter_cahoi_barbershop/core/state_models/history_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/rating_task_view.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ListHistory extends StatefulWidget {
@@ -233,13 +234,22 @@ class _HistoryTileState extends State<HistoryTile> {
                               width: 20,
                             ),
                             Expanded(
-                              child: ElevatedButton.icon(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  Icons.info_outline,
-                                ),
-                                label: const Text(
-                                  "Chi tiết",
+                              child: Visibility(
+                                visible: widget.task.status == 1,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      RatingTaskView.name,
+                                      arguments: widget.task,
+                                    );
+                                  },
+                                  icon: const Icon(
+                                    Icons.star_half_rounded,
+                                  ),
+                                  label: const Text(
+                                    "Đánh giá",
+                                  ),
                                 ),
                               ),
                             ),

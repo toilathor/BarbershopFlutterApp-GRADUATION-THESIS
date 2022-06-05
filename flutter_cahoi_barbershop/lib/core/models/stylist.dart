@@ -71,15 +71,15 @@ class StylistRate {
   int? id;
   String? name;
   String? avatar;
-  String? communication;
-  String? skill;
+  dynamic communication;
+  dynamic skill;
 
   StylistRate copyWith({
     int? id,
     String? name,
     String? avatar,
-    String? communication,
-    String? skill,
+    dynamic communication,
+    dynamic skill,
   }) =>
       StylistRate(
         id: id ?? this.id,

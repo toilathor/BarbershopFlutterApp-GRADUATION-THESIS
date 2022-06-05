@@ -353,4 +353,25 @@ class Api extends ApiBase {
       return null;
     }
   }
+
+  // Rating
+  Future<api_res.Response?> getRatingTask({required taskId}) async {
+    try {
+      var res = await dio.get('/rating/$taskId');
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> saveRating({
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      var res = await dio.post('/rating', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
 }

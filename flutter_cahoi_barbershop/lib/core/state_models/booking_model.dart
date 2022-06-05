@@ -50,15 +50,15 @@ class BookingModel extends BaseModel {
     notifyListeners();
   }
 
-  changeSelectedFacility(Facility facility) async {
+  Future changeSelectedFacility(Facility facility) async {
     selectedFacility = facility;
+
+    notifyListeners();
 
     stylists = await _bookingService.getStylists(
       facilityId: facility.id ?? 0,
       date: DateTime.now(),
     );
-
-    notifyListeners();
   }
 
   ///Step Select Service

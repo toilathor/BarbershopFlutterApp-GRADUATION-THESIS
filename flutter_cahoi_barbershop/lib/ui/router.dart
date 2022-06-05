@@ -5,7 +5,8 @@ import 'package:flutter_cahoi_barbershop/ui/splash_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/auth/login_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/booking_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/history_view.dart';
-import 'package:flutter_cahoi_barbershop/ui/views/info_product.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/info_product_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/rating_task_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/your_story_view.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/home_admin_view.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/edit_user_view.dart';
@@ -27,6 +28,7 @@ class Router {
     '/history': (BuildContext ctx) => const HistoryView(),
     '/your-story': (BuildContext ctx) => const YourStoryView(),
     '/info-product': (BuildContext ctx) => const InfoProductView(),
+    RatingTaskView.name: (BuildContext ctx) => const RatingTaskView(),
 
     ///Employee
     '/report-task': (BuildContext ctx) => const ReportTaskView(),

@@ -88,7 +88,7 @@ class _BookingViewState extends State<BookingView>
                 steps: [
                   _buildStepSelectFacility(
                     currentStep: model.currentStep,
-                    currrentFacility: model.selectedFacility,
+                    currentFacility: model.selectedFacility,
                     onPressSelect: () async {
                       var result = await Navigator.of(context).push(
                         MaterialPageRoute(
@@ -97,7 +97,8 @@ class _BookingViewState extends State<BookingView>
                       );
 
                       if (result != null && result.containsKey('selection')) {
-                        model.changeSelectedFacility(result['selection']);
+                        Facility facility = result['selection'];
+                        await model.changeSelectedFacility(facility);
                       }
                     },
                   ),
@@ -201,12 +202,12 @@ class _BookingViewState extends State<BookingView>
 
   Step _buildStepSelectFacility({
     required StepBooking currentStep,
-    required Facility? currrentFacility,
+    required Facility? currentFacility,
     required Function() onPressSelect,
   }) =>
       Step(
         isActive: currentStep == StepBooking.selectFacility ||
-            currrentFacility != null,
+            currentFacility != null,
         title: const Text(
           "Chọn cơ sở",
           style: TextStyle(
@@ -216,12 +217,11 @@ class _BookingViewState extends State<BookingView>
             fontFamily: fontBold,
           ),
         ),
-        state:
-            currrentFacility == null ? StepState.indexed : StepState.complete,
+        state: currentFacility == null ? StepState.indexed : StepState.complete,
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (currrentFacility == null)
+            if (currentFacility == null)
               Container()
             else
               Container(
@@ -239,7 +239,7 @@ class _BookingViewState extends State<BookingView>
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(4.0),
                           child: Image.network(
-                            '$localHost${currrentFacility.image}',
+                            '$localHost${currentFacility.image}',
                             fit: BoxFit.cover,
                             height: double.infinity,
                             width: double.infinity,
@@ -251,7 +251,7 @@ class _BookingViewState extends State<BookingView>
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "${currrentFacility.address}",
+                            "${currentFacility.address}",
                             // overflow: TextOverflow.ellipsis,
                           ),
                         ),

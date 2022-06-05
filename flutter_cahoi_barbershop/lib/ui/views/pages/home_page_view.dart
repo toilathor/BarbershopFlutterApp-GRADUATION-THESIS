@@ -35,11 +35,12 @@ class _HomePageViewState extends State<HomePageView> {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           backgroundColor: textColorLight2,
-          leading: IconButton(
-            onPressed: () async {},
+          leading: const IconButton(
+            onPressed: null,
+            // onPressed: () async {},
             icon: Icon(
               Icons.notifications_none,
-              size: Theme.of(context).iconTheme.size ?? 24,
+              size: 24,
             ),
             tooltip: 'Wallet',
           ),
