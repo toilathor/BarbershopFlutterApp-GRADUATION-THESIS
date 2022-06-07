@@ -8,7 +8,6 @@ class SuccessDialog {
       dialogType: DialogType.SUCCES,
       title: "Thành công",
       btnOkOnPress: () {
-        Navigator.pop(context);
       },
     ).show();
   }
