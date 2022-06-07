@@ -8,10 +8,11 @@ import 'package:flutter_cahoi_barbershop/core/services/booking_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/admin_model/product_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
-import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/button_login.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/success_dialog.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProductView extends StatefulWidget {
@@ -37,7 +38,13 @@ class _EditProductViewState extends State<EditProductView> {
       FixedExtentScrollController();
 
   int _selectedTime = 0;
-  TypeProduct2 _typeProductSelected = TypeProduct2.fromJson({});
+  late TypeProduct2 _typeProductSelected;
+
+  @override
+  void initState() {
+    _typeProductSelected = typeProducts.first;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,57 +86,57 @@ class _EditProductViewState extends State<EditProductView> {
                 },
                 child: image == null
                     ? SizedBox(
-                        height: size.width,
-                        width: size.width,
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            Image.network(
-                              "$localHost${product.image}",
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  const Icon(
-                                Icons.error,
-                                color: Colors.red,
-                              ),
-                            ),
-                            const Positioned(
-                              bottom: 20,
-                              right: 20,
-                              child: Icon(
-                                Icons.edit,
-                                size: 30,
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : SizedBox(
-                        height: size.width,
-                        width: size.width,
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            Image.file(
-                              File(image?.path ?? ""),
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  const Icon(
-                                Icons.error,
-                                color: Colors.red,
-                              ),
-                            ),
-                            const Positioned(
-                              bottom: 20,
-                              right: 20,
-                              child: Icon(
-                                Icons.edit,
-                                size: 30,
-                              ),
-                            ),
-                          ],
+                  height: size.width,
+                  width: size.width,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.network(
+                        "$localHost${product.image}",
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                        const Icon(
+                          Icons.error,
+                          color: Colors.red,
                         ),
                       ),
+                      const Positioned(
+                        bottom: 20,
+                        right: 20,
+                        child: Icon(
+                          Icons.edit,
+                          size: 30,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+                    : SizedBox(
+                  height: size.width,
+                  width: size.width,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.file(
+                        File(image?.path ?? ""),
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                        const Icon(
+                          Icons.error,
+                          color: Colors.red,
+                        ),
+                      ),
+                      const Positioned(
+                        bottom: 20,
+                        right: 20,
+                        child: Icon(
+                          Icons.edit,
+                          size: 30,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(12.0),
@@ -259,22 +266,28 @@ class _EditProductViewState extends State<EditProductView> {
           ),
         ),
         floatingActionButtonLocation:
-            FloatingActionButtonLocation.miniCenterFloat,
+        FloatingActionButtonLocation.miniCenterFloat,
         floatingActionButton: BaseButton(
           height: 50,
           width: size.width * 0.8,
-          onPressed: () {
-            // TODO
+          onPressed: () async {
             final data = {
               "name": nameController.text,
               "sort_description": sortDController.text,
               "description": descriptionController.text,
               "duration": _selectedTime,
               "price": double.parse(priceController.text),
+              "type_product_id": _typeProductSelected.id,
             };
-            logger.i(
-              data.toString(),
-            );
+            if (await model.editProduct(
+              data: data,
+              image: image,
+              productId: product.id,
+            )) {
+              SuccessDialog.show(context);
+            } else {
+              Fluttertoast.showToast(msg: 'Đã có sự cố sảy ra!');
+            }
           },
           title: "Xong",
         ),
@@ -303,8 +316,8 @@ class _EditProductViewState extends State<EditProductView> {
                 ),
                 onTap: () async {
                   var imagePicked =
-                  // ignore: invalid_use_of_visible_for_testing_member
-                  await ImagePicker.platform.pickImage(
+                      // ignore: invalid_use_of_visible_for_testing_member
+                      await ImagePicker.platform.pickImage(
                     source: ImageSource.camera,
                     maxHeight: 1080,
                     maxWidth: 1080,
@@ -328,8 +341,8 @@ class _EditProductViewState extends State<EditProductView> {
                 ),
                 onTap: () async {
                   var imagePicked =
-                  // ignore: invalid_use_of_visible_for_testing_member
-                  await ImagePicker.platform.pickImage(
+                      // ignore: invalid_use_of_visible_for_testing_member
+                      await ImagePicker.platform.pickImage(
                     maxHeight: 1080,
                     maxWidth: 1080,
                     source: ImageSource.gallery,
@@ -350,7 +363,8 @@ class _EditProductViewState extends State<EditProductView> {
     );
   }
 
-  Widget _buildChooseCamera({Function()? onTap, required Icon icon, required String label}) {
+  Widget _buildChooseCamera(
+      {Function()? onTap, required Icon icon, required String label}) {
     return Expanded(
       child: InkWell(
         borderRadius: borderRadius12,

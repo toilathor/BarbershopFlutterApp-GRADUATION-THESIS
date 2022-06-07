@@ -2,10 +2,16 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cahoi_barbershop/core/models/type_product_2.dart';
+import 'package:flutter_cahoi_barbershop/core/services/booking_service.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/admin_model/product_model.dart';
+import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
-import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/button_login.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/success_dialog.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddProductView extends StatefulWidget {
@@ -25,167 +31,240 @@ class _AddProductViewState extends State<AddProductView> {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController priceController = TextEditingController();
 
+  FixedExtentScrollController typeProductController =
+      FixedExtentScrollController();
+
+  final typeProducts = locator<BookingService>().typeProducts;
   int _selectedTime = 0;
+  late TypeProduct2 _selectedTypeProduct;
+
+  @override
+  void initState() {
+    _selectedTypeProduct = typeProducts.first;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      appBar: AppBar(),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.only(bottom: 200),
-        child: Column(
-          children: [
-            InkWell(
-              onTap: () {
-                showMenuPick();
-              },
-              child: image == null
-                  ? Container(
-                      height: size.width,
-                      width: size.width,
-                      child: const Icon(Icons.camera_alt),
-                      decoration: BoxDecoration(color: Colors.grey.shade400),
-                    )
-                  : SizedBox(
-                      height: size.width,
-                      width: size.width,
-                      child: Stack(
-                        fit: StackFit.expand,
+    return BaseView<ProductModel>(
+      builder: (context, model, child) => Scaffold(
+        appBar: AppBar(),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.only(bottom: 200),
+          child: Column(
+            children: [
+              InkWell(
+                onTap: () {
+                  showMenuPick();
+                },
+                child: image == null
+                    ? Container(
+                        height: size.width,
+                        width: size.width,
+                        child: const Icon(Icons.camera_alt),
+                        decoration: BoxDecoration(color: Colors.grey.shade400),
+                      )
+                    : SizedBox(
+                        height: size.width,
+                        width: size.width,
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            Image.file(
+                              File(image?.path ?? ""),
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(
+                                Icons.error,
+                                color: Colors.red,
+                              ),
+                            ),
+                            const Positioned(
+                              bottom: 20,
+                              right: 20,
+                              child: Icon(
+                                Icons.edit,
+                                size: 30,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        hintText: "Tên dịch vụ",
+                        hintStyle: TextStyle(
+                          color: Colors.grey.shade500,
+                        ),
+                        label: const Text("Tên dịch vụ"),
+                      ),
+                      maxLength: 100,
+                    ),
+                    TextField(
+                      controller: sortDController,
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        hintText: "Mô tả ngắn",
+                        hintStyle: TextStyle(
+                          color: Colors.grey.shade500,
+                        ),
+                        label: const Text("Mô tả ngắn"),
+                      ),
+                      maxLines: 4,
+                      maxLength: 250,
+                    ),
+                    TextField(
+                      controller: descriptionController,
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        hintText: "Mô tả chi tiết",
+                        hintStyle: TextStyle(
+                          color: Colors.grey.shade500,
+                        ),
+                        label: const Text("Mô tả chi tiết"),
+                      ),
+                      maxLines: 4,
+                    ),
+                    SizedBox(
+                      height: 100,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Image.file(
-                            File(image?.path ?? ""),
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                const Icon(
-                              Icons.error,
-                              color: Colors.red,
+                          const Text(
+                            "Thời gian khoảng:",
+                            style: TextStyle(
+                              fontFamily: fontBold,
                             ),
                           ),
-                          const Positioned(
-                            bottom: 20,
-                            right: 20,
-                            child: Icon(
-                              Icons.edit,
-                              size: 30,
+                          const Spacer(),
+                          Expanded(
+                            flex: 5,
+                            child: CupertinoPicker.builder(
+                              childCount: 121,
+                              itemBuilder: (context, index) => Center(
+                                child: Text(
+                                  "$index phút",
+                                ),
+                              ),
+                              itemExtent: 30.0,
+                              onSelectedItemChanged: (selectedItem) {
+                                setState(() {
+                                  _selectedTime = selectedItem;
+                                });
+                              },
                             ),
                           ),
+                          const Spacer(),
                         ],
                       ),
                     ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      hintText: "Tên dịch vụ",
-                      hintStyle: TextStyle(
-                        color: Colors.grey.shade500,
-                      ),
-                      label: const Text("Tên dịch vụ"),
-                    ),
-                    maxLength: 100,
-                  ),
-                  TextField(
-                    controller: sortDController,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      hintText: "Mô tả ngắn",
-                      hintStyle: TextStyle(
-                        color: Colors.grey.shade500,
-                      ),
-                      label: const Text("Mô tả ngắn"),
-                    ),
-                    maxLines: 4,
-                    maxLength: 250,
-                  ),
-                  TextField(
-                    controller: descriptionController,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      hintText: "Mô tả chi tiết",
-                      hintStyle: TextStyle(
-                        color: Colors.grey.shade500,
-                      ),
-                      label: const Text("Mô tả chi tiết"),
-                    ),
-                    maxLines: 4,
-                  ),
-                  SizedBox(
-                    height: 100,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Thời gian khoảng:",
-                          style: TextStyle(
-                            fontFamily: fontBold,
-                          ),
-                        ),
-                        const Spacer(),
-                        Expanded(
-                          flex: 5,
-                          child: CupertinoPicker.builder(
-                            childCount: 121,
-                            itemBuilder: (context, index) => Center(
-                              child: Text(
-                                "$index phút",
-                              ),
+                    SizedBox(
+                      height: 100,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Loại dịch vụ:",
+                            style: TextStyle(
+                              fontFamily: fontBold,
                             ),
-                            itemExtent: 30.0,
-                            onSelectedItemChanged: (selectedItem) {
-                              setState(() {
-                                _selectedTime = selectedItem;
-                              });
-                            },
                           ),
-                        ),
-                        const Spacer(),
-                      ],
-                    ),
-                  ),
-                  TextField(
-                    controller: priceController,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      hintText: "Giá",
-                      hintStyle: TextStyle(
-                        color: Colors.grey.shade500,
+                          const Spacer(),
+                          Expanded(
+                            flex: 7,
+                            child: CupertinoPicker.builder(
+                              scrollController: typeProductController,
+                              childCount: typeProducts.length,
+                              itemBuilder: (context, index) => Center(
+                                child: Text(
+                                  "${typeProducts[index].name}",
+                                ),
+                              ),
+                              itemExtent: 30.0,
+                              onSelectedItemChanged: (index) {
+                                setState(() {
+                                  _selectedTypeProduct = typeProducts[index];
+                                });
+                              },
+                            ),
+                          ),
+                          const Spacer(),
+                        ],
                       ),
-                      label: const Text("Giá"),
                     ),
-                    keyboardType: TextInputType.number,
-                  ),
-                ],
+                    TextField(
+                      controller: priceController,
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        hintText: "Giá",
+                        hintStyle: TextStyle(
+                          color: Colors.grey.shade500,
+                        ),
+                        label: const Text("Giá"),
+                        suffixStyle: const TextStyle(
+                          fontFamily: fontBold,
+                        ),
+                        suffixText: "K",
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterFloat,
-      floatingActionButton: BaseButton(
-        height: 50,
-        width: size.width * 0.8,
-        onPressed: () {
-          // TODO
-          final data = {
-            "name": nameController.text,
-            "sort_description": sortDController.text,
-            "description": descriptionController.text,
-            "duration": _selectedTime,
-            "price": double.parse(priceController.text),
-          };
-          logger.i(
-            data.toString(),
-          );
-        },
-        title: "Thêm",
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniCenterFloat,
+        floatingActionButton: BaseButton(
+          height: 50,
+          width: size.width * 0.8,
+          onPressed: () async {
+            if (image == null) {
+              Fluttertoast.showToast(msg: "Chưa thêm ảnh");
+              return;
+            }
+            if (sortDController.text.isEmpty ||
+                descriptionController.text.isEmpty ||
+                nameController.text.isEmpty ||
+                priceController.text.isEmpty) {
+              Fluttertoast.showToast(msg: "Hãy điền đầy đủ thông tin!");
+              return;
+            }
+            if (image == null) {
+              Fluttertoast.showToast(msg: "Chưa thêm ảnh");
+              return;
+            }
+
+            Map<String, dynamic> data = {
+              "name": nameController.text,
+              "sort_description": sortDController.text,
+              "description": descriptionController.text,
+              "duration": _selectedTime,
+              "price": double.parse(priceController.text),
+              "type_product_id": _selectedTypeProduct.id
+            };
+
+            if (await model.createProduct(
+              data: data,
+              image: image!,
+            )) {
+              SuccessDialog.show(context);
+            } else {
+              Fluttertoast.showToast(msg: 'Đã có sự cố sảy ra!');
+            }
+          },
+          title: "Thêm",
+        ),
       ),
     );
   }

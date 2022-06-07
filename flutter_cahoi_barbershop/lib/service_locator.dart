@@ -2,6 +2,7 @@ import 'package:flutter_cahoi_barbershop/core/apis/api.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/services/booking_service.dart';
 import 'package:flutter_cahoi_barbershop/core/services/post_service.dart';
+import 'package:flutter_cahoi_barbershop/core/services/product_service.dart';
 import 'package:flutter_cahoi_barbershop/core/services/role_service.dart';
 import 'package:flutter_cahoi_barbershop/core/services/shared_preferences_service.dart';
 import 'package:flutter_cahoi_barbershop/core/services/task_service.dart';
@@ -31,6 +32,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => BookingService());
   locator.registerLazySingleton(() => RoleService());
   locator.registerLazySingleton(() => PostService());
+  locator.registerLazySingleton(() => ProductService());
 
   //Api
   locator.registerLazySingleton(() => Api());

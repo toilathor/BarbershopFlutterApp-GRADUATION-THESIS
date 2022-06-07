@@ -374,4 +374,33 @@ class Api extends ApiBase {
       return null;
     }
   }
+
+  /// Product
+  Future<api_res.Response?> createProduct({required FormData data}) async {
+    try {
+      var res = await dio.post('/product', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> updateProduct(
+      {required FormData data, required int productId}) async {
+    try {
+      var res = await dio.post('/product/edit/$productId', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> deleteProduct({required int productId}) async {
+    try {
+      var res = await dio.delete('/product/$productId');
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
 }

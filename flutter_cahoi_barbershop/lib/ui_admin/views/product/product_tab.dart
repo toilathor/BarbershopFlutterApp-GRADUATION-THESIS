@@ -7,9 +7,11 @@ import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/success_dialog.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/product/add_product.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/product/edit_product.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/product/show_product_view.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ProductTab extends StatefulWidget {
   const ProductTab({Key? key}) : super(key: key);
@@ -47,24 +49,24 @@ class _ProductTabState extends State<ProductTab>
           title: typeProducts.isEmpty
               ? null
               : TabBar(
-            labelStyle: const TextStyle(
-              fontFamily: fontBold,
-            ),
-            physics: const BouncingScrollPhysics(),
-            isScrollable: true,
-            controller: tabController,
-            automaticIndicatorColorAdjustment: true,
-            tabs: _buildTabBar(),
-          ),
+                  labelStyle: const TextStyle(
+                    fontFamily: fontBold,
+                  ),
+                  physics: const BouncingScrollPhysics(),
+                  isScrollable: true,
+                  controller: tabController,
+                  automaticIndicatorColorAdjustment: true,
+                  tabs: _buildTabBar(),
+                ),
         ),
         body: Stack(
           children: [
             typeProducts.isEmpty
                 ? Container()
                 : TabBarView(
-              children: _buildTabBarView(),
-              controller: tabController,
-            ),
+                    children: _buildTabBarView(model),
+                    controller: tabController,
+                  ),
           ],
         ),
       ),
@@ -83,7 +85,7 @@ class _ProductTabState extends State<ProductTab>
     return tabs;
   }
 
-  List<Widget> _buildTabBarView() {
+  List<Widget> _buildTabBarView(ProductModel model) {
     final paddingW = size.width * 0.01;
 
     List<Widget> tabBarViews = [];
@@ -91,38 +93,48 @@ class _ProductTabState extends State<ProductTab>
       tabBarViews.add(
         typeProducts[i].products!.isEmpty
             ? Center(
-          child: Image.asset(
-            'assets/not_item.png',
-            height: size.width * 0.3,
-            // width: ,
-          ),
-        )
+                child: Image.asset(
+                  'assets/not_item.png',
+                  height: size.width * 0.3,
+                  // width: ,
+                ),
+              )
             : GridView.builder(
-          physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.only(
-            left: paddingW,
-            right: paddingW,
-            top: paddingW,
-            bottom: size.height * 0.1,
-          ),
-          itemCount: typeProducts[i].products!.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 5,
-            mainAxisSpacing: 5,
-            childAspectRatio: 4 / 7,
-          ),
-          itemBuilder: (context, index) {
-            final product = typeProducts[i].products![index];
-            return _buildProductTile(product: product);
-          },
-        ),
+                physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.only(
+                  left: paddingW,
+                  right: paddingW,
+                  top: paddingW,
+                  bottom: size.height * 0.1,
+                ),
+                itemCount: typeProducts[i].products!.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
+                  childAspectRatio: 4 / 7,
+                ),
+                itemBuilder: (context, index) {
+                  final product = typeProducts[i].products![index];
+                  return _buildProductTile(
+                    product: product,
+                    onRemove: () async {
+                      if (await model.deleteProduct(productId: product.id)) {
+                        SuccessDialog.show(context);
+                      } else {
+                        Fluttertoast.showToast(msg: "Đã có sự cố");
+                      }
+                    },
+                  );
+                },
+              ),
       );
     }
     return tabBarViews;
   }
 
-  Widget _buildProductTile({required Product product}) {
+  Widget _buildProductTile(
+      {required Product product, required Function() onRemove}) {
     return GestureDetector(
       onTap: () async {
         await Navigator.pushNamed(
@@ -224,9 +236,7 @@ class _ProductTabState extends State<ProductTab>
                           dialogType: DialogType.QUESTION,
                           title: "Xác nhận",
                           desc: "Bạn có muốn xóa sản phẩm này không?",
-                          btnOkOnPress: () {
-                            //TODO xóa sản phẩm
-                          },
+                          btnOkOnPress: onRemove,
                           btnCancelOnPress: () {},
                         ).show();
                       },
