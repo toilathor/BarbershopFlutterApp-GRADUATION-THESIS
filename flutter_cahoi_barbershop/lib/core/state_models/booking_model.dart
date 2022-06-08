@@ -83,7 +83,7 @@ class BookingModel extends BaseModel {
 
     totalDuration = 0;
     for (int i = 0; i < selectedServices.length; i++) {
-      totalDuration += selectedServices[i].duration;
+      totalDuration += int.parse("${selectedServices[i].duration}");
     }
 
     notifyListeners();

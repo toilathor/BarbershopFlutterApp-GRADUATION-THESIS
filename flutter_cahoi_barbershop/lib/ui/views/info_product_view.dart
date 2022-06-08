@@ -63,7 +63,8 @@ class _InfoProductViewState extends State<InfoProductView> {
                         Row(
                           children: [
                             Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
                               child: Icon(
                                 Icons.timelapse_outlined,
                                 color: Theme.of(context).secondaryHeaderColor,

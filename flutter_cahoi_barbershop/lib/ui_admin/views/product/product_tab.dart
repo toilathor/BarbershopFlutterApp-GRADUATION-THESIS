@@ -1,6 +1,6 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/product.dart';
+import 'package:flutter_cahoi_barbershop/core/models/type_product_2.dart';
 import 'package:flutter_cahoi_barbershop/core/services/booking_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/admin_model/product_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
@@ -23,7 +23,7 @@ class ProductTab extends StatefulWidget {
 class _ProductTabState extends State<ProductTab>
     with SingleTickerProviderStateMixin {
   late Size size;
-  final typeProducts = locator<BookingService>().typeProducts;
+  List<TypeProduct2> typeProducts = locator<BookingService>().typeProducts;
   late TabController tabController;
 
   @override
@@ -37,39 +37,46 @@ class _ProductTabState extends State<ProductTab>
           vsync: this,
         );
       },
-      builder: (context, model, child) => Scaffold(
-        backgroundColor: backgroundColor,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.pushNamed(context, AddProductView.name);
-          },
-          child: const Icon(Icons.add),
-        ),
-        appBar: AppBar(
-          title: typeProducts.isEmpty
-              ? null
-              : TabBar(
-                  labelStyle: const TextStyle(
-                    fontFamily: fontBold,
-                  ),
-                  physics: const BouncingScrollPhysics(),
-                  isScrollable: true,
-                  controller: tabController,
-                  automaticIndicatorColorAdjustment: true,
-                  tabs: _buildTabBar(),
-                ),
-        ),
-        body: Stack(
-          children: [
-            typeProducts.isEmpty
-                ? Container()
-                : TabBarView(
-                    children: _buildTabBarView(model),
+      builder: (context, model, child) {
+        typeProducts = locator<BookingService>().typeProducts;
+
+        return Scaffold(
+          backgroundColor: backgroundColor,
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              var res = await Navigator.pushNamed(context, AddProductView.name);
+              if (res != null && res == true) {
+                await model.getAllProduct();
+              }
+            },
+            child: const Icon(Icons.add),
+          ),
+          appBar: AppBar(
+            title: typeProducts.isEmpty
+                ? null
+                : TabBar(
+                    labelStyle: const TextStyle(
+                      fontFamily: fontBold,
+                    ),
+                    physics: const BouncingScrollPhysics(),
+                    isScrollable: true,
                     controller: tabController,
+                    automaticIndicatorColorAdjustment: true,
+                    tabs: _buildTabBar(),
                   ),
-          ],
-        ),
-      ),
+          ),
+          body: Stack(
+            children: [
+              typeProducts.isEmpty
+                  ? Container()
+                  : TabBarView(
+                      children: _buildTabView(model),
+                      controller: tabController,
+                    ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -85,7 +92,7 @@ class _ProductTabState extends State<ProductTab>
     return tabs;
   }
 
-  List<Widget> _buildTabBarView(ProductModel model) {
+  List<Widget> _buildTabView(ProductModel model) {
     final paddingW = size.width * 0.01;
 
     List<Widget> tabBarViews = [];
@@ -99,34 +106,45 @@ class _ProductTabState extends State<ProductTab>
                   // width: ,
                 ),
               )
-            : GridView.builder(
-                physics: const BouncingScrollPhysics(),
-                padding: EdgeInsets.only(
-                  left: paddingW,
-                  right: paddingW,
-                  top: paddingW,
-                  bottom: size.height * 0.1,
-                ),
-                itemCount: typeProducts[i].products!.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 5,
-                  mainAxisSpacing: 5,
-                  childAspectRatio: 4 / 7,
-                ),
-                itemBuilder: (context, index) {
-                  final product = typeProducts[i].products![index];
-                  return _buildProductTile(
-                    product: product,
-                    onRemove: () async {
-                      if (await model.deleteProduct(productId: product.id)) {
-                        SuccessDialog.show(context);
-                      } else {
-                        Fluttertoast.showToast(msg: "Đã có sự cố");
-                      }
-                    },
-                  );
+            : RefreshIndicator(
+                onRefresh: () async {
+                  await model.getAllProduct();
                 },
+                child: GridView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  padding: EdgeInsets.only(
+                    left: paddingW,
+                    right: paddingW,
+                    top: paddingW,
+                    bottom: size.height * 0.1,
+                  ),
+                  cacheExtent: 1000,
+                  itemCount: typeProducts[i].products!.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 5,
+                    mainAxisSpacing: 5,
+                    childAspectRatio: 4 / 7,
+                  ),
+                  itemBuilder: (context, index) {
+                    final product = typeProducts[i].products![index];
+                    return _buildProductTile(
+                      product: product,
+                      onRemove: () async {
+                        if (await model.deleteProduct(productId: product.id)) {
+                          SuccessDialog.show(
+                            context,
+                            btnOkOnPress: () async {
+                              await model.getAllProduct();
+                            },
+                          );
+                        } else {
+                          Fluttertoast.showToast(msg: "Đã có sự cố");
+                        }
+                      },
+                    );
+                  },
+                ),
               ),
       );
     }
@@ -229,19 +247,19 @@ class _ProductTabState extends State<ProductTab>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    TextButton(
-                      onPressed: () {
-                        AwesomeDialog(
-                          context: context,
-                          dialogType: DialogType.QUESTION,
-                          title: "Xác nhận",
-                          desc: "Bạn có muốn xóa sản phẩm này không?",
-                          btnOkOnPress: onRemove,
-                          btnCancelOnPress: () {},
-                        ).show();
-                      },
-                      child: const Text("Xóa"),
-                    ),
+                    // TextButton(
+                    //   onPressed: () {
+                    //     AwesomeDialog(
+                    //       context: context,
+                    //       dialogType: DialogType.QUESTION,
+                    //       title: "Xác nhận",
+                    //       desc: "Bạn có muốn xóa sản phẩm này không?",
+                    //       btnOkOnPress: onRemove,
+                    //       btnCancelOnPress: () {},
+                    //     ).show();
+                    //   },
+                    //   child: const Text("Xóa"),
+                    // ),
                     ElevatedButton(
                       onPressed: () {
                         // TODO sửa dịch vụ

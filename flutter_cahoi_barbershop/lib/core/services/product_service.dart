@@ -6,11 +6,11 @@ import 'package:flutter_cahoi_barbershop/service_locator.dart';
 class ProductService {
   final _api = locator<Api>();
 
-  Future<Product?> createProduct({required FormData data}) async {
+  Future<bool?> createProduct({required FormData data}) async {
     var res = await _api.createProduct(data: data);
 
     if (res != null) {
-      return Product.fromJson(res.data);
+      return res.data;
     }
     return null;
   }

@@ -10,6 +10,7 @@ import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/button_login.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/loading_dialog.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/success_dialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -229,6 +230,8 @@ class _AddProductViewState extends State<AddProductView> {
           height: 50,
           width: size.width * 0.8,
           onPressed: () async {
+            LoadingDialog.show(context);
+
             if (image == null) {
               Fluttertoast.showToast(msg: "Chưa thêm ảnh");
               return;
@@ -258,8 +261,15 @@ class _AddProductViewState extends State<AddProductView> {
               data: data,
               image: image!,
             )) {
-              SuccessDialog.show(context);
+              LoadingDialog.dismiss(context);
+              SuccessDialog.show(
+                context,
+                btnOkOnPress: () {
+                  Navigator.pop(context, true);
+                },
+              );
             } else {
+              LoadingDialog.dismiss(context);
               Fluttertoast.showToast(msg: 'Đã có sự cố sảy ra!');
             }
           },

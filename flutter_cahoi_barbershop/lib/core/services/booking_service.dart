@@ -56,8 +56,11 @@ class BookingService {
     var res = await _api.getProduct(typeProductId: typeProductId);
 
     if (res != null) {
-      return List<Product>.from(
-          res.data.map((i) => Product.fromJson(i)).toList());
+      List<Product> productTemp =
+          List<Product>.from(res.data.map((i) => Product.fromJson(i)).toList());
+      productTemp.removeWhere((element) => element.status == 0);
+
+      return productTemp;
     }
 
     return [];
@@ -139,7 +142,7 @@ class BookingService {
     return null;
   }
 
-  Future getAllProduct() async {
+  Future<List<TypeProduct2>> getAllProduct() async {
     var res = await _api.getAllProduct();
 
     if (res != null) {
@@ -147,5 +150,7 @@ class BookingService {
         res.data.map((i) => TypeProduct2.fromJson(i)).toList(),
       );
     }
+
+    return typeProducts;
   }
 }
