@@ -7,6 +7,7 @@ import 'package:flutter_cahoi_barbershop/ui/utils/store_secure.dart';
 
 class AuthenticationService {
   final _api = locator<Api>();
+
   final _storeSecure = locator<StoreSecure>();
 
   StreamController<MUser> userController = StreamController<MUser>();

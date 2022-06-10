@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logger/logger.dart';
 
 bool validateUppercase(String text) {
@@ -11,3 +13,7 @@ bool validateNumeric(String text) {
 }
 
 Logger logger = Logger();
+
+AppLocalizations? appLang(BuildContext context) {
+  return AppLocalizations.of(context);
+}

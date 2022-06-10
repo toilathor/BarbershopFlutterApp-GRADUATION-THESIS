@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cahoi_barbershop/core/models/user.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
+import 'package:flutter_cahoi_barbershop/core/services/locale_service.dart';
+import 'package:flutter_cahoi_barbershop/l10n/l10n.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/test_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/router.dart' as router;
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -43,12 +47,24 @@ class _MyAppState extends State<MyApp> {
           create: (context) =>
               locator<AuthenticationService>().userController.stream,
         ),
+        StreamProvider<Locale>(
+          create: (context) => locator<LocaleService>().localeController.stream,
+          initialData: const Locale('vi'),
+        ),
       ],
       child: MaterialApp(
         title: 'Cá hồi Barbershop',
         debugShowCheckedModeBanner: false,
         initialRoute: router.initialRoute,
         routes: router.Router.defineRoute,
+        supportedLocales: L10n.all,
+        locale: locator<LocaleService>().locale,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
         theme: ThemeData(
           primaryColor: primaryColor,
           secondaryHeaderColor: secondaryColor,

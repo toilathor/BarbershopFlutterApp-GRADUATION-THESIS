@@ -21,7 +21,7 @@ class UserService {
     return [];
   }
 
-  Future<bool> signCalander() async {
+  Future<bool> signCalender() async {
     var res = await _api.signCalender();
     if (res != null) {
       return res.data;

@@ -16,7 +16,7 @@ class _BusinessTabState extends State<BusinessTab> {
     return Center(
       child: ElevatedButton(
         onPressed: () {
-          locator<UserService>().signCalander();
+          locator<UserService>().signCalender();
         },
         child: const Text('Đăng kí lịch làm việc cho toàn bộ nhân viên'),
       ),

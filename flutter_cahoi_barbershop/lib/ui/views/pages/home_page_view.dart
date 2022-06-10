@@ -9,6 +9,7 @@ import 'package:flutter_cahoi_barbershop/core/state_models/home_page_model.dart'
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/playlist_youtube/play_clip_view.dart';
@@ -67,7 +68,7 @@ class _HomePageViewState extends State<HomePageView> {
         floatingActionButton: FloatingActionButton(
           heroTag: 'HostLine',
           backgroundColor:
-          Theme.of(context).floatingActionButtonTheme.backgroundColor,
+              Theme.of(context).floatingActionButtonTheme.backgroundColor,
           onPressed: () async {
             if (await canLaunch("tel:$hostLine")) {
               await launch("tel:$hostLine");
@@ -229,9 +230,9 @@ class _HomePageViewState extends State<HomePageView> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                "CAHOI TV",
-                                style: TextStyle(
+                              Text(
+                                appLang(context)!.language,
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontFamily: fontBold,
                                 ),
@@ -243,7 +244,7 @@ class _HomePageViewState extends State<HomePageView> {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                      const PlaylistYoutube(),
+                                          const PlaylistYoutube(),
                                     ),
                                   );
                                 },
