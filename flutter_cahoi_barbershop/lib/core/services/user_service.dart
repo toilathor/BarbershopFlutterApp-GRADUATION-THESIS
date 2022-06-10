@@ -5,11 +5,10 @@ import 'package:flutter_cahoi_barbershop/service_locator.dart';
 class UserService {
   final Api _api = locator<Api>();
 
-  Future<List<MUser>> searchUser(String? searchString, {required int page}) async {
-    Map<String, dynamic> data = {
-      "page" : page
-    };
-    if(searchString != null){
+  Future<List<MUser>> searchUser(String? searchString,
+      {required int page}) async {
+    Map<String, dynamic> data = {"page": page};
+    if (searchString != null) {
       data["search_string"] = searchString;
     }
 
@@ -20,5 +19,13 @@ class UserService {
     }
 
     return [];
+  }
+
+  Future<bool> signCalander() async {
+    var res = await _api.signCalender();
+    if (res != null) {
+      return res.data;
+    }
+    return false;
   }
 }

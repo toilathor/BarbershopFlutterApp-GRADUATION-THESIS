@@ -83,6 +83,15 @@ class Api extends ApiBase {
   }
 
   ///Booking
+  Future<api_res.Response?> checkCanBook() async {
+    try {
+      var res = await dio.get('/task/can-book');
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<api_res.Response?> getFacility() async {
     try {
       var res = await dio.get('/facilities');
@@ -398,6 +407,24 @@ class Api extends ApiBase {
   Future<api_res.Response?> deleteProduct({required int productId}) async {
     try {
       var res = await dio.delete('/product/$productId');
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> signCalender() async {
+    try {
+      var res = await dio.get('/');
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> cleanOldTask() async {
+    try {
+      var res = await dio.get('/task/clean');
       return castRes(res);
     } catch (e) {
       return null;

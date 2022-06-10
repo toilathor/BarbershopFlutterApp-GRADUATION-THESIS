@@ -98,4 +98,8 @@ class TaskService {
 
     return null;
   }
+
+  Future cleanTask() async {
+    _api.cleanOldTask();
+  }
 }

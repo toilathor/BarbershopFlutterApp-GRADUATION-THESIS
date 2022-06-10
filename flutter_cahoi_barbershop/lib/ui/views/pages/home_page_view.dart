@@ -1,12 +1,15 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:date_format/date_format.dart' as date_format;
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/fake-data/data.dart';
 import 'package:flutter_cahoi_barbershop/core/models/clip_youtube.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
+import 'package:flutter_cahoi_barbershop/core/services/booking_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/home_page_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/playlist_youtube/play_clip_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/playlist_youtube/playlist_youtube_view.dart';
@@ -64,7 +67,7 @@ class _HomePageViewState extends State<HomePageView> {
         floatingActionButton: FloatingActionButton(
           heroTag: 'HostLine',
           backgroundColor:
-              Theme.of(context).floatingActionButtonTheme.backgroundColor,
+          Theme.of(context).floatingActionButtonTheme.backgroundColor,
           onPressed: () async {
             if (await canLaunch("tel:$hostLine")) {
               await launch("tel:$hostLine");
@@ -131,7 +134,7 @@ class _HomePageViewState extends State<HomePageView> {
                                   height: 8,
                                 ),
                                 Text(
-                                  "Hạng của bạn là ${user.rank?.rankName}",
+                                  "Hang của bạn là ${user.rank?.rankName}",
                                   style: const TextStyle(
                                     color: Colors.white54,
                                   ),
@@ -157,12 +160,28 @@ class _HomePageViewState extends State<HomePageView> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             _buildNaviRoute(
-                                context: context,
-                                icons: "assets/ic_calendar.png",
-                                title: "Đặt lịch",
-                                onTap: () {
+                              context: context,
+                              icons: "assets/ic_calendar.png",
+                              title: "Đặt lịch",
+                              onTap: () async {
+                                if (await locator<BookingService>()
+                                    .checkCanBook()) {
                                   Navigator.pushNamed(context, '/booking');
-                                }),
+                                } else {
+                                  AwesomeDialog(
+                                    context: context,
+                                    btnOkOnPress: () {
+                                      Navigator.pushNamed(context, '/history');
+                                    },
+                                    dialogType: DialogType.WARNING,
+                                    title:
+                                        "Bạn đang có lịch hẹn đang đợi, vui lòng "
+                                        "hủy trước khi đặt lịch hẹn mới!",
+                                    titleTextStyle: styleTitleDialog,
+                                  ).show();
+                                }
+                              },
+                            ),
                             _buildNaviRoute(
                               context: context,
                               icons: "assets/ic_history.png",
@@ -224,7 +243,7 @@ class _HomePageViewState extends State<HomePageView> {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const PlaylistYoutube(),
+                                      const PlaylistYoutube(),
                                     ),
                                   );
                                 },

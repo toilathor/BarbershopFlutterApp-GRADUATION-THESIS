@@ -153,4 +153,14 @@ class BookingService {
 
     return typeProducts;
   }
+
+  Future<bool> checkCanBook() async {
+    var res = await _api.checkCanBook();
+
+    if (res != null) {
+      return res.data;
+    }
+
+    return false;
+  }
 }

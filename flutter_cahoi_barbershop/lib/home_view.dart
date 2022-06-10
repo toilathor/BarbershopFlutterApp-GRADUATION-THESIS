@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cahoi_barbershop/core/services/task_service.dart';
+import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/pages/account_page_view.dart';
@@ -22,6 +24,14 @@ class _HomeViewState extends State<HomeView> {
   ];
 
   int _currentIndex = 0;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await locator<TaskService>().cleanTask();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
