@@ -56,7 +56,7 @@ class _MyAppState extends State<MyApp> {
         initialData: locator<LocaleService>().locale,
         stream: locator<LocaleService>().localeResponse,
         builder: (context, snapshot) => MaterialApp(
-          title: 'Cá hồi Barbershop',
+          title: 'CaHoi Barbershop',
           debugShowCheckedModeBanner: false,
           initialRoute: router.initialRoute,
           routes: router.Router.defineRoute,

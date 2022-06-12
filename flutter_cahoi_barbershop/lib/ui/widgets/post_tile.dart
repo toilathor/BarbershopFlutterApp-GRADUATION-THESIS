@@ -6,6 +6,7 @@ import 'package:flutter_cahoi_barbershop/core/models/post2.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -117,7 +118,7 @@ class _PostTileState extends State<PostTile> {
                     showCupertinoModalPopup(
                       context: context,
                       builder: (context) => CupertinoActionSheet(
-                        title: const Text("Tùy chọn"),
+                        title: Text(appLang(context)!.bottombar_menu),
                         actions: [
                           CupertinoActionSheetAction(
                             onPressed: () {
@@ -125,7 +126,9 @@ class _PostTileState extends State<PostTile> {
                                 widget.onEdit!();
                               }
                             },
-                            child: const Text("Chỉnh sửa"),
+                            child: Text(
+                              appLang(context)!.edit,
+                            ),
                           ),
                           CupertinoActionSheetAction(
                             onPressed: () {
@@ -133,14 +136,18 @@ class _PostTileState extends State<PostTile> {
                                 widget.onDelete!();
                               }
                             },
-                            child: const Text("Xóa"),
+                            child: Text(
+                              appLang(context)!.delete,
+                            ),
                           ),
                         ],
                         cancelButton: CupertinoActionSheetAction(
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: const Text("Cancel"),
+                          child: Text(
+                            appLang(context)!.cancel,
+                          ),
                         ),
                       ),
                     );
@@ -204,6 +211,7 @@ class _PostTileState extends State<PostTile> {
                 options: CarouselOptions(
                   scrollPhysics: const BouncingScrollPhysics(),
                   initialPage: 1,
+                  enableInfiniteScroll: false,
                   height: double.infinity,
                   viewportFraction: 1,
                   onPageChanged: (index, reason) {
@@ -295,7 +303,7 @@ class _PostTileState extends State<PostTile> {
               horizontal: 16.0,
             ),
             child: Text(
-              '${widget.post.likeCount} Likes',
+              '${widget.post.likeCount} ${appLang(context)!.like}',
               style: const TextStyle(
                 fontSize: 12,
                 color: Colors.black,

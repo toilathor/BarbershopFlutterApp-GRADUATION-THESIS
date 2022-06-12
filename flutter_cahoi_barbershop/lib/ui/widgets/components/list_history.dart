@@ -203,16 +203,15 @@ class _HistoryTileState extends State<HistoryTile> {
                           ),
               ),
               SizedBox(
-                height: 100,
+                height: 65,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
-                      Expanded(
+                      Flexible(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisSize: MainAxisSize.max,
                           children: [
                             Expanded(
                               child: Visibility(
@@ -387,7 +386,7 @@ class _HistoryTileState extends State<HistoryTile> {
                 fontSize: 16,
               ),
               decoration: InputDecoration(
-                hintText: "",
+                hintText: appLang(context)!.hint_status,
                 hintStyle: TextStyle(
                   fontSize: 14,
                   color: Colors.grey.withOpacity(0.5),

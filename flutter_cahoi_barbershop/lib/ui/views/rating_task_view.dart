@@ -81,7 +81,7 @@ class _RatingTaskViewState extends State<RatingTaskView> {
                           : appLang(context)!.reviewed,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 26,
                         fontFamily: fontBold,
                       ),
                     ),

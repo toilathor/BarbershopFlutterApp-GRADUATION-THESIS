@@ -17,7 +17,7 @@ import 'package:flutter_cahoi_barbershop/ui_employee/employee_home_view.dart';
 import 'package:flutter_cahoi_barbershop/ui_employee/report_task_view.dart';
 import 'package:flutter_cahoi_barbershop/ui_employee/show_task_view.dart';
 
-const String initialRoute = "/splash";
+const String initialRoute = "/test";
 
 class Router {
   static Map<String, Widget Function(BuildContext)> defineRoute = {

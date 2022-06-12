@@ -177,9 +177,11 @@ class _HomePageViewState extends State<HomePageView> {
                                     btnOkOnPress: () {
                                       Navigator.pushNamed(context, '/history');
                                     },
-                                    dialogType: DialogType.WARNING,
-                                    title: appLang(context)!.warning_task,
+                                    title: appLang(context)!.warningg,
                                     titleTextStyle: styleTitleDialog,
+                                    dialogType: DialogType.WARNING,
+                                    desc: appLang(context)!.warning_task,
+                                    descTextStyle: styleDescDialog,
                                   ).show();
                                 }
                               },

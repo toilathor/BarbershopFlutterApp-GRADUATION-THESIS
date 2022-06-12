@@ -82,7 +82,7 @@ class TaskService {
   Future<Rating?> getRatingTask({required int taskId}) async {
     var res = await _api.getRatingTask(taskId: taskId);
 
-    if (res != null) {
+    if (res != null && res.data != null) {
       return Rating.fromJson(res.data);
     }
 
