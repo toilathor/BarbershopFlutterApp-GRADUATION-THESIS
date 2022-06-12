@@ -3,6 +3,7 @@ import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/server_config.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/logout_dialog.dart';
@@ -70,25 +71,25 @@ class _HomeAdminViewState extends State<HomeAdminView> {
                 children: [
                   _drawerTile(
                     tab: AdminTab.hr,
-                    title: 'Nhân sự',
+                    title: appLang(context)!.hr,
                     icon: const Icon(Icons.lock),
                   ),
                   const Divider(),
                   _drawerTile(
                     tab: AdminTab.business,
-                    title: 'Công việc',
+                    title: appLang(context)!.work,
                     icon: const Icon(Icons.business_center),
                   ),
                   const Divider(),
                   _drawerTile(
                     tab: AdminTab.product,
-                    title: 'Sản phẩm',
+                    title: appLang(context)!.product,
                     icon: const Icon(Icons.cut),
                   ),
                   const Divider(),
                   _drawerTile(
                     tab: AdminTab.analysis,
-                    title: 'Phân tích',
+                    title: appLang(context)!.analysis,
                     icon: const Icon(Icons.bar_chart),
                   ),
                   ListTile(
@@ -99,7 +100,9 @@ class _HomeAdminViewState extends State<HomeAdminView> {
                       Icons.logout,
                       color: Colors.red,
                     ),
-                    title: const Text('Đăng xuất'),
+                    title: Text(
+                      appLang(context)!.logout,
+                    ),
                   ),
                 ],
               ),

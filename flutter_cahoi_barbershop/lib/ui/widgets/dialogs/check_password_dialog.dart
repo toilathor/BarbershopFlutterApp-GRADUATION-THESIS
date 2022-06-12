@@ -35,7 +35,9 @@ class _CheckPasswordBodyState extends State<_CheckPasswordBody> {
   Widget build(BuildContext context) {
     return BaseView<AuthModel>(
       builder: (context, model, child) => AlertDialog(
-        title: const Text("Mật khẩu"),
+        title: Text(
+          appLang(context)!.password,
+        ),
         shape: RoundedRectangleBorder(borderRadius: borderRadius12),
         content: Form(
           key: formKey,
@@ -60,19 +62,19 @@ class _CheckPasswordBodyState extends State<_CheckPasswordBody> {
             obscureText: isHintPass,
             validator: (_) {
               if (controller.text.isEmpty || controller.text.length < 8) {
-                return "Vui lòng nhập ít nhất 8 kí tự";
+                return appLang(context)!.warning_length;
               }
 
               if (validateNumeric(controller.text)) {
-                return "Chứa ít nhất một kí tự là số";
+                return appLang(context)!.warning_numeric;
               }
 
               if (validateUppercase(controller.text)) {
-                return "Chứa ít nhất một kí tự viết hoa";
+                return appLang(context)!.warning_upcase;
               }
 
               if (isError) {
-                return "Mật khẩu không đúng";
+                return appLang(context)!.wrong_password;
               }
 
               return null;
@@ -88,7 +90,9 @@ class _CheckPasswordBodyState extends State<_CheckPasswordBody> {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: const Text("Hủy"),
+            child: Text(
+              appLang(context)!.cancel,
+            ),
           ),
           ElevatedButton(
             onPressed: () async {

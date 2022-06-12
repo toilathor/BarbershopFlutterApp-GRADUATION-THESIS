@@ -97,5 +97,22 @@
   "wrong_password": "Sai mật khẩu",
   "user_not_find": "Người dùng này không tồn tại",
   "reset_password": "Đặt lại mật khẩu",
-  "create_new_pass": "Đặt mật khẩu mới"
+  "create_new_pass": "Đặt mật khẩu mới",
+  "please_review": "Mời bạn đánh giác chất lượng phục vụ",
+  "reviewed": "Bạn đã đánh giá",
+  "comment_review": "Phản hồi của bạn sẽ giúp chúng tôi cải thiện chất lượng phục vụ tốt hơn",
+  "stylist": "Thợ cắt tóc",
+  "other": "Khác",
+  "assessment": "Không gian",
+  "security": "Bảo vệ",
+  "suggestions": "Góp ý",
+  "save": "Lưu",
+  "question_del_post": "Bạn có chắc chắn muốn xóa vĩnh viễn bài viết này không?",
+  "confirm": "Xác nhận",
+  "share_now": "Chia sẻ ngay",
+  "cancel": "Hủy",
+  "hr": "Nhân sự",
+  "work": "Công việc",
+  "product": "Sản phẩm",
+  "analysis": "Phân tích"
 }

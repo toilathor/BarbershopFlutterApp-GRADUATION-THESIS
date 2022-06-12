@@ -3,6 +3,7 @@ import 'package:flutter_cahoi_barbershop/core/models/rating.dart';
 import 'package:flutter_cahoi_barbershop/core/models/task.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/history_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/button_login.dart';
@@ -76,8 +77,8 @@ class _RatingTaskViewState extends State<RatingTaskView> {
                   child: Center(
                     child: Text(
                       rating == null
-                          ? "Mời bạn đánh giác chất lượng phục vụ"
-                          : "Bạn đã đánh giá",
+                          ? appLang(context)!.please_review
+                          : appLang(context)!.reviewed,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 18,
@@ -86,21 +87,20 @@ class _RatingTaskViewState extends State<RatingTaskView> {
                     ),
                   ),
                 ),
-                const Text(
-                  "Phản hồi của bạn sẽ giúp chúng tôi "
-                  "cải thiện chất lượng phục vụ tốt hơn",
+                Text(
+                  appLang(context)!.comment_review,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                   ),
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                const Text(
-                  "Thợ cắt tóc",
+                Text(
+                  appLang(context)!.stylist,
                   textAlign: TextAlign.start,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: fontBold,
                     fontSize: 16,
                   ),
@@ -118,14 +118,14 @@ class _RatingTaskViewState extends State<RatingTaskView> {
                   child: Column(
                     children: [
                       _rowRating(
-                        label: "Giao tiếp",
+                        label: appLang(context)!.communicate,
                         initValue: ratingCommunication,
                         onChange: (point) {
                           ratingCommunication = point;
                         },
                       ),
                       _rowRating(
-                        label: "Chuyên môn",
+                        label: appLang(context)!.skill,
                         initValue: ratingSkill,
                         onChange: (point) {
                           ratingSkill = point;
@@ -137,10 +137,10 @@ class _RatingTaskViewState extends State<RatingTaskView> {
                 const SizedBox(
                   height: 20,
                 ),
-                const Text(
-                  "Khác",
+                Text(
+                  appLang(context)!.other,
                   textAlign: TextAlign.start,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: fontBold,
                     fontSize: 16,
                   ),
@@ -158,14 +158,14 @@ class _RatingTaskViewState extends State<RatingTaskView> {
                   child: Column(
                     children: [
                       _rowRating(
-                        label: "Không gian",
+                        label: appLang(context)!.assessment,
                         initValue: ratingAssessment,
                         onChange: (point) {
                           ratingAssessment = point;
                         },
                       ),
                       _rowRating(
-                        label: "Bảo vệ",
+                        label: appLang(context)!.security,
                         initValue: ratingSecure,
                         onChange: (point) {
                           ratingSecure = point;
@@ -193,7 +193,7 @@ class _RatingTaskViewState extends State<RatingTaskView> {
                   decoration: InputDecoration(
                     fillColor: Colors.grey.shade300,
                     filled: true,
-                    hintText: "Góp ý",
+                    hintText: appLang(context)!.suggestions,
                     hintStyle: TextStyle(
                       fontSize: 14,
                       color: Colors.grey.shade600,
@@ -224,10 +224,12 @@ class _RatingTaskViewState extends State<RatingTaskView> {
                           LoadingDialog.dismiss(context);
                           SuccessDialog.show(context);
                         } else {
-                          Fluttertoast.showToast(msg: "Đã có sự cố!");
+                          Fluttertoast.cancel();
+                          Fluttertoast.showToast(
+                              msg: appLang(context)!.has_error);
                         }
                       },
-                      title: 'Lưu',
+                      title: appLang(context)!.save,
                       height: 50,
                       width: size.width * 0.7,
                     ),

@@ -80,5 +80,22 @@
   "wrong_password": "Wrong password",
   "user_not_find": "This user does not exist",
   "reset_password": "Reset password",
-  "create_new_pass": "Create New Password"
+  "create_new_pass": "Create New Password",
+  "please review": "Please rate the service quality",
+  "reviewed": "You have rated",
+  "comment_review": "Your feedback will help us improve the quality of service better",
+  "stylist": "Stylist",
+  "other": "Other",
+  "assessment": "Assessment",
+  "security": "Security",
+  "suggestions": "Suggestions",
+  "save": "Save",
+  "question_del_post": "Are you sure you want to permanently delete this post?",
+  "confirm": "Confirm",
+  "share_now": "Share now",
+  "cancel": "Cancel",
+  "hr": "Human Resouces",
+  "work": "Work",
+  "product": "Product",
+  "analysis": "Analysis"
 }

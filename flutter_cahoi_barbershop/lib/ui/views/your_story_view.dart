@@ -5,6 +5,7 @@ import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/story_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/components/bottom_sheet_edit_post.dart';
@@ -124,10 +125,10 @@ class _YourStoryViewState extends State<YourStoryView> {
                       await model.deletePost(postId: post.id!);
                     },
                     btnCancelOnPress: () {},
-                    body: const Text(
-                      "Bạn có chắc chắn muốn xóa vĩnh viễn bài viết này không?",
+                    body: Text(
+                      appLang(context)!.question_del_post,
                     ),
-                    title: "Xác nhận",
+                    title: appLang(context)!.confirm,
                   ).show();
                 },
                 onEdit: () async {

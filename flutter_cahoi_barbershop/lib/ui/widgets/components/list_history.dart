@@ -426,13 +426,13 @@ class _HistoryTileState extends State<HistoryTile> {
                         .sharePost(task: task, caption: captionController.text);
                     if (res) {
                       AwesomeDialog(
-                              context: context,
-                              dialogType: DialogType.SUCCES,
-                              btnOkOnPress: () {
-                                Navigator.pop(context);
-                              },
-                              title: "Successful!")
-                          .show();
+                        context: context,
+                        dialogType: DialogType.SUCCES,
+                        btnOkOnPress: () {
+                          Navigator.pop(context);
+                        },
+                        title: appLang(context)!.success,
+                      ).show();
                     } else {
                       AwesomeDialog(
                               context: context,
@@ -442,9 +442,9 @@ class _HistoryTileState extends State<HistoryTile> {
                           .show();
                     }
                   },
-                  child: const Text(
-                    "Chia sẻ ngay",
-                    style: TextStyle(
+                  child: Text(
+                    appLang(context)!.share_now,
+                    style: const TextStyle(
                       fontFamily: fontBold,
                     ),
                   ),

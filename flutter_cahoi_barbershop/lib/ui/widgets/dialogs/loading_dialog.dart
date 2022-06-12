@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class LoadingDialog {
@@ -24,11 +25,11 @@ class LoadingDialog {
                 rightDotColor: const Color(0xFFEA3799),
                 size: 50,
               ),
-              const Material(
+              Material(
                 color: Colors.transparent,
                 child: Text(
-                  'loading...',
-                  style: TextStyle(
+                  appLang(context)!.loading,
+                  style: const TextStyle(
                     color: headerColor1,
                     fontSize: 16,
                     fontFamily: fontBold,
