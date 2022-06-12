@@ -5,6 +5,7 @@ class StoreSecure {
 
   final _keyToken = 'token';
   final _expiresIn = 'expires_in';
+  final _language = 'language';
 
   StoreSecure() {
     getInstance();
@@ -24,6 +25,14 @@ class StoreSecure {
 
   Future<String?> getExpiresIn() async {
     return await _storage?.read(key: _expiresIn);
+  }
+
+  Future setLanguage(String? language) async {
+    await _storage?.write(key: _language, value: language);
+  }
+
+  Future<String?> getLanguage() async {
+    return await _storage?.read(key: _language);
   }
 
   getInstance() async {

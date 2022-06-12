@@ -195,7 +195,7 @@ class _AccountPageViewState extends State<AccountPageView> {
                 ),
               ),
               SizedBox(
-                height: 30,
+                height: 35,
                 child: AnimatedToggleSwitch<Locale>.size(
                   current: value,
                   values: L10n.all,
@@ -210,7 +210,7 @@ class _AccountPageViewState extends State<AccountPageView> {
                           : "assets/icon/vietnam.jpg",
                     );
                   },
-                  borderColor: Colors.blue,
+                  borderColor: Colors.grey.withOpacity(0.5),
                   colorBuilder: (i) => Colors.transparent,
                   onChanged: (i) {
                     locator<LocaleService>().changeLanguage();
