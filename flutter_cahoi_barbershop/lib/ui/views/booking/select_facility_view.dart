@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/booking_model.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/widgets/facility_tile.dart';
 import 'package:geolocator/geolocator.dart';
@@ -21,7 +22,9 @@ class _SelectFacilityViewState extends State<SelectFacilityView> {
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
-          title: const Text("Chọn cơ sở"),
+          title: Text(
+            appLang(context)!.select_facility,
+          ),
           automaticallyImplyLeading: false,
           leading: CupertinoNavigationBarBackButton(
             color: Theme.of(context).backgroundColor,
@@ -37,15 +40,17 @@ class _SelectFacilityViewState extends State<SelectFacilityView> {
                       height: 20.0,
                     ),
                     Text(
-                      'Đang tải...',
+                      appLang(context)!.loading,
                       style: Theme.of(context).textTheme.subtitle2,
                     )
                   ],
                 ),
               )
             : (model.facilities.isEmpty || model.position == null
-                ? const Center(
-                    child: Text('Đã có lỗi sảy ra!'),
+                ? Center(
+                    child: Text(
+                      appLang(context)!.has_error,
+                    ),
                   )
                 : RefreshIndicator(
                     onRefresh: () async {

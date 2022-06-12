@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/product.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/elevated_button_icon.dart';
 
 class ProductTile extends StatefulWidget {
@@ -127,9 +128,9 @@ class _ProductTileState extends State<ProductTile> {
                     width: widget.width,
                     child: widget.isSelected
                         ? ElevatedButtonIcon(
-                            width: widget.width,
+                      width: widget.width,
                             onPressed: widget.onPressSelect,
-                            title: 'Selected',
+                            title: appLang(context)!.selected,
                             icon: const Icon(
                               Icons.check_circle_outline,
                               size: 24,
@@ -140,7 +141,7 @@ class _ProductTileState extends State<ProductTile> {
                             onPressed: widget.onPressSelect,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text("Chọn",
+                              child: Text(appLang(context)!.select,
                                   style: Theme.of(context).textTheme.bodyText1),
                             ),
                           ),

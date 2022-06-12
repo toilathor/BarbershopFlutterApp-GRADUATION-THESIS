@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/product.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/elevated_button_icon.dart';
 
 class InfoProductView extends StatefulWidget {
@@ -82,10 +83,10 @@ class _InfoProductViewState extends State<InfoProductView> {
                       ],
                     ),
                   ),
-                  const Text(
-                    "Mô tả",
+                  Text(
+                    appLang(context)!.description,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: fontBold,
                       color: Colors.grey,
                       fontSize: 20,
@@ -113,7 +114,7 @@ class _InfoProductViewState extends State<InfoProductView> {
                 onPressed: () {
                   Navigator.pop(context, true);
                 },
-                title: 'Chọn',
+                title: appLang(context)!.select,
               ),
             ),
           ),

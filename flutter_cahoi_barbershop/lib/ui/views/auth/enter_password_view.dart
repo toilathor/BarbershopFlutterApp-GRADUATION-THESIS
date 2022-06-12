@@ -5,6 +5,7 @@ import 'package:flutter_cahoi_barbershop/core/state_models/auth_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/router_login.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/server_config.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
@@ -57,11 +58,11 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12.0),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
                           child: Text(
-                            "Nhập mật khẩu",
-                            style: TextStyle(
+                            appLang(context)!.login,
+                            style: const TextStyle(
                               fontSize: 36,
                               fontFamily: fontBold,
                               color: headerColor1,
@@ -72,7 +73,7 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
                           padding: const EdgeInsets.all(12.0),
                           child: RichText(
                             text: TextSpan(
-                              text: "Vui lòng nhập mật khẩu của số điện thoại ",
+                              text: appLang(context)!.please_enter_pass,
                               children: [
                                 TextSpan(
                                   text: widget.phoneNumber,
@@ -140,14 +141,10 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
             validator: (_) {
               RegExp regex = RegExp(
                   r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$');
-              if (currentPassword.isEmpty) {
-                return 'Vui lòng nhập mật khẩu';
+              if (!regex.hasMatch(currentPassword)) {
+                return appLang(context)!.warning_pass_invalid;
               } else {
-                if (!regex.hasMatch(currentPassword)) {
-                  return 'Mật khẩu không hợp lệ';
-                } else {
-                  return null;
-                }
+                return null;
               }
             },
             cursorColor: Colors.black,
@@ -169,7 +166,7 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
             autocorrect: true,
             onFieldSubmitted: onFieldSubmitted,
             decoration: InputDecoration(
-              hintText: "Mật khẩu",
+              hintText: appLang(context)!.password,
               counterText: "",
               hintStyle: TextStyle(
                 fontSize: 24,
@@ -201,7 +198,11 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
                     },
                     style: const ButtonStyle(
                         splashFactory: NoSplash.splashFactory),
-                    child: Text(isHidePassword ? 'Hiện' : 'Ẩn'),
+                    child: Text(
+                      isHidePassword
+                          ? appLang(context)!.show
+                          : appLang(context)!.hide,
+                    ),
                   ),
                 ],
               ),
@@ -222,7 +223,7 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
                   width: size.width * 0.9,
                   onPressed: onLogin,
                   // isLength && isUppercase && isNumeric ? onLogin : null,
-                  title: "Đăng nhập",
+                  title: appLang(context)!.login,
                 ),
               ),
               Padding(
@@ -238,7 +239,7 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
                           ),
                         );
                       },
-                      child: const Text("Quên mật khẩu?"),
+                      child: Text(appLang(context)!.forgot_pass),
                       style: const ButtonStyle(
                         splashFactory: NoSplash.splashFactory,
                       ),
@@ -260,15 +261,15 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
         padding: const EdgeInsets.all(12.0),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           TextRegex(
-            title: "• ít nhất 1 kí tự viết hoa",
+            title: appLang(context)!.warning_upcase,
             validated: isUppercase,
           ),
           TextRegex(
-            title: "• ít nhất một kí tự số",
+            title: appLang(context)!.warning_numeric,
             validated: isNumeric,
           ),
           TextRegex(
-            title: "• độ dài tối thiểu là 8",
+            title: appLang(context)!.warning_length,
             validated: isLength,
           ),
         ]),
@@ -317,7 +318,8 @@ class _EnterPasswordViewState extends State<EnterPasswordView> {
         role: role,
       );
     } else {
-      Fluttertoast.showToast(msg: 'Wrong password');
+      Fluttertoast.cancel();
+      Fluttertoast.showToast(msg: appLang(context)!.wrong_password);
       formPassKey.currentState!.validate();
       setState(() {
         passController.text = "";

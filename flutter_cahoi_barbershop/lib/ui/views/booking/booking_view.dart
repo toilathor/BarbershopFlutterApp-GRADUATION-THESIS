@@ -6,6 +6,7 @@ import 'package:flutter_cahoi_barbershop/core/models/stylist.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/booking_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/select_facility_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/select_product_view.dart';
@@ -41,15 +42,18 @@ class _BookingViewState extends State<BookingView>
       },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () async {
+          Fluttertoast.cancel();
           Fluttertoast.showToast(
-            msg: "Để tránh back nhầm. Hãy bấm nút back góc trên bên phải!",
+            msg: appLang(context)!.warning_back_booking,
           );
           return false;
         },
         child: Scaffold(
           backgroundColor: Theme.of(context).backgroundColor,
           appBar: AppBar(
-            title: const Text("Đặt lịch cắt tóc"),
+            title: Text(
+              appLang(context)!.schedule_haircut,
+            ),
             automaticallyImplyLeading: false,
             actions: [
               Container(
@@ -133,7 +137,7 @@ class _BookingViewState extends State<BookingView>
       BuildContext context, ControlsDetails details, BookingModel model) {
     if (details.currentStep == StepBooking.selectFacility.index) {
       return ElevatedButtonIcon(
-        title: 'Bước tiếp theo',
+        title: appLang(context)!.next_step,
         onPressed:
             model.selectedFacility == null ? null : details.onStepContinue,
       );
@@ -143,12 +147,14 @@ class _BookingViewState extends State<BookingView>
           Expanded(
             child: TextButton(
               onPressed: details.onStepCancel,
-              child: const Text('Trở lại'),
+              child: Text(
+                appLang(context)!.back_step,
+              ),
             ),
           ),
           Expanded(
             child: ElevatedButtonIcon(
-              title: 'Hoàn tất',
+              title: appLang(context)!.complete,
               onPressed: model.checkCompleted()
                   ? () async {
                       var res =
@@ -157,7 +163,7 @@ class _BookingViewState extends State<BookingView>
                         AwesomeDialog(
                           context: context,
                           dialogType: DialogType.SUCCES,
-                          title: "Đặt lịch thành công",
+                          title: appLang(context)!.success,
                           btnOkOnPress: () {
                             Navigator.pop(context);
                           },
@@ -165,7 +171,7 @@ class _BookingViewState extends State<BookingView>
                       } else {
                         AwesomeDialog(
                           context: context,
-                          title: "Đã có sự cố, vui lòng thử lại sau! 🥲🥲🥲",
+                          title: appLang(context)!.has_error,
                           dialogType: DialogType.ERROR,
                           btnOkOnPress: () {},
                         ).show();
@@ -183,13 +189,15 @@ class _BookingViewState extends State<BookingView>
             flex: 1,
             child: TextButton(
               onPressed: details.onStepCancel,
-              child: const Text('Trở lại'),
+              child: Text(
+                appLang(context)!.back_step,
+              ),
             ),
           ),
           Expanded(
             flex: 1,
             child: ElevatedButtonIcon(
-              title: 'Bước tiếp theo',
+              title: appLang(context)!.next_step,
               onPressed: model.selectedProducts.isEmpty
                   ? null
                   : details.onStepContinue,
@@ -208,9 +216,9 @@ class _BookingViewState extends State<BookingView>
       Step(
         isActive: currentStep == StepBooking.selectFacility ||
             currentFacility != null,
-        title: const Text(
-          "Chọn cơ sở",
-          style: TextStyle(
+        title: Text(
+          appLang(context)!.select_facility,
+          style: const TextStyle(
             color: textColorLight2,
             fontSize: 24,
             fontWeight: FontWeight.w500,
@@ -264,7 +272,9 @@ class _BookingViewState extends State<BookingView>
               width: double.infinity,
               child: OutlinedButton(
                 onPressed: onPressSelect,
-                child: const Text('Chọn cơ sở'),
+                child: Text(
+                  appLang(context)!.select_facility,
+                ),
               ),
             ),
           ],
@@ -281,9 +291,9 @@ class _BookingViewState extends State<BookingView>
             selectedProducts.isNotEmpty,
         state:
             selectedProducts.isEmpty ? StepState.indexed : StepState.complete,
-        title: const Text(
-          "Chọn dịch vụ",
-          style: TextStyle(
+        title: Text(
+          appLang(context)!.select_product,
+          style: const TextStyle(
             color: textColorLight2,
             fontSize: 24,
             fontWeight: FontWeight.w500,
@@ -303,7 +313,9 @@ class _BookingViewState extends State<BookingView>
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                child: const Text('Chọn dịch vụ'),
+                child: Text(
+                  appLang(context)!.select_product,
+                ),
                 onPressed: onPressSelectProduct,
               ),
             ),
@@ -312,10 +324,10 @@ class _BookingViewState extends State<BookingView>
       );
 
   Step _buildStepSelectDateAndStylist(BookingModel model) => Step(
-        isActive: model.currentStep == StepBooking.selectStylistAndDate,
-        title: const Text(
-          "Chọn thợ cắt tóc & ngày, giờ",
-          style: TextStyle(
+    isActive: model.currentStep == StepBooking.selectStylistAndDate,
+        title: Text(
+          appLang(context)!.select_stylist,
+          style: const TextStyle(
             color: textColorLight2,
             fontSize: 24,
             fontWeight: FontWeight.w500,
@@ -383,9 +395,9 @@ class _BookingViewState extends State<BookingView>
               ),
               SizedBox(
                 width: size.width,
-                child: const Text(
-                  "Ghi chú",
-                  style: TextStyle(
+                child: Text(
+                  appLang(context)!.note,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontFamily: fontBold,
                   ),
@@ -400,8 +412,7 @@ class _BookingViewState extends State<BookingView>
                   fontSize: 16,
                 ),
                 decoration: InputDecoration(
-                  hintText: "Ví dụ: Anh đi với 2 đứa con, Anh đi với bạn, "
-                      "Rửa tay và vân vân ... vv",
+                  hintText: appLang(context)!.example_note_booking,
                   hintStyle: TextStyle(
                     fontSize: 14,
                     color: Colors.grey.withOpacity(0.5),
@@ -417,10 +428,12 @@ class _BookingViewState extends State<BookingView>
     required StylistRate? stylist,
   }) {
     return stylist == null
-        ? const Center(
+        ? Center(
             child: Text(
-              "Chúng tôi sẽ chọn giúp bạn thợ tốt nhất..",
-              style: TextStyle(fontWeight: FontWeight.w400),
+              appLang(context)!.desc_random_select,
+              style: const TextStyle(
+                fontWeight: FontWeight.w400,
+              ),
             ),
           )
         : Column(
@@ -444,7 +457,10 @@ class _BookingViewState extends State<BookingView>
               Expanded(
                 child: Row(
                   children: [
-                    Text("Giao tiếp: ${stylist.communication ?? '5'}"),
+                    Text(
+                      "${appLang(context)!.communicate}: "
+                      "${stylist.communication ?? '5'}",
+                    ),
                     const Icon(
                       Icons.star,
                       color: Colors.amber,
@@ -455,7 +471,10 @@ class _BookingViewState extends State<BookingView>
               Expanded(
                 child: Row(
                   children: [
-                    Text("Kĩ năng: ${stylist.skill ?? '5'}"),
+                    Text(
+                      "${appLang(context)!.skill}:"
+                      " ${stylist.skill ?? '5'}",
+                    ),
                     const Icon(
                       Icons.star,
                       color: Colors.amber,
@@ -491,12 +510,15 @@ class _BookingViewState extends State<BookingView>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
-            "Tổng: ",
+          Text(
+            "${appLang(context)!.total}: ",
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-                color: primaryColor, fontSize: 20, fontFamily: fontBold),
+            style: const TextStyle(
+              color: primaryColor,
+              fontSize: 20,
+              fontFamily: fontBold,
+            ),
           ),
           Container(
             padding: const EdgeInsets.all(8),
@@ -508,14 +530,18 @@ class _BookingViewState extends State<BookingView>
               "${price}K",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(color: primaryColor),
+              style: const TextStyle(
+                color: primaryColor,
+              ),
             ),
           ),
         ],
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
-        border: Border.all(color: Colors.black26),
+        border: Border.all(
+          color: Colors.black26,
+        ),
       ),
     ));
     return items;

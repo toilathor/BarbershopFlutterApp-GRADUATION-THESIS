@@ -62,11 +62,13 @@ class _StoryPageViewState extends State<StoryPageView> {
                     ),
                   ),
                 ),
-                tooltip: 'Trang cá nhân',
+                tooltip: '',
               ),
             )
           ],
-          title: Text("Top ${date_format.formatDate(DateTime.now(), [MM])}"),
+          title: Text(
+            "Top ${date_format.formatDate(DateTime.now(), [MM])}",
+          ),
         ),
         body: Center(
           child: RefreshIndicator(

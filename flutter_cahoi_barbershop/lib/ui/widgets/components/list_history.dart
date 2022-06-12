@@ -7,6 +7,7 @@ import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/history_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/rating_task_view.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -76,11 +77,11 @@ class _HistoryTileState extends State<HistoryTile> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _buildCoupleText(
-                      first: 'Giờ: ',
+                      first: '${appLang(context)!.time}: ',
                       last: "${widget.task.time?.time}",
                     ),
                     _buildCoupleText(
-                      first: 'Ngày: ',
+                      first: '${appLang(context)!.date}: ',
                       last: "${widget.task.date}",
                     ),
                   ],
@@ -97,9 +98,9 @@ class _HistoryTileState extends State<HistoryTile> {
                         children: [
                           Row(
                             children: [
-                              const Expanded(
+                              Expanded(
                                 child: Text(
-                                  'Đ.g kĩ năng: ',
+                                  '${appLang(context)!.communicate}: ',
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -118,9 +119,9 @@ class _HistoryTileState extends State<HistoryTile> {
                           ),
                           Row(
                             children: [
-                              const Expanded(
+                              Expanded(
                                 child: Text(
-                                  'Đ.g Giao tiếp: ',
+                                  '${appLang(context)!.skill}:',
                                   overflow: TextOverflow.clip,
                                 ),
                               ),
@@ -142,7 +143,7 @@ class _HistoryTileState extends State<HistoryTile> {
                             last: "${widget.task.stylist!.user?.name}",
                           ),
                           _buildCoupleText(
-                            first: "Cơ sở: ",
+                            first: "${appLang(context)!.facility}: ",
                             last: "${widget.task.stylist?.facility?.address}",
                           )
                         ],
@@ -191,8 +192,7 @@ class _HistoryTileState extends State<HistoryTile> {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    "Vì bạn chưa đến nên chưa có ảnh, "
-                                    "nhớ tới đúng giờ nhé!",
+                                    appLang(context)!.remind_task,
                                     style: TextStyle(
                                       color: Colors.grey.shade500,
                                     ),
@@ -247,8 +247,8 @@ class _HistoryTileState extends State<HistoryTile> {
                                   icon: const Icon(
                                     Icons.star_half_rounded,
                                   ),
-                                  label: const Text(
-                                    "Đánh giá",
+                                  label: Text(
+                                    appLang(context)!.review,
                                   ),
                                 ),
                               ),
@@ -262,10 +262,10 @@ class _HistoryTileState extends State<HistoryTile> {
                           onPressed: () {
                             AwesomeDialog(
                               context: context,
-                              title: "Hủy lịch",
-                              body: const Text(
-                                "Bạn có chắc chắn muốn hủy lịch không",
-                                style: TextStyle(
+                              title: appLang(context)!.cancel_calendar,
+                              body: Text(
+                                appLang(context)!.question_cancel_calender,
+                                style: const TextStyle(
                                   fontFamily: fontBold,
                                 ),
                               ),
@@ -276,21 +276,9 @@ class _HistoryTileState extends State<HistoryTile> {
                               dialogType: DialogType.QUESTION,
                             ).show();
                           },
-                          child: const Text(
-                            'Hủy lịch',
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Visibility(
-                        visible: widget.task.status != 0,
-                        child: TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'Tôi muốn xóa ảnh!',
-                            style: TextStyle(
+                          child: Text(
+                            appLang(context)!.cancel_calendar,
+                            style: const TextStyle(
                               decoration: TextDecoration.underline,
                             ),
                           ),
@@ -335,7 +323,9 @@ class _HistoryTileState extends State<HistoryTile> {
           color: widget.task.status == 1 ? Colors.green : Colors.yellow,
         ),
         Text(
-          widget.task.status == 1 ? 'Đã xong' : "Đang chờ",
+          widget.task.status == 1
+              ? appLang(context)!.success
+              : appLang(context)!.waiting,
         )
       ],
     );
@@ -397,7 +387,7 @@ class _HistoryTileState extends State<HistoryTile> {
                 fontSize: 16,
               ),
               decoration: InputDecoration(
-                hintText: "Bạn có đang nghĩ gì...?",
+                hintText: "",
                 hintStyle: TextStyle(
                   fontSize: 14,
                   color: Colors.grey.withOpacity(0.5),

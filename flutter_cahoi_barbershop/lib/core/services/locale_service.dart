@@ -11,5 +11,5 @@ class LocaleService {
 
   Function(Locale) get addLocaleResponse => _localeResponse.sink.add;
 
-  Locale locale = const Locale("vi");
+  Locale locale = const Locale("en");
 }

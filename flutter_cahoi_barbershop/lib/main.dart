@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
         ),
         StreamProvider<Locale>(
           create: (context) => locator<LocaleService>().localeController.stream,
-          initialData: const Locale('vi'),
+          initialData: const Locale('en'),
         ),
       ],
       child: MaterialApp(

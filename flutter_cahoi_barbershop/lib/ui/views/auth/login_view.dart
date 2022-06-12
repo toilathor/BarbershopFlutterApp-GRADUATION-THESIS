@@ -6,6 +6,7 @@ import 'package:flutter_cahoi_barbershop/core/state_models/auth_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/router_login.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/server_config.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
@@ -53,11 +54,11 @@ class _LoginViewState extends State<LoginView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12.0),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: Text(
-                          "Xin chào,",
-                          style: TextStyle(
+                          appLang(context)!.hello_user(""),
+                          style: const TextStyle(
                             color: headerColor1,
                             fontSize: 36,
                             fontFamily: fontBold,
@@ -67,7 +68,7 @@ class _LoginViewState extends State<LoginView> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: Text(
-                          "Đăng nhập hoặc đăng ký",
+                          appLang(context)!.login_or_register,
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                             fontSize: 18,
@@ -91,10 +92,10 @@ class _LoginViewState extends State<LoginView> {
                             return null;
                           } else if (phoneController.text.isEmpty) {
                             isValidatePhoneNumber = false;
-                            return "Vui lòng nhập số điện thoại";
+                            return appLang(context)!.warning_enter_phoneNum;
                           } else {
                             isValidatePhoneNumber = false;
-                            return "Số điện thoại không hợp lệ";
+                            return appLang(context)!.warning_phoneNum_invalid;
                           }
                         },
                         onFieldSubmitted: (_) async {
@@ -136,14 +137,14 @@ class _LoginViewState extends State<LoginView> {
                   ? Column(
                       children: [
                         Text(
-                          "Hoặc tiếp tục với",
+                          appLang(context)!.or_continue,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.black.withOpacity(0.5),
                             fontFamily: fontBold,
                           ),
                         ),
-                        Divider(
+                        const Divider(
                           indent: 50,
                           endIndent: 50,
                         ),
@@ -155,14 +156,20 @@ class _LoginViewState extends State<LoginView> {
                             if (await model.loginWithGoogle()) {
                               _routerSocial();
                             } else {
-                              Fluttertoast.showToast(msg: 'Error!');
+                              Fluttertoast.cancel();
+                              Fluttertoast.showToast(
+                                msg: appLang(context)!.has_error,
+                              );
                             }
                           },
                           onLoginFacebook: () async {
                             if (await model.loginWithFacebook()) {
                               _routerSocial();
                             } else {
-                              Fluttertoast.showToast(msg: 'Error!');
+                              Fluttertoast.cancel();
+                              Fluttertoast.showToast(
+                                msg: appLang(context)!.has_error,
+                              );
                             }
                           },
                         ),
@@ -178,16 +185,15 @@ class _LoginViewState extends State<LoginView> {
                                   color: Colors.black.withOpacity(0.5),
                                   fontFamily: fontBold,
                                 ),
-                                text: 'Bằng cách tiếp tục, bạn đã chấp nhận',
+                                text: appLang(context)!.terms_of_use2,
                               ),
                               TextSpan(
                                 style: const TextStyle(
-                                  color: Colors.blue,
-                                  decoration: TextDecoration.underline,
-                                  fontStyle: FontStyle.italic,
-                                  fontSize: 12
-                                ),
-                                text: ' điều khoản sử dụng',
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline,
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 12),
+                                text: appLang(context)!.terms_of_use,
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () async {
                                     var url =
@@ -218,7 +224,7 @@ class _LoginViewState extends State<LoginView> {
         height: 50,
         width: size.width * 0.9,
         onPressed: isValidatePhoneNumber ? onCheckUserExisted : null,
-        title: "Tiếp tục",
+        title: appLang(context)!.continuee,
       );
 
   Widget _buildSocials({

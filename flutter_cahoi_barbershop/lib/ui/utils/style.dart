@@ -9,5 +9,9 @@ BorderRadius borderRadiusCircle = BorderRadius.circular(1000);
 
 const styleTitleDialog = TextStyle(
   fontFamily: fontBold,
-// fontSize: 10,
+  fontSize: 18,
+);
+
+const styleDescDialog = TextStyle(
+  fontFamily: fontBold,
 );

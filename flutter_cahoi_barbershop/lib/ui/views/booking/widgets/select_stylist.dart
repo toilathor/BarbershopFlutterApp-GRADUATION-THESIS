@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/stylist.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/avatar.dart';
 
 class SelectStylist extends StatefulWidget {
@@ -33,7 +34,7 @@ class _SelectStylistState extends State<SelectStylist> {
           },
           child: _buildAvatarStylist(
             size: size,
-            title: "Chúng tôi chọn thợ cho bạn",
+            title: appLang(context)!.name_random_select,
             src: "https://bit.ly/3FMV625",
             isSelected: widget.current == null,
           ),

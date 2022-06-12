@@ -9,6 +9,7 @@ import 'package:flutter_cahoi_barbershop/core/state_models/home_page_model.dart'
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/playlist_youtube/play_clip_view.dart';
@@ -38,14 +39,14 @@ class _HomePageViewState extends State<HomePageView> {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           backgroundColor: textColorLight2,
-          leading: const IconButton(
+          leading: IconButton(
             onPressed: null,
             // onPressed: () async {},
-            icon: Icon(
+            icon: const Icon(
               Icons.notifications_none,
               size: 24,
             ),
-            tooltip: 'Wallet',
+            tooltip: appLang(context)!.notification,
           ),
           title: Center(
             child: Row(
@@ -133,10 +134,13 @@ class _HomePageViewState extends State<HomePageView> {
                                 const SizedBox(
                                   height: 8,
                                 ),
-                                Text(
-                                  "Hang của bạn là ${user.rank?.rankName}",
-                                  style: const TextStyle(
-                                    color: Colors.white54,
+                                Visibility(
+                                  visible: user.rank!.rankName != "None",
+                                  child: Text(
+                                    "${user.rank?.rankName}",
+                                    style: const TextStyle(
+                                      color: Colors.white54,
+                                    ),
                                   ),
                                 )
                               ],
@@ -162,7 +166,7 @@ class _HomePageViewState extends State<HomePageView> {
                             _buildNaviRoute(
                               context: context,
                               icons: "assets/ic_calendar.png",
-                              title: "Đặt lịch",
+                              title: appLang(context)!.navi_home_booking,
                               onTap: () async {
                                 if (await locator<BookingService>()
                                     .checkCanBook()) {
@@ -174,9 +178,7 @@ class _HomePageViewState extends State<HomePageView> {
                                       Navigator.pushNamed(context, '/history');
                                     },
                                     dialogType: DialogType.WARNING,
-                                    title:
-                                        "Bạn đang có lịch hẹn đang đợi, vui lòng "
-                                        "hủy trước khi đặt lịch hẹn mới!",
+                                    title: appLang(context)!.warning_task,
                                     titleTextStyle: styleTitleDialog,
                                   ).show();
                                 }
@@ -185,7 +187,7 @@ class _HomePageViewState extends State<HomePageView> {
                             _buildNaviRoute(
                               context: context,
                               icons: "assets/ic_history.png",
-                              title: "Lịch sử",
+                              title: appLang(context)!.navi_home_history,
                               onTap: () {
                                 Navigator.pushNamed(context, '/history');
                               },
@@ -193,13 +195,13 @@ class _HomePageViewState extends State<HomePageView> {
                             _buildNaviRoute(
                               context: context,
                               icons: "assets/ic_membership.png",
-                              title: "Thành viên",
+                              title: appLang(context)!.navi_home_member,
                               onTap: () => null,
                             ),
                             _buildNaviRoute(
                               context: context,
                               icons: "assets/ic_gift.png",
-                              title: "Ưu đãi",
+                              title: appLang(context)!.navi_home_reward,
                               onTap: () => null,
                             ),
                           ],
@@ -238,7 +240,8 @@ class _HomePageViewState extends State<HomePageView> {
                               ),
                               TextButton(
                                 style: const ButtonStyle(
-                                    splashFactory: NoSplash.splashFactory),
+                                  splashFactory: NoSplash.splashFactory,
+                                ),
                                 onPressed: () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
@@ -247,9 +250,9 @@ class _HomePageViewState extends State<HomePageView> {
                                     ),
                                   );
                                 },
-                                child: const Text(
-                                  "Thêm >",
-                                  style: TextStyle(
+                                child: Text(
+                                  "${appLang(context)!.more} >",
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     fontFamily: fontBold,
                                     color: Colors.cyan,

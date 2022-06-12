@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/change_password.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/check_password_dialog.dart';
@@ -51,9 +52,9 @@ class _AccountPageViewState extends State<AccountPageView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              const Text(
-                                'Xin chào, ',
-                                style: TextStyle(
+                              Text(
+                                appLang(context)!.hello_user(""),
+                                style: const TextStyle(
                                   color: Colors.grey,
                                   fontSize: 18,
                                   fontFamily: fontBold,
@@ -87,11 +88,11 @@ class _AccountPageViewState extends State<AccountPageView> {
                 children: [
                   user.phoneNumber != null
                       ? _buildTileSetting(
-                          icon: const Icon(
+                    icon: const Icon(
                             Icons.password_sharp,
                             color: Colors.purple,
                           ),
-                          title: 'Đổi mật khẩu',
+                          title: appLang(context)!.change_password,
                           onPress: () async {
                             var res = await CheckPasswordDialog.show(context);
 
@@ -102,7 +103,7 @@ class _AccountPageViewState extends State<AccountPageView> {
                               if (resCP != null && resCP) {
                                 AwesomeDialog(
                                   context: context,
-                                  title: "Thành công!",
+                                  title: "${appLang(context)!.success}!",
                                   dialogType: DialogType.SUCCES,
                                   btnOkOnPress: () {},
                                 ).show();
@@ -116,7 +117,7 @@ class _AccountPageViewState extends State<AccountPageView> {
                       Icons.logout,
                       color: Colors.red,
                     ),
-                    title: 'Đăng xuất',
+                    title: appLang(context)!.logout,
                     onPress: () {
                       LogoutDialog.show(context);
                     },

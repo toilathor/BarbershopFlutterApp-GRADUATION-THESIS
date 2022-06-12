@@ -3,6 +3,7 @@ import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/history_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/box_info.dart';
@@ -68,7 +69,7 @@ class _HistoryViewState extends State<HistoryView> {
                   children: [
                     BoxInfo(
                       height: size.height * 0.1,
-                      title: "Họ Tên",
+                      title: appLang(context)!.full_name,
                       content: "${user.name}",
                     ),
                     const SizedBox(
@@ -84,7 +85,7 @@ class _HistoryViewState extends State<HistoryView> {
                     ),
                     BoxInfo(
                       height: size.height * 0.1,
-                      title: "Số điện thoại",
+                      title: appLang(context)!.phone_number,
                       content: "${user.phoneNumber}",
                     ),
                     const SizedBox(
@@ -93,9 +94,9 @@ class _HistoryViewState extends State<HistoryView> {
                     SizedBox(
                       height: size.height * 0.6,
                       child: model.tasks.isEmpty
-                          ? const Center(
+                          ? Center(
                               child: Text(
-                                'Bạn chưa bao giờ trải nghiệm dịch vụ của chúng tôi..🥲🥲🥲',
+                                appLang(context)!.warning_history,
                               ),
                             )
                           : ListHistory(
