@@ -49,72 +49,76 @@ class _MyAppState extends State<MyApp> {
         ),
         StreamProvider<Locale>(
           create: (context) => locator<LocaleService>().localeController.stream,
-          initialData: const Locale('en'),
+          initialData: locator<LocaleService>().locale,
         ),
       ],
-      child: MaterialApp(
-        title: 'Cá hồi Barbershop',
-        debugShowCheckedModeBanner: false,
-        initialRoute: router.initialRoute,
-        routes: router.Router.defineRoute,
-        supportedLocales: L10n.all,
-        locale: locator<LocaleService>().locale,
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        theme: ThemeData(
-          primaryColor: primaryColor,
-          secondaryHeaderColor: secondaryColor,
-          backgroundColor: backgroundColor,
-          fontFamily: fontLight,
-          iconTheme: const IconThemeData(
-            size: 32,
-            color: backgroundColor,
-          ),
-          appBarTheme: const AppBarTheme(
-            backgroundColor: primaryColor,
-            iconTheme: IconThemeData(
+      child: StreamBuilder<Locale>(
+        initialData: locator<LocaleService>().locale,
+        stream: locator<LocaleService>().localeResponse,
+        builder: (context, snapshot) => MaterialApp(
+          title: 'Cá hồi Barbershop',
+          debugShowCheckedModeBanner: false,
+          initialRoute: router.initialRoute,
+          routes: router.Router.defineRoute,
+          supportedLocales: L10n.all,
+          locale: snapshot.data,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          theme: ThemeData(
+            primaryColor: primaryColor,
+            secondaryHeaderColor: secondaryColor,
+            backgroundColor: backgroundColor,
+            fontFamily: fontLight,
+            iconTheme: const IconThemeData(
               size: 32,
               color: backgroundColor,
             ),
-            actionsIconTheme: IconThemeData(
-              size: 32,
-              color: backgroundColor,
+            appBarTheme: const AppBarTheme(
+              backgroundColor: primaryColor,
+              iconTheme: IconThemeData(
+                size: 32,
+                color: backgroundColor,
+              ),
+              actionsIconTheme: IconThemeData(
+                size: 32,
+                color: backgroundColor,
+              ),
+              centerTitle: true,
+              titleTextStyle: TextStyle(
+                color: backgroundColor,
+                fontSize: 24,
+                fontFamily: fontBold,
+              ),
             ),
-            centerTitle: true,
-            titleTextStyle: TextStyle(
-              color: backgroundColor,
-              fontSize: 24,
-              fontFamily: fontBold,
+            floatingActionButtonTheme: const FloatingActionButtonThemeData(
+              backgroundColor: acceptColor,
             ),
-          ),
-          floatingActionButtonTheme: const FloatingActionButtonThemeData(
-            backgroundColor: acceptColor,
-          ),
-          cardTheme: const CardTheme(
-            elevation: 8,
-          ),
-          outlinedButtonTheme: OutlinedButtonThemeData(
-            style: OutlinedButton.styleFrom(
-              side: const BorderSide(
-                width: 2.0,
-                color: secondaryColor,
-                style: BorderStyle.solid,
+            cardTheme: const CardTheme(
+              elevation: 8,
+            ),
+            outlinedButtonTheme: OutlinedButtonThemeData(
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(
+                  width: 2.0,
+                  color: secondaryColor,
+                  style: BorderStyle.solid,
+                ),
               ),
             ),
           ),
-        ),
-        onUnknownRoute: (settings) => MaterialPageRoute(
-          builder: (_) => Scaffold(
-            body: Center(
-              child: Text('No route defined for ${settings.name}'),
+          onUnknownRoute: (settings) => MaterialPageRoute(
+            builder: (_) => Scaffold(
+              body: Center(
+                child: Text('No route defined for ${settings.name}'),
+              ),
             ),
           ),
+          home: const TestView(),
         ),
-        home: const TestView(),
       ),
     );
   }

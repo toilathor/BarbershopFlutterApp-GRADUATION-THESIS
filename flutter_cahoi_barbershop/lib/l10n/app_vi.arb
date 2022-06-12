@@ -1,8 +1,5 @@
 {
-  "language": "Tiếng Việt",
-  "@language": {
-    "description": "Đây là ngôn ngữ hiện tại!"
-  },
+  "language": "Ngôn ngữ",
   "bottombar_discovery": "Khám phá",
   "bottombar_story": "Bản tin",
   "bottombar_menu": "Tùy chọn",
