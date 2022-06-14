@@ -1,17 +1,19 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/promotion_mechanism_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class TestView extends StatefulWidget {
-  const TestView({Key? key}) : super(key: key);
+class MembershipView extends StatefulWidget {
+  const MembershipView({Key? key}) : super(key: key);
+
+  static String name = "membership";
 
   @override
-  State<TestView> createState() => _TestViewState();
+  State<MembershipView> createState() => _MembershipViewState();
 }
 
-class _TestViewState extends State<TestView> {
+class _MembershipViewState extends State<MembershipView> {
   @override
   void initState() {
     super.initState();
@@ -30,17 +32,24 @@ class _TestViewState extends State<TestView> {
         body: Column(
           children: [
             ListTile(
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, PromotionMechanismView.name);
+              },
               shape: const RoundedRectangleBorder(
                 side: BorderSide(color: Colors.black12, width: 0.5),
               ),
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Text(
-                    "Cơ chế thăng hạng",
+                    appLang(context)!.promotion_mechanism,
+                    style: const TextStyle(
+                      fontFamily: fontBold,
+                    ),
                   ),
-                  Icon(Icons.navigate_next)
+                  const Icon(
+                    Icons.navigate_next,
+                  )
                 ],
               ),
             ),
@@ -89,35 +98,30 @@ class _TabSliver extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: const [
+      children: [
         MemberRewardTile(
-          title: "Quyền lợi đặt trước lịch",
-          subTitle: "Đặt trước 5 ngày",
+          title: appLang(context)!.title_calendar_time,
+          subTitle: appLang(context)!.sub_calendar_time_s,
           icon: "assets/icon/calendar_time.svg",
         ),
         MemberRewardTile(
-          title: "Ưu đãi chiết khấu",
-          subTitle: "- Chiết khấu ~10% cho Shine Combo và VIP Combo\n"
-              "- Chiết khấu 10% dịch vụ hóa chất Uốn/Nhuộm\n"
-              "- Chiết khấu lên đến 30% khi mua sản phẩm\n",
+          title: appLang(context)!.title_reward,
+          subTitle: appLang(context)!.sub_reward(10),
           icon: "assets/icon/reward.svg",
         ),
         MemberRewardTile(
-          title: "Quyền lợi về phục vụ",
-          subTitle:
-              "- Được đưa yêu cầu phục vụ riêng khi đặt trước lịch cắt tóc",
+          title: appLang(context)!.title_benefits,
+          subTitle: appLang(context)!.sub_benefits_s,
           icon: "assets/icon/benefits.svg",
         ),
         MemberRewardTile(
-          title: "Ưu đãi bất ngờ",
-          subTitle: "- Nhận mã khuyến mại bất ngờ mỗi tháng",
+          title: appLang(context)!.title_reward_birthday,
+          subTitle: appLang(context)!.sub_reward_birthday,
           icon: "assets/icon/birthday.svg",
         ),
         MemberRewardTile(
-          title: "Quyền đặt trước Stylist (thợ cắt)",
-          subTitle: "- Được book stylist\n"
-              "- Xem thông tin tay nghề stylist và luôn được gợi "
-              "ý top thợ được khách hàng đánh giá cao nhất",
+          title: appLang(context)!.title_book_stylist,
+          subTitle: appLang(context)!.sub_book_stylist,
           icon: "assets/icon/star.svg",
         ),
       ],
@@ -131,38 +135,30 @@ class _TabGold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: const [
+      children: [
         MemberRewardTile(
-          title: "Quyền lợi đặt trước lịch",
-          subTitle: "- Đặt trước 6 ngày\n"
-              "- Book sát giờ",
+          title: appLang(context)!.title_calendar_time,
+          subTitle: appLang(context)!.sub_calendar_time_g,
           icon: "assets/icon/calendar_time.svg",
         ),
         MemberRewardTile(
-          title: "Ưu đãi chiết khấu",
-          subTitle: "- Chiết khấu 10% ~ 15% cho Shine Combo và VIP Combo\n"
-              " - Chiết khấu 10% dịch vụ hóa chất Uốn/Nhuộm\n"
-              "- Chiết khấu lên đến 30% khi mua sản phẩm\n",
+          title: appLang(context)!.title_reward,
+          subTitle: appLang(context)!.sub_reward(15),
           icon: "assets/icon/reward.svg",
         ),
         MemberRewardTile(
-          title: "Quyền lợi về phục vụ",
-          subTitle: "- Luôn có nhân viên chăm sóc trực tiếp, sẵn sàng hỗ trợ\n"
-              "- Được sử dụng các dịch vụ, sản phẩm và phụ kiện dành riêng cho Gold Member tại salon",
+          title: appLang(context)!.title_benefits,
+          subTitle: appLang(context)!.sub_benefits_g,
           icon: "assets/icon/benefits.svg",
         ),
         MemberRewardTile(
-          title: "Quyền lợi sử dụng trước các dịch vụ mới nhất",
-          subTitle:
-              "- Là 1 trong những người đầu tiên được mời đến trải nghiệm "
-              "mỗi khi có sản phẩm/dịch vụ mới ra mắt",
-          icon: "assets/icon/birthday.svg",
+          title: appLang(context)!.title_benefits_new,
+          subTitle: appLang(context)!.sub_benefits_new,
+          icon: "assets/icon/benefits_new.svg",
         ),
         MemberRewardTile(
-          title: "Quyền đặt trước Stylist (thợ cắt)",
-          subTitle: "- Được book stylist\n"
-              "- Xem thông tin tay nghề stylist và luôn được gợi "
-              "ý top thợ được khách hàng đánh giá cao nhất",
+          title: appLang(context)!.title_book_stylist,
+          subTitle: appLang(context)!.sub_book_stylist,
           icon: "assets/icon/star.svg",
         ),
       ],

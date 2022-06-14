@@ -12,6 +12,7 @@ import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/membership_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/playlist_youtube/play_clip_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/playlist_youtube/playlist_youtube_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/avatar.dart';
@@ -198,14 +199,19 @@ class _HomePageViewState extends State<HomePageView> {
                               context: context,
                               icons: "assets/ic_membership.png",
                               title: appLang(context)!.navi_home_member,
-                              onTap: () => null,
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  MembershipView.name,
+                                );
+                              },
                             ),
-                            _buildNaviRoute(
-                              context: context,
-                              icons: "assets/ic_gift.png",
-                              title: appLang(context)!.navi_home_reward,
-                              onTap: () => null,
-                            ),
+                            // _buildNaviRoute(
+                            //   context: context,
+                            //   icons: "assets/ic_gift.png",
+                            //   title: appLang(context)!.navi_home_reward,
+                            //   onTap: () => null,
+                            // ),
                           ],
                         ),
                       ),

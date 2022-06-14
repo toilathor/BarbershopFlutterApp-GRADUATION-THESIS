@@ -6,7 +6,6 @@ import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/services/locale_service.dart';
 import 'package:flutter_cahoi_barbershop/l10n/l10n.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
-import 'package:flutter_cahoi_barbershop/test_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/router.dart' as router;
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
@@ -117,7 +116,7 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
           ),
-          home: const TestView(),
+          // home: const PromotionMechanismView(),
         ),
       ),
     );

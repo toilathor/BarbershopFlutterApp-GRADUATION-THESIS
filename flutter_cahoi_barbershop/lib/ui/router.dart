@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/home_view.dart';
-import 'package:flutter_cahoi_barbershop/test_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/splash_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/auth/login_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/booking_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/history_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/info_product_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/membership_view.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/promotion_mechanism_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/rating_task_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/your_story_view.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/home_admin_view.dart';
@@ -17,7 +18,7 @@ import 'package:flutter_cahoi_barbershop/ui_employee/employee_home_view.dart';
 import 'package:flutter_cahoi_barbershop/ui_employee/report_task_view.dart';
 import 'package:flutter_cahoi_barbershop/ui_employee/show_task_view.dart';
 
-const String initialRoute = "/test";
+const String initialRoute = "/splash";
 
 class Router {
   static Map<String, Widget Function(BuildContext)> defineRoute = {
@@ -29,6 +30,9 @@ class Router {
     '/your-story': (BuildContext ctx) => const YourStoryView(),
     '/info-product': (BuildContext ctx) => const InfoProductView(),
     RatingTaskView.name: (BuildContext ctx) => const RatingTaskView(),
+    MembershipView.name: (BuildContext ctx) => const MembershipView(),
+    PromotionMechanismView.name: (BuildContext ctx) =>
+        const PromotionMechanismView(),
 
     ///Employee
     '/report-task': (BuildContext ctx) => const ReportTaskView(),
@@ -43,6 +47,5 @@ class Router {
     ShowProductView.name: (BuildContext ctx) => const ShowProductView(),
 
     ///Test
-    "/test": (BuildContext ctx) => const TestView(),
   };
 }

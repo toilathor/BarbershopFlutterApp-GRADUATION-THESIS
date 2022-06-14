@@ -174,8 +174,8 @@ class _HistoryTileState extends State<HistoryTile> {
                                               Container(),
                                           height: double.infinity,
                                           width: double.infinity,
-                                          cacheHeight: 500,
-                                          cacheWidth: 500,
+                                          // cacheHeight: 500,
+                                          // cacheWidth: 500,
                                         ),
                                       ),
                                     ),
@@ -323,7 +323,7 @@ class _HistoryTileState extends State<HistoryTile> {
         ),
         Text(
           widget.task.status == 1
-              ? appLang(context)!.success
+              ? appLang(context)!.complete
               : appLang(context)!.waiting,
         )
       ],
@@ -406,6 +406,7 @@ class _HistoryTileState extends State<HistoryTile> {
                       borderRadius: borderRadius12,
                       child: Image.network(
                         "$localHost/${task.image![index].link}",
+                        fit: BoxFit.cover,
                         errorBuilder: (context, _, __) => Container(),
                       ),
                     ),

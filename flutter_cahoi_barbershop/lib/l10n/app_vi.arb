@@ -47,6 +47,7 @@
   "complete": "Hoàn tất",
   "example_note_booking": "Ví dụ: Anh đi với hai con.. Anh đi với bạn.. Rửa tay và ..v..v",
   "success": "Đặt lịch thành công 🎊🎉🎉🎊",
+  "successful": "Thành công",
   "waiting": "Đang chờ",
   "has_error": "Đã có sự cố, vui lòng thử lại sau! 🥲🥲🥲",
   "warning_back_booking": "Để tránh back nhầm. Hãy bấm nút back góc trên bên phải!",
@@ -115,5 +116,28 @@
   "warningg": "Chú ý",
   "edit": "Chỉnh sửa",
   "delete": "Xóa",
-  "like": "Lượt thích"
+  "like": "Lượt thích",
+  "promotion_mechanism": "Cơ chế thăng hạng",
+  "sub_promotion_mechanism": "• Để đạt hạng Gold Member, anh cần là Silver Member và có chi tiêu tích lũy trong 6 tháng gần nhất cần đạt từ 1,500,000 VNĐ trở lên.\n• Khi đã đạt hạng Gold, tất cả các quyền lợi sẽ được duy trì trong 6 tháng tiếp theo. Nếu đến kì xét hạng (ngày đầu tiên của 6 tháng tiếp theo) mà anh vẫn duy trì được chi tiêu từ 1,500,000 | VNĐ trở lên thì anh sẽ tiếp tục duy trì hạng Gold. Trong trường hợp không đạt 1,500,000 VNĐ anh sẽ được xét thành hạng Silver Member nếu như thẻ Silver Member của anh còn hạn, trường hợp thẻ Silver Member của anh hết hạn thì anh sẽ cần đăng kí gia hạn Silver Member để tiếp tục quá trình thăng hạng Gold.",
+  "title_calendar_time": "Quyền lợi đặt trước lịch",
+  "sub_calendar_time_s": "Đặt trước 5 ngày",
+  "sub_calendar_time_g": "- Đặt trước 6 ngày\n- Book sát giờ",
+  "title_reward": "Ưu đãi chiết khấu",
+  "sub_reward": "- Chiết khấu {down}% / hóa đơn",
+  "@sub_reward": {
+    "placeholders": {
+      "down": {
+        "type": "int"
+      }
+    }
+  },
+  "title_benefits": "Quyền lợi về phục vụ",
+  "sub_benefits_s": "- Được đưa yêu cầu phục vụ riêng khi đặt trước lịch cắt tóc",
+  "sub_benefits_g": "- Luôn có nhân viên chăm sóc trực tiếp, sẵn sàng hỗ trợ\n- Được sử dụng các dịch vụ, sản phẩm và phụ kiện dành riêng cho Gold Member tại salon",
+  "title_reward_birthday": "Ưu đãi bất ngờ",
+  "sub_reward_birthday": "- Giảm giá 100K trong ngày sinh nhật",
+  "title_benefits_new": "Quyền lợi sử dụng trước các dịch vụ mới nhất",
+  "sub_benefits_new": "- Là 1 trong những người đầu tiên được mời đến trải nghiệm mỗi khi có sản phẩm/dịch vụ mới ra mắt",
+  "title_book_stylist": "Quyền đặt trước Stylist (thợ cắt)",
+  "sub_book_stylist": "- Được book stylist\n- Xem thông tin tay nghề stylist và luôn được gợi ý top thợ được khách hàng đánh giá cao nhất"
 }
