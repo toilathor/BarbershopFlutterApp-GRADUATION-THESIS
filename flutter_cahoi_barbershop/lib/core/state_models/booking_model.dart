@@ -9,6 +9,7 @@ import 'package:flutter_cahoi_barbershop/core/services/booking_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/base.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:geolocator/geolocator.dart';
 
 class BookingModel extends BaseModel {
@@ -194,7 +195,7 @@ class BookingModel extends BaseModel {
       return false;
     }
 
-    if (selectedStylist != null && currentTimeSlot == null) {
+    if (currentTimeSlot == null) {
       return false;
     }
     return true;
@@ -203,18 +204,29 @@ class BookingModel extends BaseModel {
   Future complete({
     String notes = "",
   }) async {
-    debugPrint('task: ${selectedStylist!.id ?? 0}, '
-        '$notes, '
-        '${selectedDate.toString()}, '
-        '${currentTimeSlot!.time ?? ""}');
     Map<String, dynamic> data = {
       "time_slot_id": currentTimeSlot!.id,
       "date": format_date.formatDate(selectedDate, fDate),
       "notes": notes,
-      "stylist_id": selectedStylist!.id ?? 0,
+      // "stylist_id": selectedStylist!.id ?? 0,
       'products': selectedProducts.map((e) => e.id).toList()
     };
 
+    if (selectedStylist == null) {
+      var stylistTemp = stylists!.first;
+
+      for (var e in stylists!) {
+        if ((e.communication + e.skill) >
+            (stylistTemp.communication + stylistTemp.skill)) {
+          stylistTemp = e;
+        }
+      }
+
+      data['stylist_id'] = stylistTemp.id;
+    } else {
+      data['stylist_id'] = selectedStylist!.id ?? 0;
+    }
+    logger.d(data);
     return _bookingService.createNewTask(data: data);
   }
 

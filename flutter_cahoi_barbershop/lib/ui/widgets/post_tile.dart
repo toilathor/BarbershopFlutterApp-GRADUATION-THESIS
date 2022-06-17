@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/post2.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
@@ -33,7 +34,7 @@ class PostTile extends StatefulWidget {
   State<PostTile> createState() => _PostTileState();
 }
 
-class _PostTileState extends State<PostTile> {
+class _PostTileState extends State<PostTile> with TickerProviderStateMixin {
   Size size = Size.zero;
   double heiHeart = 24;
 
@@ -41,8 +42,23 @@ class _PostTileState extends State<PostTile> {
 
   bool isLiked = false;
 
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
   @override
   void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(
+        milliseconds: 500,
+      ),
+    );
+
+    _animation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.bounceOut,
+    );
+
     isLiked = widget.isLiked;
     super.initState();
   }
@@ -57,8 +73,8 @@ class _PostTileState extends State<PostTile> {
       margin: const EdgeInsets.only(bottom: 25.0),
       padding: const EdgeInsets.only(bottom: 25.0),
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
+        border: Border.symmetric(
+          horizontal: BorderSide(
             color: Colors.grey.shade500,
             width: 0.5,
           ),
@@ -87,13 +103,35 @@ class _PostTileState extends State<PostTile> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          widget.post.task?.customer?.name ?? "no name",
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: fontBold,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              widget.post.task?.customer?.name ?? "no name",
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: fontBold,
+                              ),
+                            ),
+                            const Icon(
+                              Icons.play_arrow,
+                              color: primaryColor,
+                              size: 16,
+                            ),
+                            Tooltip(
+                              message: appLang(context)!.stylist,
+                              child: Text(
+                                widget.post.task?.stylist?.user?.name ??
+                                    "no name",
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  overflow: TextOverflow.ellipsis,
+                                  fontFamily: fontBold,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         Text(
                           format_date.formatDate(
@@ -183,6 +221,17 @@ class _PostTileState extends State<PostTile> {
           Expanded(
             child: GestureDetector(
               onDoubleTap: () {
+                _animationController.forward().whenComplete(
+                  () {
+                    Future.delayed(
+                      const Duration(seconds: 1),
+                      () {
+                        _animationController.reverse();
+                      },
+                    );
+                  },
+                );
+
                 if (widget.isLiked) {
                   return;
                 }
@@ -199,27 +248,43 @@ class _PostTileState extends State<PostTile> {
                   },
                 );
               },
-              child: CarouselSlider.builder(
-                itemBuilder: (context, index, realIndex) => Image.network(
-                    "$localHost/${widget.post.task?.image![index].link}",
-                    errorBuilder: (context, _, ___) => Container(),
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: double.infinity,
-                    cacheHeight: 1080),
-                itemCount: widget.post.task?.image!.length,
-                options: CarouselOptions(
-                  scrollPhysics: const BouncingScrollPhysics(),
-                  initialPage: 1,
-                  enableInfiniteScroll: false,
-                  height: double.infinity,
-                  viewportFraction: 1,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      activeIndex = index;
-                    });
-                  },
-                ),
+              child: Stack(
+                children: [
+                  CarouselSlider.builder(
+                    itemBuilder: (context, index, realIndex) => Image.network(
+                      "$localHost/${widget.post.task?.image![index].link}",
+                      errorBuilder: (context, _, ___) => Container(),
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                      cacheHeight: 1080,
+                    ),
+                    itemCount: widget.post.task?.image!.length,
+                    options: CarouselOptions(
+                      scrollPhysics: const BouncingScrollPhysics(),
+                      initialPage: 1,
+                      enableInfiniteScroll: false,
+                      height: double.infinity,
+                      viewportFraction: 1,
+                      onPageChanged: (index, reason) {
+                        setState(() {
+                          activeIndex = index;
+                        });
+                      },
+                    ),
+                  ),
+                  Center(
+                    child: ScaleTransition(
+                      scale: _animation,
+                      child: SvgPicture.asset(
+                        "assets/icon/heart_active.svg",
+                        color: Colors.red,
+                        height: 70,
+                        width: 70,
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
           ),
@@ -281,17 +346,16 @@ class _PostTileState extends State<PostTile> {
                   ),
                 ),
                 Positioned(
-                  right: 20,
-                  height: 24,
-                  width: 24,
+                  right: 0,
                   child: IconButton(
+                    highlightColor: headerColor1,
                     onPressed: () {
                       Navigator.pushNamed(context, "/booking");
                     },
                     tooltip: 'Booking Now',
                     icon: const Icon(
                       Icons.bookmark_border_rounded,
-                      color: Colors.black,
+                      color: Colors.black87,
                     ),
                   ),
                 ),
@@ -314,5 +378,11 @@ class _PostTileState extends State<PostTile> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 }
