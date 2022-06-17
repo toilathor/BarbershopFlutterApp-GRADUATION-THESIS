@@ -206,7 +206,7 @@ class _ShowTaskViewState extends State<ShowTaskView> {
             borderRadius: borderRadius12,
             child: SizedBox(
               child: Image.network(
-                "$localHost/$source",
+                "$localHost$source",
                 height: size.width,
                 width: size.width,
                 fit: BoxFit.cover,

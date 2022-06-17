@@ -103,35 +103,13 @@ class _PostTileState extends State<PostTile> with TickerProviderStateMixin {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                              widget.post.task?.customer?.name ?? "no name",
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: fontBold,
-                              ),
-                            ),
-                            const Icon(
-                              Icons.play_arrow,
-                              color: primaryColor,
-                              size: 16,
-                            ),
-                            Tooltip(
-                              message: appLang(context)!.stylist,
-                              child: Text(
-                                widget.post.task?.stylist?.user?.name ??
-                                    "no name",
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  overflow: TextOverflow.ellipsis,
-                                  fontFamily: fontBold,
-                                ),
-                              ),
-                            ),
-                          ],
+                        Text(
+                          widget.post.task?.customer?.name ?? "no name",
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: fontBold,
+                          ),
                         ),
                         Text(
                           format_date.formatDate(
@@ -217,6 +195,30 @@ class _PostTileState extends State<PostTile> with TickerProviderStateMixin {
                 ),
               ),
             ),
+          ),
+          Row(
+            children: [
+              const Icon(
+                Icons.person,
+                color: primaryColor,
+                size: 24,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Tooltip(
+                message: appLang(context)!.stylist,
+                child: Text(
+                  "Stylist: ${widget.post.task?.stylist?.user?.name ?? "no name"}",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.ellipsis,
+                    fontFamily: fontBold,
+                  ),
+                ),
+              ),
+            ],
           ),
           Expanded(
             child: GestureDetector(

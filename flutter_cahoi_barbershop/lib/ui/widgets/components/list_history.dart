@@ -33,6 +33,7 @@ class _ListHistoryState extends State<ListHistory> {
   Widget build(BuildContext context) {
     return ListView.builder(
       controller: widget.controller,
+      cacheExtent: 5000,
       padding: const EdgeInsets.symmetric(vertical: 20.0),
       physics: const BouncingScrollPhysics(parent: ClampingScrollPhysics()),
       itemCount: widget.tasks.length,
@@ -174,8 +175,6 @@ class _HistoryTileState extends State<HistoryTile> {
                                               Container(),
                                           height: double.infinity,
                                           width: double.infinity,
-                                          // cacheHeight: 500,
-                                          // cacheWidth: 500,
                                         ),
                                       ),
                                     ),
@@ -431,7 +430,7 @@ class _HistoryTileState extends State<HistoryTile> {
                         btnOkOnPress: () {
                           Navigator.pop(context);
                         },
-                        title: appLang(context)!.success,
+                        title: appLang(context)!.successful,
                       ).show();
                     } else {
                       AwesomeDialog(

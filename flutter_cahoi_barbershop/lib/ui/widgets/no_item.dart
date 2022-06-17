@@ -9,8 +9,8 @@ class NoItemWidget extends StatelessWidget {
     return Center(
       child: Image.asset(
         'assets/not_item.png',
-        height: size.width * 0.5,
-        // width: ,
+        height: size.width * 0.7,
+        width: size.width * 0.7,
       ),
     );
   }
