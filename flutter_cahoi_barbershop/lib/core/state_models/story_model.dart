@@ -9,6 +9,7 @@ class StoryModel extends BaseModel {
   final _postService = locator<PostService>();
 
   List<Post2> posts = [];
+  List<Post2> postsLastMonth = [];
   List<int> likedPost = [];
 
   bool isLoading = false;
@@ -47,6 +48,20 @@ class StoryModel extends BaseModel {
     }
 
     isLoading = false;
+    notifyListeners();
+  }
+
+  Future changePostsLastMonth() async {
+    DataPost? res = await _postService.getPostLastMonth(
+      page: currentPage,
+    );
+
+    if (res != null && res.posts != null) {
+      postsLastMonth = res.posts ?? [];
+    } else {
+      Fluttertoast.showToast(msg: "Error!");
+    }
+
     notifyListeners();
   }
 

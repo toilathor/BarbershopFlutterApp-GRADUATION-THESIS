@@ -1,6 +1,5 @@
 import 'package:flutter_cahoi_barbershop/core/apis/api.dart';
 import 'package:flutter_cahoi_barbershop/core/models/data_post.dart';
-import 'package:flutter_cahoi_barbershop/core/models/post.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 
 class PostService {
@@ -39,6 +38,16 @@ class PostService {
     return null;
   }
 
+  Future<DataPost?> getPostLastMonth({required int page}) async {
+    var res = await _api.getPostLastMonth();
+
+    if (res != null) {
+      return DataPost.fromJson(res.data);
+    }
+
+    return null;
+  }
+
   Future<bool?> likePost({required int postId}) async {
     var res = await _api.likePost(data: {
       "post_id": postId,
@@ -67,23 +76,22 @@ class PostService {
 
   Future<bool> deletePost({required int postId}) async {
     var res = await _api.deletePost(data: {
-      "post" : postId,
+      "post": postId,
     });
 
-    if(res!= null){
+    if (res != null) {
       return res.data;
     }
 
     return false;
   }
 
-  Future<bool> updatePost({required int postId, required String captions}) async {
-    var res = await _api.updatePost(data: {
-      "post_id" : postId,
-      "captions" : captions
-    });
+  Future<bool> updatePost(
+      {required int postId, required String captions}) async {
+    var res =
+        await _api.updatePost(data: {"post_id": postId, "captions": captions});
 
-    if(res != null){
+    if (res != null) {
       return res.data;
     }
 

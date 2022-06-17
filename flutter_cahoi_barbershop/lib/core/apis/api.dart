@@ -315,6 +315,15 @@ class Api extends ApiBase {
     }
   }
 
+  Future<api_res.Response?> getPostLastMonth() async {
+    try {
+      var res = await dio.get('/post/last-month');
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<api_res.Response?> getWall({required Map<String, int> data}) async {
     try {
       var res = await dio.get('/post/wall', queryParameters: data);

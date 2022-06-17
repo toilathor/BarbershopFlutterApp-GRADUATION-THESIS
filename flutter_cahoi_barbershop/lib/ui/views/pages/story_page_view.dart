@@ -20,11 +20,14 @@ class StoryPageView extends StatefulWidget {
   _StoryPageViewState createState() => _StoryPageViewState();
 }
 
-class _StoryPageViewState extends State<StoryPageView> {
+class _StoryPageViewState extends State<StoryPageView>
+    with SingleTickerProviderStateMixin {
   Size size = const Size(0, 0);
   bool like = true;
   final user = locator<AuthenticationService>().user;
   ScrollController scrollController = ScrollController();
+
+  int currentTab = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +39,8 @@ class _StoryPageViewState extends State<StoryPageView> {
       onModelReady: (model) async {
         await model.changePosts();
 
+        await model.changePostsLastMonth();
+
         scrollController.addListener(() async {
           if (scrollController.position.pixels ==
                   scrollController.position.maxScrollExtent &&
@@ -44,90 +49,161 @@ class _StoryPageViewState extends State<StoryPageView> {
           }
         });
       },
-      builder: (context, model, child) => Scaffold(
-        appBar: AppBar(
-          actions: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    '/your-story',
-                  );
-                },
-                icon: ClipRRect(
-                  borderRadius: BorderRadius.circular(100.0),
-                  child: Image.network(
-                    '${user.avatar}',
-                    errorBuilder: (context, error, stackTrace) => const Icon(
-                      Icons.location_history_rounded,
+      builder: (context, model, child) => DefaultTabController(
+        initialIndex: currentTab,
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            actions: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      '/your-story',
+                    );
+                  },
+                  icon: ClipRRect(
+                    borderRadius: BorderRadius.circular(100.0),
+                    child: Image.network(
+                      '${user.avatar}',
+                      errorBuilder: (context, error, stackTrace) => const Icon(
+                        Icons.location_history_rounded,
+                      ),
                     ),
                   ),
+                  tooltip: appLang(context)!.your_story,
                 ),
-                tooltip: '',
               ),
-            )
-          ],
-          title: Text(
-            "Top ${date_format.formatDate(DateTime.now(), [MM])}",
-          ),
-        ),
-        body: Center(
-          child: model.isLoading
-              ? const Center(
-                  child: LoadingWidget(),
-                )
-              : RefreshIndicator(
-                  onRefresh: () async {
-                    model.resetList();
-                    await model.changePosts();
-                  },
-                  child: model.posts.isEmpty
-                      ? const NoItemWidget()
-                      : ListView.builder(
-                          controller: scrollController,
-                          physics: const BouncingScrollPhysics(
-                            parent: AlwaysScrollableScrollPhysics(),
-                          ),
-                          itemCount: model.posts.length,
-                          itemBuilder: (context, index) {
-                            Post2 post = model.posts[index];
-                            int isLiked = model.likedPost.firstWhere(
-                              (element) => element == post.id,
-                              orElse: () => -1,
-                            );
-
-                            return PostTile(
-                              post: post,
-                              isLiked: isLiked != -1,
-                              onLikePost: () async {
-                                return await model
-                                    .likePost(model.posts[index].id ?? 0);
-                              },
-                              onDelete: () {
-                                AwesomeDialog(
-                                  context: context,
-                                  dialogType: DialogType.QUESTION,
-                                  btnOkOnPress: () async {
-                                    await model.deletePost(postId: post.id!);
-                                  },
-                                  btnCancelOnPress: () {},
-                                  body: Text(
-                                    appLang(context)!.question_del_post,
-                                  ),
-                                  title: appLang(context)!.confirm,
-                                ).show();
-                              },
-                              onEdit: () async {
-                                await _showEditPost(post: post);
-                                await model.resetList();
-                                await model.changePosts();
-                              },
-                            );
-                          },
-                        ),
+            ],
+            bottom: TabBar(
+              onTap: (value) {
+                setState(() {
+                  currentTab = value;
+                });
+              },
+              tabs: [
+                Tab(
+                  text: "Top ${date_format.formatDate(DateTime.now(), [MM])}",
                 ),
+                Tab(
+                  text: "Top ${date_format.formatDate(
+                    DateTime.now().subtract(
+                      const Duration(
+                        days: 30,
+                      ),
+                    ),
+                    [MM],
+                  )}",
+                ),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              Center(
+                child: model.isLoading
+                    ? const Center(
+                        child: LoadingWidget(),
+                      )
+                    : RefreshIndicator(
+                        onRefresh: () async {
+                          model.resetList();
+                          await model.changePosts();
+                        },
+                        child: model.posts.isEmpty
+                            ? const Center(
+                                child: SingleChildScrollView(
+                                  physics: BouncingScrollPhysics(
+                                    parent: AlwaysScrollableScrollPhysics(),
+                                  ),
+                                  child: NoItemWidget(),
+                                ),
+                              )
+                            : ListView.builder(
+                                controller: scrollController,
+                                physics: const BouncingScrollPhysics(
+                                  parent: AlwaysScrollableScrollPhysics(),
+                                ),
+                                itemCount: model.posts.length,
+                                itemBuilder: (context, index) {
+                                  Post2 post = model.posts[index];
+                                  int isLiked = model.likedPost.firstWhere(
+                                    (element) => element == post.id,
+                                    orElse: () => -1,
+                                  );
+
+                                  return PostTile(
+                                    post: post,
+                                    isLiked: isLiked != -1,
+                                    onLikePost: () async {
+                                      return await model
+                                          .likePost(model.posts[index].id ?? 0);
+                                    },
+                                    onDelete: () {
+                                      AwesomeDialog(
+                                        context: context,
+                                        dialogType: DialogType.QUESTION,
+                                        btnOkOnPress: () async {
+                                          await model.deletePost(
+                                              postId: post.id!);
+                                        },
+                                        btnCancelOnPress: () {},
+                                        body: Text(
+                                          appLang(context)!.question_del_post,
+                                        ),
+                                        title: appLang(context)!.confirm,
+                                      ).show();
+                                    },
+                                    onEdit: () async {
+                                      await _showEditPost(post: post);
+                                      await model.resetList();
+                                      await model.changePosts();
+                                    },
+                                  );
+                                },
+                              ),
+                      ),
+              ),
+              Center(
+                child: model.isLoading
+                    ? const Center(
+                        child: LoadingWidget(),
+                      )
+                    : RefreshIndicator(
+                        onRefresh: () async {
+                          await model.changePostsLastMonth();
+                        },
+                        child: model.postsLastMonth.isEmpty
+                            ? const Center(
+                                child: SingleChildScrollView(
+                                  physics: BouncingScrollPhysics(
+                                    parent: AlwaysScrollableScrollPhysics(),
+                                  ),
+                                  child: NoItemWidget(),
+                                ),
+                              )
+                            : ListView.builder(
+                                controller: scrollController,
+                                physics: const BouncingScrollPhysics(
+                                  parent: AlwaysScrollableScrollPhysics(),
+                                ),
+                                itemCount: model.postsLastMonth.length,
+                                itemBuilder: (context, index) {
+                                  return PostTile(
+                                    post: model.postsLastMonth[index],
+                                    isLiked: true,
+                                    onLikePost: () {},
+                                    onDelete: () {},
+                                    onEdit: () {},
+                                  );
+                                },
+                              ),
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );
