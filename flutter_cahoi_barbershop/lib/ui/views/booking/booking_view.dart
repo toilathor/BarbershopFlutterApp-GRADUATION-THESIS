@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/facility.dart';
 import 'package:flutter_cahoi_barbershop/core/models/product.dart';
 import 'package:flutter_cahoi_barbershop/core/models/stylist.dart';
+import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/booking_model.dart';
+import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
@@ -488,6 +490,15 @@ class _BookingViewState extends State<BookingView>
 
   List<Widget> _buildSelectedProduct(
       {required List<Product> selectedProducts}) {
+    final user = locator<AuthenticationService>().user;
+    int discountRank = 0;
+
+    if (user.rank!.id == 1) {
+      discountRank = 10;
+    } else if (user.rank!.id == 2) {
+      discountRank = 15;
+    }
+
     List<Widget> items = [];
     double price = 0;
     for (int i = 0; i < selectedProducts.length; i++) {
@@ -503,47 +514,93 @@ class _BookingViewState extends State<BookingView>
       );
     }
 
-    ///Add item total
-    items.add(Container(
-      height: 40,
-      padding: const EdgeInsets.all(4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "${appLang(context)!.total}: ",
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: primaryColor,
-              fontSize: 20,
-              fontFamily: fontBold,
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100.0),
-              color: Colors.yellow,
-            ),
-            child: Text(
-              "${price}K",
+    ///Add discount
+    items.add(
+      Container(
+        height: 40,
+        padding: const EdgeInsets.all(4.0),
+        margin: const EdgeInsets.all(4.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "${appLang(context)!.discount_rank} ${user.rank?.rankName}",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 color: primaryColor,
+                fontSize: 16,
               ),
             ),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100.0),
+                color: Colors.red.shade200,
+              ),
+              child: Text(
+                "-$discountRank%",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: primaryColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+          border: Border.all(
+            color: Colors.black26,
           ),
-        ],
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
-        border: Border.all(
-          color: Colors.black26,
         ),
       ),
-    ));
+    );
+
+    ///Add item total
+    items.add(
+      Container(
+        height: 40,
+        padding: const EdgeInsets.all(4.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "${appLang(context)!.total}: ",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: primaryColor,
+                fontSize: 20,
+                fontFamily: fontBold,
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100.0),
+                color: Colors.yellow,
+              ),
+              child: Text(
+                "${price - (price * discountRank / 100)}K",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: primaryColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+          border: Border.all(
+            color: Colors.black26,
+          ),
+        ),
+      ),
+    );
     return items;
   }
 }

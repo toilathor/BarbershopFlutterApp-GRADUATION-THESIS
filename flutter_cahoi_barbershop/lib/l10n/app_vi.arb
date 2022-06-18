@@ -142,5 +142,7 @@
   "sub_book_stylist": "- Được book stylist\n- Xem thông tin tay nghề stylist và luôn được gợi ý top thợ được khách hàng đánh giá cao nhất",
   "title_rules": "Thể lệ",
   "rules_desc": "Top 10 trong tháng sẽ nhận ưu đãi giảm giá trong lần sử dụng dịch vụ tiếp theo 10 ~ 50 % tổng hóa đơn\nThời hạn sử dụng ưu đãi là 30 ngày kể từ ngày đầu tiên của tháng",
-  "top": "Xếp hạng"
+  "top": "Xếp hạng",
+  "your_rank": "Hạng của bạn ",
+  "discount_rank": "Triết khấu hạng"
 }
