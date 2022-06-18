@@ -12,6 +12,7 @@ import 'package:flutter_cahoi_barbershop/ui/widgets/components/bottom_sheet_edit
 import 'package:flutter_cahoi_barbershop/ui/widgets/loading_widget.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/no_item.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/post_tile.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class StoryPageView extends StatefulWidget {
   const StoryPageView({Key? key}) : super(key: key);
@@ -26,14 +27,18 @@ class _StoryPageViewState extends State<StoryPageView>
   bool like = true;
   final user = locator<AuthenticationService>().user;
   ScrollController scrollController = ScrollController();
+  final GlobalKey _one = GlobalKey();
 
   int currentTab = 0;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (size.isEmpty) {
-      size = MediaQuery.of(context).size;
-    }
+    size = MediaQuery.of(context).size;
 
     return BaseView<StoryModel>(
       onModelReady: (model) async {
@@ -52,158 +57,181 @@ class _StoryPageViewState extends State<StoryPageView>
       builder: (context, model, child) => DefaultTabController(
         initialIndex: currentTab,
         length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            actions: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/your-story',
-                    );
-                  },
-                  icon: ClipRRect(
-                    borderRadius: BorderRadius.circular(100.0),
-                    child: Image.network(
-                      '${user.avatar}',
-                      errorBuilder: (context, error, stackTrace) => const Icon(
-                        Icons.location_history_rounded,
+        child: ShowCaseWidget(
+          builder: Builder(builder: (context) {
+            return Scaffold(
+              floatingActionButton: FloatingActionButton.extended(
+                icon: const Icon(Icons.info_outline),
+                label: Text(
+                  appLang(context)!.title_rules,
+                ),
+                onPressed: () {
+                  ShowCaseWidget.of(context)!.startShowCase([_one]);
+                },
+              ),
+              appBar: AppBar(
+                actions: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/your-story',
+                        );
+                      },
+                      icon: ClipRRect(
+                        borderRadius: BorderRadius.circular(100.0),
+                        child: Image.network(
+                          '${user.avatar}',
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
+                            Icons.location_history_rounded,
+                          ),
+                        ),
                       ),
+                      tooltip: appLang(context)!.your_story,
                     ),
                   ),
-                  tooltip: appLang(context)!.your_story,
-                ),
-              ),
-            ],
-            bottom: TabBar(
-              onTap: (value) {
-                setState(() {
-                  currentTab = value;
-                });
-              },
-              tabs: [
-                Tab(
-                  text: "Top ${date_format.formatDate(DateTime.now(), [MM])}",
-                ),
-                Tab(
-                  text: "Top ${date_format.formatDate(
-                    DateTime.now().subtract(
-                      const Duration(
-                        days: 30,
+                ],
+                bottom: TabBar(
+                  onTap: (value) {
+                    setState(() {
+                      currentTab = value;
+                    });
+                  },
+                  tabs: [
+                    Showcase(
+                      key: _one,
+                      description: appLang(context)!.rules_desc,
+                      child: Tab(
+                        text: "Top ${date_format.formatDate(
+                          DateTime.now(),
+                          [MM],
+                        )}",
                       ),
+                      showArrow: true,
                     ),
-                    [MM],
-                  )}",
+                    Tab(
+                      text: "Top ${date_format.formatDate(
+                        DateTime.now().subtract(
+                          const Duration(
+                            days: 30,
+                          ),
+                        ),
+                        [MM],
+                      )}",
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          body: TabBarView(
-            children: [
-              Center(
-                child: model.isLoading
-                    ? const Center(
-                        child: LoadingWidget(),
-                      )
-                    : RefreshIndicator(
-                        onRefresh: () async {
-                          model.resetList();
-                          await model.changePosts();
-                        },
-                        child: model.posts.isEmpty
-                            ? const Center(
-                                child: SingleChildScrollView(
-                                  physics: BouncingScrollPhysics(
-                                    parent: AlwaysScrollableScrollPhysics(),
-                                  ),
-                                  child: NoItemWidget(),
-                                ),
-                              )
-                            : ListView.builder(
-                                controller: scrollController,
-                                physics: const BouncingScrollPhysics(
-                                  parent: AlwaysScrollableScrollPhysics(),
-                                ),
-                                itemCount: model.posts.length,
-                                itemBuilder: (context, index) {
-                                  Post2 post = model.posts[index];
-                                  int isLiked = model.likedPost.firstWhere(
-                                    (element) => element == post.id,
-                                    orElse: () => -1,
-                                  );
+              ),
+              body: TabBarView(
+                children: [
+                  Center(
+                    child: model.isLoading
+                        ? const Center(
+                            child: LoadingWidget(),
+                          )
+                        : RefreshIndicator(
+                            onRefresh: () async {
+                              model.resetList();
+                              await model.changePosts();
+                            },
+                            child: model.posts.isEmpty
+                                ? const Center(
+                                    child: SingleChildScrollView(
+                                      physics: BouncingScrollPhysics(
+                                        parent: AlwaysScrollableScrollPhysics(),
+                                      ),
+                                      child: NoItemWidget(),
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    controller: scrollController,
+                                    physics: const BouncingScrollPhysics(
+                                      parent: AlwaysScrollableScrollPhysics(),
+                                    ),
+                                    itemCount: model.posts.length,
+                                    itemBuilder: (context, index) {
+                                      Post2 post = model.posts[index];
+                                      int isLiked = model.likedPost.firstWhere(
+                                        (element) => element == post.id,
+                                        orElse: () => -1,
+                                      );
 
-                                  return PostTile(
-                                    post: post,
-                                    isLiked: isLiked != -1,
-                                    onLikePost: () async {
-                                      return await model
-                                          .likePost(model.posts[index].id ?? 0);
-                                    },
-                                    onDelete: () {
-                                      AwesomeDialog(
-                                        context: context,
-                                        dialogType: DialogType.QUESTION,
-                                        btnOkOnPress: () async {
-                                          await model.deletePost(
-                                              postId: post.id!);
+                                      return PostTile(
+                                        post: post,
+                                        isLiked: isLiked != -1,
+                                        onLikePost: () async {
+                                          return await model.likePost(
+                                              model.posts[index].id ?? 0);
                                         },
-                                        btnCancelOnPress: () {},
-                                        body: Text(
-                                          appLang(context)!.question_del_post,
-                                        ),
-                                        title: appLang(context)!.confirm,
-                                      ).show();
+                                        onDelete: () {
+                                          AwesomeDialog(
+                                            context: context,
+                                            dialogType: DialogType.QUESTION,
+                                            btnOkOnPress: () async {
+                                              await model.deletePost(
+                                                  postId: post.id!);
+                                            },
+                                            btnCancelOnPress: () {},
+                                            body: Text(
+                                              appLang(context)!
+                                                  .question_del_post,
+                                            ),
+                                            title: appLang(context)!.confirm,
+                                          ).show();
+                                        },
+                                        onEdit: () async {
+                                          await _showEditPost(post: post);
+                                          await model.resetList();
+                                          await model.changePosts();
+                                        },
+                                      );
                                     },
-                                    onEdit: () async {
-                                      await _showEditPost(post: post);
-                                      await model.resetList();
-                                      await model.changePosts();
-                                    },
-                                  );
-                                },
-                              ),
-                      ),
-              ),
-              Center(
-                child: model.isLoading
-                    ? const Center(
-                        child: LoadingWidget(),
-                      )
-                    : RefreshIndicator(
-                        onRefresh: () async {
-                          await model.changePostsLastMonth();
-                        },
-                        child: model.postsLastMonth.isEmpty
-                            ? const Center(
-                                child: SingleChildScrollView(
-                                  physics: BouncingScrollPhysics(
-                                    parent: AlwaysScrollableScrollPhysics(),
                                   ),
-                                  child: NoItemWidget(),
-                                ),
-                              )
-                            : ListView.builder(
-                                controller: scrollController,
-                                physics: const BouncingScrollPhysics(
-                                  parent: AlwaysScrollableScrollPhysics(),
-                                ),
-                                itemCount: model.postsLastMonth.length,
-                                itemBuilder: (context, index) {
-                                  return PostTile(
-                                    post: model.postsLastMonth[index],
-                                    isLiked: true,
-                                    onLikePost: () {},
-                                    onDelete: () {},
-                                    onEdit: () {},
-                                  );
-                                },
-                              ),
-                      ),
+                          ),
+                  ),
+                  Center(
+                    child: model.isLoading
+                        ? const Center(
+                            child: LoadingWidget(),
+                          )
+                        : RefreshIndicator(
+                            onRefresh: () async {
+                              await model.changePostsLastMonth();
+                            },
+                            child: model.postsLastMonth.isEmpty
+                                ? const Center(
+                                    child: SingleChildScrollView(
+                                      physics: BouncingScrollPhysics(
+                                        parent: AlwaysScrollableScrollPhysics(),
+                                      ),
+                                      child: NoItemWidget(),
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    controller: scrollController,
+                                    physics: const BouncingScrollPhysics(
+                                      parent: AlwaysScrollableScrollPhysics(),
+                                    ),
+                                    itemCount: model.postsLastMonth.length,
+                                    itemBuilder: (context, index) {
+                                      return PostTile(
+                                        post: model.postsLastMonth[index],
+                                        isLiked: true,
+                                        onLikePost: () {},
+                                        onDelete: () {},
+                                        onEdit: () {},
+                                      );
+                                    },
+                                  ),
+                          ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          }),
         ),
       ),
     );

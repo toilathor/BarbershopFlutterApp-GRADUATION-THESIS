@@ -203,7 +203,7 @@ class _PostTileState extends State<PostTile> with TickerProviderStateMixin {
                 color: primaryColor,
                 size: 24,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               Tooltip(
@@ -280,7 +280,7 @@ class _PostTileState extends State<PostTile> with TickerProviderStateMixin {
                       scale: _animation,
                       child: SvgPicture.asset(
                         "assets/icon/heart_active.svg",
-                        color: Colors.red,
+                        color: Colors.red.withOpacity(0.7),
                         height: 70,
                         width: 70,
                       ),
