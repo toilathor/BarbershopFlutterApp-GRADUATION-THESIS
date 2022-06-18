@@ -42,8 +42,14 @@ class _EmployeeHomeViewState extends State<EmployeeHomeView> {
                       borderRadius: borderRadiusCircle,
                       child: SizedBox(
                         width: size.width * 0.2,
-                        child: Image.network(
-                          '${user.avatar}',
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: Image.network(
+                            user.avatar != null
+                                ? "$localHost${user.avatar}"
+                                : avatarDefault,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),

@@ -20,3 +20,5 @@ const apiKeyMap = 'AIzaSyDVr-0LtOAAbSRRbgQHNuQcWtxw0MeUlvs';
 
 const fontLight = 'sf-ui-display-light';
 const fontBold = 'sf-ui-display-bold';
+
+const avatarDefault = "https://bit.ly/3kGo0rS";

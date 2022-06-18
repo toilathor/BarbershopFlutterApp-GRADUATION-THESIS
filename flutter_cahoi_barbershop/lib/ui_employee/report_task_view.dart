@@ -105,6 +105,7 @@ class _ReportTaskViewState extends State<ReportTaskView> {
                                   borderRadius: borderRadiusCircle,
                                   child: Image.network(
                                     "${model.task?.customer?.avatar}",
+                                    fit: BoxFit.cover,
                                     errorBuilder:
                                         (context, error, stackTrace) =>
                                             Container(),

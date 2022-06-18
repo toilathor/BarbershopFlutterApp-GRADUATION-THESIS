@@ -46,7 +46,15 @@ class _AccountPageViewState extends State<AccountPageView> {
                     children: [
                       ClipRRect(
                         borderRadius: borderRadiusCircle,
-                        child: Image.network("${user.avatar}"),
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: Image.network(
+                            user.avatar != null
+                                ? "$localHost${user.avatar}"
+                                : avatarDefault,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                       Expanded(
                         child: Padding(
@@ -95,16 +103,16 @@ class _AccountPageViewState extends State<AccountPageView> {
                             Icons.password_sharp,
                             color: Colors.purple,
                           ),
-                    title: appLang(context)!.change_password,
-                    onPress: () async {
-                      var res = await CheckPasswordDialog.show(context);
+                          title: appLang(context)!.change_password,
+                          onPress: () async {
+                            var res = await CheckPasswordDialog.show(context);
 
-                      if (res != null && res) {
-                        var resCP =
-                        await ChangePasswordDialog.show(context);
+                            if (res != null && res) {
+                              var resCP =
+                                  await ChangePasswordDialog.show(context);
 
-                        if (resCP != null && resCP) {
-                          AwesomeDialog(
+                              if (resCP != null && resCP) {
+                                AwesomeDialog(
                                   context: context,
                                   title: "${appLang(context)!.success}!",
                                   dialogType: DialogType.SUCCES,

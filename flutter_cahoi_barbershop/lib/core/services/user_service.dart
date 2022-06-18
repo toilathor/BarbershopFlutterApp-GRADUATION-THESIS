@@ -1,3 +1,4 @@
+import 'package:dio/src/form_data.dart';
 import 'package:flutter_cahoi_barbershop/core/apis/api.dart';
 import 'package:flutter_cahoi_barbershop/core/models/user.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
@@ -23,6 +24,14 @@ class UserService {
 
   Future<bool> signCalender() async {
     var res = await _api.signCalender();
+    if (res != null) {
+      return res.data;
+    }
+    return false;
+  }
+
+  Future<bool?> changeAvatar({required FormData data}) async {
+    var res = await _api.changeAvatar(data: data);
     if (res != null) {
       return res.data;
     }

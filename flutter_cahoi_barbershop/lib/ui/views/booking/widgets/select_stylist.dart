@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/stylist.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/avatar.dart';
 
@@ -72,7 +73,9 @@ class _SelectStylistState extends State<SelectStylist> {
                     child: _buildAvatarStylist(
                       size: size,
                       title: "${widget.stylists[index].name}",
-                      src: '${widget.stylists[index].avatar}',
+                      src: widget.stylists[index].avatar != null
+                          ? "$localHost${widget.stylists[index].avatar}"
+                          : avatarDefault,
                       isSelected: widget.current == widget.stylists[index],
                     ),
                   ),

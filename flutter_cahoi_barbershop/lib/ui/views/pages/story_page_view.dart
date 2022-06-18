@@ -6,6 +6,7 @@ import 'package:flutter_cahoi_barbershop/core/models/post2.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/story_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/components/bottom_sheet_edit_post.dart';
@@ -82,11 +83,17 @@ class _StoryPageViewState extends State<StoryPageView>
                       },
                       icon: ClipRRect(
                         borderRadius: BorderRadius.circular(100.0),
-                        child: Image.network(
-                          '${user.avatar}',
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(
-                            Icons.location_history_rounded,
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: Image.network(
+                            user.avatar != null
+                                ? "$localHost${user.avatar}"
+                                : avatarDefault,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(
+                              Icons.location_history_rounded,
+                            ),
                           ),
                         ),
                       ),

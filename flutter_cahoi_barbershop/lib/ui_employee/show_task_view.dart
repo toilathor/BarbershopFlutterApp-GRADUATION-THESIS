@@ -75,6 +75,7 @@ class _ShowTaskViewState extends State<ShowTaskView> {
                               BorderRadius.circular(size.height * 0.15),
                           child: Image.network(
                             "${model.task?.customer?.avatar}",
+                            fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) =>
                                 Container(),
                           ),

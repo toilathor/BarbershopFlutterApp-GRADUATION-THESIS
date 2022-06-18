@@ -92,8 +92,11 @@ class _PostTileState extends State<PostTile> with TickerProviderStateMixin {
                   children: [
                     ClipRect(
                       child: Image.network(
-                        '${widget.post.task?.customer?.avatar}',
+                        widget.post.task?.customer?.avatar != null
+                            ? '$localHost${widget.post.task?.customer?.avatar}'
+                            : avatarDefault,
                         height: 50,
+                        fit: BoxFit.cover,
                         errorBuilder: (context, _, ___) => Container(),
                       ),
                     ),

@@ -109,7 +109,9 @@ class _HomePageViewState extends State<HomePageView> {
                       children: [
                         Avatar(
                           height: size.width * 0.18,
-                          src: user.avatar ?? "",
+                          src: user.avatar != null
+                              ? "$localHost${user.avatar}"
+                              : avatarDefault,
                         ),
                         Expanded(
                           child: Container(

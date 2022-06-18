@@ -3,6 +3,7 @@ import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/history_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
@@ -45,15 +46,21 @@ class _HistoryViewState extends State<HistoryView> {
               children: [
                 ClipRRect(
                   borderRadius: borderRadiusCircle,
-                  child: Image.network(
-                    '${user.avatar}',
-                    errorBuilder: (context, error, stackTrace) => const Center(
-                      child: Icon(
-                        Icons.error,
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: Image.network(
+                      user.avatar != null
+                          ? "$localHost${user.avatar}"
+                          : avatarDefault,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Center(
+                        child: Icon(
+                          Icons.error,
+                        ),
                       ),
+                      fit: BoxFit.cover,
+                      height: size.height * 0.06,
                     ),
-                    fit: BoxFit.cover,
-                    height: size.height * 0.06,
                   ),
                 ),
               ],

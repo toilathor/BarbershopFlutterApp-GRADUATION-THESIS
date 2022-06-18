@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/screen_arguments.dart';
 import 'package:flutter_cahoi_barbershop/core/models/task.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/stylist_model/report_task_model.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/server_config.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
@@ -164,7 +165,12 @@ class _TaskTabState extends State<TaskTab> {
                 children: [
                   ClipRRect(
                     borderRadius: borderRadiusCircle,
-                    child: Image.network("${task.customer?.avatar}"),
+                    child: Image.network(
+                      task.customer?.avatar != null
+                          ? "$localHost${task.customer?.avatar}"
+                          : avatarDefault,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   const SizedBox(
                     width: 8,

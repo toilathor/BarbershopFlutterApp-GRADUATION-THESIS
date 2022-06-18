@@ -233,6 +233,15 @@ class Api extends ApiBase {
     }
   }
 
+  Future<api_res.Response?> changeAvatar({required FormData data}) async {
+    try {
+      var res = await dio.post('/user/change-avatar', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<api_res.Response?> checkPassword(
       {required Map<String, String> data}) async {
     try {
