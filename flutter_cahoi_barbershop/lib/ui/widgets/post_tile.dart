@@ -275,17 +275,67 @@ class _PostTileState extends State<PostTile> with TickerProviderStateMixin {
                       },
                     ),
                   ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Visibility(
+                      // visible: widget.top != null,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 10,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Visibility(
+                              visible: widget.top == 1,
+                              child: IconTop.first(),
+                            ),
+                            Visibility(
+                              visible: widget.top == 2,
+                              child: IconTop.second(),
+                            ),
+                            Visibility(
+                              visible: widget.top == 3,
+                              child: IconTop.third(),
+                            ),
+                            Text(
+                              "${appLang(context)!.top} ${widget.top}"
+                                  .toUpperCase(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: fontBold,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
+                        ),
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment(-1.0, -1),
+                            end: Alignment(-1.0, 1),
+                            colors: [
+                              Colors.transparent,
+                              Colors.black87,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   Center(
                     child: ScaleTransition(
                       scale: _animation,
                       child: SvgPicture.asset(
                         "assets/icon/heart_active.svg",
-                        color: Colors.red.withOpacity(0.7),
+                        color: Colors.red.withOpacity(0.9),
                         height: 70,
                         width: 70,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -386,5 +436,35 @@ class _PostTileState extends State<PostTile> with TickerProviderStateMixin {
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+}
+
+class IconTop extends StatelessWidget {
+  const IconTop({Key? key, required this.top}) : super(key: key);
+
+  final int top;
+
+  factory IconTop.first() => const IconTop(top: 1);
+
+  factory IconTop.second() => const IconTop(top: 2);
+
+  factory IconTop.third() => const IconTop(top: 3);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(_getAsset());
+  }
+
+  String _getAsset() {
+    switch (top) {
+      case 1:
+        return "assets/top1.svg";
+      case 2:
+        return "assets/top2.svg";
+      case 3:
+        return "assets/top3.svg";
+      default:
+        return "assets/top3.svg";
+    }
   }
 }

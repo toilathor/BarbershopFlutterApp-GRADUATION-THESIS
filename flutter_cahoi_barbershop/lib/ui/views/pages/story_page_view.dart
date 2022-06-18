@@ -162,6 +162,7 @@ class _StoryPageViewState extends State<StoryPageView>
                                       return PostTile(
                                         post: post,
                                         isLiked: isLiked != -1,
+                                        top: index + 1,
                                         onLikePost: () async {
                                           return await model.likePost(
                                               model.posts[index].id ?? 0);
@@ -220,9 +221,8 @@ class _StoryPageViewState extends State<StoryPageView>
                                       return PostTile(
                                         post: model.postsLastMonth[index],
                                         isLiked: true,
+                                        top: index + 1,
                                         onLikePost: () {},
-                                        onDelete: () {},
-                                        onEdit: () {},
                                       );
                                     },
                                   ),

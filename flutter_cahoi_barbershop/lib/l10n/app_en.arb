@@ -120,5 +120,6 @@
   "title_book_stylist": "Stylist preset permissions",
   "sub_book_stylist": "- Get book stylist\n- View stylist's skill information and always be suggested the top stylist rated by customers",
   "title_rules": "Rules",
-  "rules_desc": "Top 10 in the month will receive a discount in the next service use 10 ~ 50% of the total bill\nOffer valid for 30 days from the first day of the month"
+  "rules_desc": "Top 10 in the month will receive a discount in the next service use 10 ~ 50% of the total bill\nOffer valid for 30 days from the first day of the month",
+  "top": "Top"
 }
