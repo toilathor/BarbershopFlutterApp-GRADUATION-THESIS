@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/type_product.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/booking_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/widgets/product_tile.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/elevated_button_icon.dart';
@@ -29,8 +30,10 @@ class _SelectProductViewState extends State<SelectProductView>
       onModelReady: (model) async {
         await model.changeTypeProduct();
 
-        tabController =
-            TabController(length: model.typeProducts.length, vsync: this);
+        tabController = TabController(
+          length: model.typeProducts.length,
+          vsync: this,
+        );
       },
       builder: (context, model, child) => Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
@@ -55,8 +58,8 @@ class _SelectProductViewState extends State<SelectProductView>
                     typeProducts: model.typeProducts,
                   ),
                 ),
-          title: const Text(
-            "Chọn dịch vụ",
+          title: Text(
+            appLang(context)!.select_product,
           ),
         ),
         body: Stack(
@@ -82,7 +85,8 @@ class _SelectProductViewState extends State<SelectProductView>
                           Navigator.of(context)
                               .pop({'services': model.selectedProducts});
                         },
-                  title: 'Đã chọn ${model.selectedProducts.length} dịch vụ'
+                  title: appLang(context)!
+                      .selected_num("${model.selectedProducts.length}")
                       .toUpperCase(),
                 ),
               ),

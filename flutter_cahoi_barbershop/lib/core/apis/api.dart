@@ -1,6 +1,5 @@
 import 'package:date_format/date_format.dart' as date_format;
 import 'package:dio/src/form_data.dart';
-import 'package:flutter_cahoi_barbershop/core/models/post.dart';
 import 'package:flutter_cahoi_barbershop/core/models/response.dart' as api_res;
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 
@@ -84,6 +83,15 @@ class Api extends ApiBase {
   }
 
   ///Booking
+  Future<api_res.Response?> checkCanBook() async {
+    try {
+      var res = await dio.get('/task/can-book');
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<api_res.Response?> getFacility() async {
     try {
       var res = await dio.get('/facilities');
@@ -108,6 +116,15 @@ class Api extends ApiBase {
   Future<api_res.Response?> getTypeProduct() async {
     try {
       var res = await dio.get('/type-products');
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> getAllProduct() async {
+    try {
+      var res = await dio.get('/product');
       return castRes(res);
     } catch (e) {
       return null;
@@ -216,6 +233,26 @@ class Api extends ApiBase {
     }
   }
 
+  Future<api_res.Response?> checkPassword(
+      {required Map<String, String> data}) async {
+    try {
+      var res = await dio.post('/user/check-password', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> changePassword(
+      {required Map<String, String> data}) async {
+    try {
+      var res = await dio.post('/user/change-password', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
   ///Role
   Future<api_res.Response?> getRoles() async {
     try {
@@ -278,8 +315,16 @@ class Api extends ApiBase {
     }
   }
 
-  Future<api_res.Response?> getWall(
-      {required Map<String, int> data}) async {
+  Future<api_res.Response?> getPostLastMonth() async {
+    try {
+      var res = await dio.get('/post/last-month');
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> getWall({required Map<String, int> data}) async {
     try {
       var res = await dio.get('/post/wall', queryParameters: data);
       return castRes(res);
@@ -307,9 +352,88 @@ class Api extends ApiBase {
     }
   }
 
-  Future<api_res.Response?> deletePost({required Map<String, dynamic> data}) async {
+  Future<api_res.Response?> deletePost(
+      {required Map<String, dynamic> data}) async {
     try {
       var res = await dio.delete('/post', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> updatePost(
+      {required Map<String, dynamic> data}) async {
+    try {
+      var res = await dio.post('/post/edit', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Rating
+  Future<api_res.Response?> getRatingTask({required taskId}) async {
+    try {
+      var res = await dio.get('/rating/$taskId');
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> saveRating({
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      var res = await dio.post('/rating', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Product
+  Future<api_res.Response?> createProduct({required FormData data}) async {
+    try {
+      var res = await dio.post('/product', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> updateProduct(
+      {required FormData data, required int productId}) async {
+    try {
+      var res = await dio.post('/product/edit/$productId', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> deleteProduct({required int productId}) async {
+    try {
+      var res = await dio.delete('/product/$productId');
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> signCalender() async {
+    try {
+      var res = await dio.get('/');
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> cleanOldTask() async {
+    try {
+      var res = await dio.get('/task/clean');
       return castRes(res);
     } catch (e) {
       return null;

@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/post2.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -32,7 +34,7 @@ class PostTile extends StatefulWidget {
   State<PostTile> createState() => _PostTileState();
 }
 
-class _PostTileState extends State<PostTile> {
+class _PostTileState extends State<PostTile> with TickerProviderStateMixin {
   Size size = Size.zero;
   double heiHeart = 24;
 
@@ -40,8 +42,23 @@ class _PostTileState extends State<PostTile> {
 
   bool isLiked = false;
 
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
   @override
   void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(
+        milliseconds: 500,
+      ),
+    );
+
+    _animation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.bounceOut,
+    );
+
     isLiked = widget.isLiked;
     super.initState();
   }
@@ -56,8 +73,8 @@ class _PostTileState extends State<PostTile> {
       margin: const EdgeInsets.only(bottom: 25.0),
       padding: const EdgeInsets.only(bottom: 25.0),
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
+        border: Border.symmetric(
+          horizontal: BorderSide(
             color: Colors.grey.shade500,
             width: 0.5,
           ),
@@ -117,7 +134,7 @@ class _PostTileState extends State<PostTile> {
                     showCupertinoModalPopup(
                       context: context,
                       builder: (context) => CupertinoActionSheet(
-                        title: const Text("Tùy chọn"),
+                        title: Text(appLang(context)!.bottombar_menu),
                         actions: [
                           CupertinoActionSheetAction(
                             onPressed: () {
@@ -125,7 +142,9 @@ class _PostTileState extends State<PostTile> {
                                 widget.onEdit!();
                               }
                             },
-                            child: const Text("Chỉnh sửa"),
+                            child: Text(
+                              appLang(context)!.edit,
+                            ),
                           ),
                           CupertinoActionSheetAction(
                             onPressed: () {
@@ -133,14 +152,18 @@ class _PostTileState extends State<PostTile> {
                                 widget.onDelete!();
                               }
                             },
-                            child: const Text("Xóa"),
+                            child: Text(
+                              appLang(context)!.delete,
+                            ),
                           ),
                         ],
                         cancelButton: CupertinoActionSheetAction(
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: const Text("Cancel"),
+                          child: Text(
+                            appLang(context)!.cancel,
+                          ),
                         ),
                       ),
                     );
@@ -173,9 +196,47 @@ class _PostTileState extends State<PostTile> {
               ),
             ),
           ),
+          Row(
+            children: [
+              const Icon(
+                Icons.person,
+                color: primaryColor,
+                size: 24,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Tooltip(
+                message: appLang(context)!.stylist,
+                child: Text(
+                  "Stylist: ${widget.post.task?.stylist?.user?.name ?? "no name"}",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.ellipsis,
+                    fontFamily: fontBold,
+                  ),
+                ),
+              ),
+            ],
+          ),
           Expanded(
             child: GestureDetector(
               onDoubleTap: () {
+                _animationController.forward().whenComplete(
+                  () {
+                    Future.delayed(
+                      const Duration(seconds: 1),
+                      () {
+                        _animationController.reverse();
+                      },
+                    );
+                  },
+                );
+
+                if (widget.isLiked) {
+                  return;
+                }
                 setState(() {
                   heiHeart = 24 / 2;
                 });
@@ -189,26 +250,93 @@ class _PostTileState extends State<PostTile> {
                   },
                 );
               },
-              child: CarouselSlider.builder(
-                itemBuilder: (context, index, realIndex) => Image.network(
-                    "$localHost/${widget.post.task?.image![index].link}",
-                    errorBuilder: (context, _, ___) => Container(),
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: double.infinity,
-                    cacheHeight: 1080),
-                itemCount: widget.post.task?.image!.length,
-                options: CarouselOptions(
-                  scrollPhysics: const BouncingScrollPhysics(),
-                  initialPage: 1,
-                  height: double.infinity,
-                  viewportFraction: 1,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      activeIndex = index;
-                    });
-                  },
-                ),
+              child: Stack(
+                children: [
+                  CarouselSlider.builder(
+                    itemBuilder: (context, index, realIndex) => Image.network(
+                      "$localHost/${widget.post.task?.image![index].link}",
+                      errorBuilder: (context, _, ___) => Container(),
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                      cacheHeight: 1080,
+                    ),
+                    itemCount: widget.post.task?.image!.length,
+                    options: CarouselOptions(
+                      scrollPhysics: const BouncingScrollPhysics(),
+                      initialPage: 1,
+                      enableInfiniteScroll: false,
+                      height: double.infinity,
+                      viewportFraction: 1,
+                      onPageChanged: (index, reason) {
+                        setState(() {
+                          activeIndex = index;
+                        });
+                      },
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Visibility(
+                      // visible: widget.top != null,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 10,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Visibility(
+                              visible: widget.top == 1,
+                              child: IconTop.first(),
+                            ),
+                            Visibility(
+                              visible: widget.top == 2,
+                              child: IconTop.second(),
+                            ),
+                            Visibility(
+                              visible: widget.top == 3,
+                              child: IconTop.third(),
+                            ),
+                            Text(
+                              "${appLang(context)!.top} ${widget.top}"
+                                  .toUpperCase(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: fontBold,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
+                        ),
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment(-1.0, -1),
+                            end: Alignment(-1.0, 1),
+                            colors: [
+                              Colors.transparent,
+                              Colors.black87,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: ScaleTransition(
+                      scale: _animation,
+                      child: SvgPicture.asset(
+                        "assets/icon/heart_active.svg",
+                        color: Colors.red.withOpacity(0.9),
+                        height: 70,
+                        width: 70,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -270,17 +398,16 @@ class _PostTileState extends State<PostTile> {
                   ),
                 ),
                 Positioned(
-                  right: 20,
-                  height: 24,
-                  width: 24,
+                  right: 0,
                   child: IconButton(
+                    highlightColor: headerColor1,
                     onPressed: () {
                       Navigator.pushNamed(context, "/booking");
                     },
                     tooltip: 'Booking Now',
                     icon: const Icon(
                       Icons.bookmark_border_rounded,
-                      color: Colors.black,
+                      color: Colors.black87,
                     ),
                   ),
                 ),
@@ -292,7 +419,7 @@ class _PostTileState extends State<PostTile> {
               horizontal: 16.0,
             ),
             child: Text(
-              '${widget.post.likeCount} Likes',
+              '${widget.post.likeCount} ${appLang(context)!.like}',
               style: const TextStyle(
                 fontSize: 12,
                 color: Colors.black,
@@ -303,5 +430,41 @@ class _PostTileState extends State<PostTile> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+}
+
+class IconTop extends StatelessWidget {
+  const IconTop({Key? key, required this.top}) : super(key: key);
+
+  final int top;
+
+  factory IconTop.first() => const IconTop(top: 1);
+
+  factory IconTop.second() => const IconTop(top: 2);
+
+  factory IconTop.third() => const IconTop(top: 3);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(_getAsset());
+  }
+
+  String _getAsset() {
+    switch (top) {
+      case 1:
+        return "assets/top1.svg";
+      case 2:
+        return "assets/top2.svg";
+      case 3:
+        return "assets/top3.svg";
+      default:
+        return "assets/top3.svg";
+    }
   }
 }

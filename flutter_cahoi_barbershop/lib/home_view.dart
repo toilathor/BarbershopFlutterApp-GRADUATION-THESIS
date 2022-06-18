@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cahoi_barbershop/core/services/task_service.dart';
+import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/pages/account_page_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/pages/discover_page_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/pages/home_page_view.dart';
@@ -24,6 +27,14 @@ class _HomeViewState extends State<HomeView> {
   int _currentIndex = 0;
 
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await locator<TaskService>().cleanTask();
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -42,28 +53,28 @@ class _HomeViewState extends State<HomeView> {
           },
           selectedLabelStyle: const TextStyle(fontFamily: fontBold),
           unselectedLabelStyle: const TextStyle(fontFamily: fontBold),
-          items: const [
-            BottomNavigationBarItem(
+          items: [
+            const BottomNavigationBarItem(
               icon: Icon(
                 Icons.home,
               ),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(
+              icon: const Icon(
                 Icons.search,
               ),
-              label: "Khám phá",
+              label: appLang(context)!.bottombar_discovery,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.history_edu_rounded),
-              label: 'Bản tin',
+              icon: const Icon(Icons.history_edu_rounded),
+              label: appLang(context)!.bottombar_story,
             ),
             BottomNavigationBarItem(
-              icon: Icon(
+              icon: const Icon(
                 Icons.person,
               ),
-              label: "Tùy chọn",
+              label: appLang(context)!.bottombar_menu,
             ),
           ],
         ),

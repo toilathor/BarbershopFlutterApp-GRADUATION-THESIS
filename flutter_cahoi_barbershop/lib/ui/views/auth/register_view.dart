@@ -3,6 +3,7 @@ import 'package:flutter_cahoi_barbershop/core/state_models/auth_model.dart';
 import 'package:flutter_cahoi_barbershop/home_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/button_login.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/loading_dialog.dart';
@@ -56,11 +57,11 @@ class _RegisterViewState extends State<RegisterView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     child: Text(
-                      "Đăng ký",
-                      style: TextStyle(
+                      appLang(context)!.register,
+                      style: const TextStyle(
                         fontSize: 36,
                         fontFamily: fontBold,
                         color: headerColor1,
@@ -98,10 +99,10 @@ class _RegisterViewState extends State<RegisterView> {
             validator: (_) {
               if (currentName.length > 30 || currentName.isEmpty) {
                 isValidatedName = false;
-                return 'Name is too long';
+                return appLang(context)!.warning_name_long;
               } else if (currentName.split(" ").length < 2) {
                 isValidatedName = false;
-                return 'Tên tối thiểu 2 từ';
+                return appLang(context)!.warning_2_words;
               } else {
                 isValidatedName = true;
                 return null;
@@ -120,14 +121,14 @@ class _RegisterViewState extends State<RegisterView> {
             maxLength: 30,
             autocorrect: true,
             decoration: InputDecoration(
-              labelText: "Họ Tên",
+              labelText: appLang(context)!.full_name,
               floatingLabelBehavior: FloatingLabelBehavior.always,
               labelStyle: TextStyle(
                 color: Colors.black.withOpacity(0.5),
                 fontWeight: FontWeight.bold,
                 fontSize: 24,
               ),
-              hintText: "Tên ít nhất 2 từ",
+              hintText: appLang(context)!.warning_2_words,
               counterText: "",
               hintStyle: TextStyle(
                 fontSize: 18,
@@ -152,10 +153,10 @@ class _RegisterViewState extends State<RegisterView> {
               RegExp regex = RegExp(
                   r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$');
               if (currentPassword.isEmpty) {
-                return 'Vui lòng nhập mật khẩu';
+                return appLang(context)!.warning_enter_password;
               } else {
                 if (!regex.hasMatch(currentPassword)) {
-                  return 'Mật khẩu không hợp lệ';
+                  return appLang(context)!.warning_pass_invalid;
                 } else {
                   return null;
                 }
@@ -178,14 +179,14 @@ class _RegisterViewState extends State<RegisterView> {
             maxLength: 250,
             autocorrect: true,
             decoration: InputDecoration(
-              labelText: "Mật khẩu",
+              labelText: appLang(context)!.password,
               floatingLabelBehavior: FloatingLabelBehavior.always,
               labelStyle: TextStyle(
                 color: Colors.black.withOpacity(0.5),
                 fontWeight: FontWeight.bold,
                 fontSize: 24,
               ),
-              hintText: "Mật khẩu",
+              hintText: appLang(context)!.password,
               counterText: "",
               hintStyle: TextStyle(
                 fontSize: 18,
@@ -216,11 +217,14 @@ class _RegisterViewState extends State<RegisterView> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
-                        isHidePassword ? 'Show' : 'Hide',
+                        isHidePassword
+                            ? appLang(context)!.show
+                            : appLang(context)!.hide,
                         style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.blue),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.blue,
+                        ),
                       ),
                     ),
                   ),
@@ -237,15 +241,15 @@ class _RegisterViewState extends State<RegisterView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextRegex(
-              title: "• ít nhất 1 kí tự viết hoa",
+              title: appLang(context)!.warning_upcase,
               validated: isUppercase,
             ),
             TextRegex(
-              title: "• ít nhất một kí tự số",
+              title: appLang(context)!.warning_numeric,
               validated: isNumeric,
             ),
             TextRegex(
-              title: "• độ dài tối thiểu là 8",
+              title: appLang(context)!.warning_length,
               validated: isLength,
             ),
           ],
@@ -265,7 +269,7 @@ class _RegisterViewState extends State<RegisterView> {
                     isLength && isUppercase && isValidatedName && isNumeric
                         ? onRegister
                         : null,
-                title: "Đăng kí",
+                title: appLang(context)!.register,
               ),
             ),
           ],

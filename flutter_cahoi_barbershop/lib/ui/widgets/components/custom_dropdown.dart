@@ -63,17 +63,6 @@ class _CustomStringDropDownState extends State<CustomStringDropDown> {
               ),
             )
             .toList(),
-        // selectedItemBuilder: (_) => widget.values
-        //     .map(
-        //       (e) => DropdownMenuItem<String>(
-        //         value: e,
-        //         child: Text(
-        //           e,
-        //           style: const TextStyle(color: Colors.red),
-        //         ),
-        //       ),
-        //     )
-        //     .toList(),
         isExpanded: true,
         onChanged: (value) {
           setState(() {

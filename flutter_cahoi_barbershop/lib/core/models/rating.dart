@@ -1,40 +1,75 @@
-/// avg_communication_rate : "3.2"
-/// avg_skill_rate : "4.4"
+/// communication_rate : 5
+/// skill_rate : 5
+/// assessment : 5
+/// secure : 5
+/// checkout : 5
+/// comment : ""
+/// task_id : 190
+/// id : 50
 
 class Rating {
   Rating({
-    String? avgCommunicationRate,
-    String? avgSkillRate,
-  }) {
-    _avgCommunicationRate = avgCommunicationRate;
-    _avgSkillRate = avgSkillRate;
-  }
+    this.communicationRate,
+    this.skillRate,
+    this.assessment,
+    this.secure,
+    this.checkout,
+    this.comment,
+    this.taskId,
+    this.id,
+  });
 
   Rating.fromJson(dynamic json) {
-    _avgCommunicationRate = json['avg_communication_rate'];
-    _avgSkillRate = json['avg_skill_rate'];
+    communicationRate = json['communication_rate'];
+    skillRate = json['skill_rate'];
+    assessment = json['assessment'];
+    secure = json['secure'];
+    checkout = json['checkout'];
+    comment = json['comment'];
+    taskId = json['task_id'];
+    id = json['id'];
   }
 
-  String? _avgCommunicationRate;
-  String? _avgSkillRate;
+  dynamic communicationRate;
+  dynamic skillRate;
+  dynamic assessment;
+  dynamic secure;
+  dynamic checkout;
+  String? comment;
+  int? taskId;
+  int? id;
 
   Rating copyWith({
-    String? avgCommunicationRate,
-    String? avgSkillRate,
+    dynamic communicationRate,
+    dynamic skillRate,
+    dynamic assessment,
+    dynamic secure,
+    dynamic checkout,
+    String? comment,
+    int? taskId,
+    int? id,
   }) =>
       Rating(
-        avgCommunicationRate: avgCommunicationRate ?? _avgCommunicationRate,
-        avgSkillRate: avgSkillRate ?? _avgSkillRate,
+        communicationRate: communicationRate ?? this.communicationRate,
+        skillRate: skillRate ?? this.skillRate,
+        assessment: assessment ?? this.assessment,
+        secure: secure ?? this.secure,
+        checkout: checkout ?? this.checkout,
+        comment: comment ?? this.comment,
+        taskId: taskId ?? this.taskId,
+        id: id ?? this.id,
       );
-
-  String? get avgCommunicationRate => _avgCommunicationRate;
-
-  String? get avgSkillRate => _avgSkillRate;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['avg_communication_rate'] = _avgCommunicationRate;
-    map['avg_skill_rate'] = _avgSkillRate;
+    map['communication_rate'] = communicationRate;
+    map['skill_rate'] = skillRate;
+    map['assessment'] = assessment;
+    map['secure'] = secure;
+    map['checkout'] = checkout;
+    map['comment'] = comment;
+    map['task_id'] = taskId;
+    map['id'] = id;
     return map;
   }
 }

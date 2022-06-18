@@ -10,6 +10,7 @@ import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/components/custom_dropdown.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/loading_dialog.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/no_item.dart';
 
 class TaskTab extends StatefulWidget {
   const TaskTab({Key? key}) : super(key: key);
@@ -98,13 +99,7 @@ class _TaskTabState extends State<TaskTab> {
             ),
             Expanded(
               child: model.tasks.isEmpty
-                  ? Center(
-                      child: Image.asset(
-                        'assets/not_item.png',
-                        height: size.width * 0.5,
-                        // width: ,
-                      ),
-                    )
+                  ? const NoItemWidget()
                   : ListView.builder(
                       controller: scrollController,
                       physics: const BouncingScrollPhysics(),

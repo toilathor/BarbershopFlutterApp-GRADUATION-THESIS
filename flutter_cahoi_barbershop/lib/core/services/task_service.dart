@@ -1,5 +1,6 @@
 import 'package:dio/src/form_data.dart';
 import 'package:flutter_cahoi_barbershop/core/apis/api.dart';
+import 'package:flutter_cahoi_barbershop/core/models/rating.dart';
 import 'package:flutter_cahoi_barbershop/core/models/task.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 
@@ -76,5 +77,29 @@ class TaskService {
     }
 
     return false;
+  }
+
+  Future<Rating?> getRatingTask({required int taskId}) async {
+    var res = await _api.getRatingTask(taskId: taskId);
+
+    if (res != null && res.data != null) {
+      return Rating.fromJson(res.data);
+    }
+
+    return null;
+  }
+
+  Future<Rating?> saveRating({required Map<String, dynamic> data}) async {
+    var res = await _api.saveRating(data: data);
+
+    if (res != null) {
+      return Rating.fromJson(res.data);
+    }
+
+    return null;
+  }
+
+  Future cleanTask() async {
+    _api.cleanOldTask();
   }
 }

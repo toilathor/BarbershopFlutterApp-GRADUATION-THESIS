@@ -9,6 +9,7 @@ class StoryModel extends BaseModel {
   final _postService = locator<PostService>();
 
   List<Post2> posts = [];
+  List<Post2> postsLastMonth = [];
   List<int> likedPost = [];
 
   bool isLoading = false;
@@ -50,6 +51,20 @@ class StoryModel extends BaseModel {
     notifyListeners();
   }
 
+  Future changePostsLastMonth() async {
+    DataPost? res = await _postService.getPostLastMonth(
+      page: currentPage,
+    );
+
+    if (res != null && res.posts != null) {
+      postsLastMonth = res.posts ?? [];
+    } else {
+      Fluttertoast.showToast(msg: "Error!");
+    }
+
+    notifyListeners();
+  }
+
   Future<bool> likePost(int postId) async {
     var res = await _postService.likePost(postId: postId);
     int indexPost =
@@ -82,6 +97,16 @@ class StoryModel extends BaseModel {
 
     if (res) {
       Fluttertoast.showToast(msg: "Đã xóa bài viết!");
+    } else {
+      Fluttertoast.showToast(msg: "Đã có lỗi sảy ra!");
+    }
+  }
+
+  Future updatePost({required int postId, required String captions}) async {
+    var res = await _postService.updatePost(postId: postId, captions: captions);
+
+    if (res) {
+      Fluttertoast.showToast(msg: "Thành công!");
     } else {
       Fluttertoast.showToast(msg: "Đã có lỗi sảy ra!");
     }

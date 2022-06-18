@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/apis/api.dart';
 import 'package:flutter_cahoi_barbershop/core/models/user.dart';
 import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
+import 'package:flutter_cahoi_barbershop/core/services/booking_service.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/router_login.dart';
@@ -22,9 +23,12 @@ class _SplashViewState extends State<SplashView> {
   double opacity = 0;
   double scale = 0.7;
   Size size = Size.zero;
+  final _bookingService = locator<BookingService>();
 
   @override
   void initState() {
+    _bookingService.getAllProduct();
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       setState(() {
         position = size.width * 0.7;
@@ -43,7 +47,7 @@ class _SplashViewState extends State<SplashView> {
 
         Timer(
           const Duration(seconds: 2),
-          () {
+              () {
             if (user != null) {
               Role role = Role.values[user.roles?.first.id ?? 1];
 
@@ -55,7 +59,7 @@ class _SplashViewState extends State<SplashView> {
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 '/login',
-                (route) => false,
+                    (route) => false,
               );
             }
           },
@@ -64,11 +68,11 @@ class _SplashViewState extends State<SplashView> {
         debugPrint('Expires');
         Timer(
           const Duration(seconds: 2),
-          () {
+              () {
             Navigator.pushNamedAndRemoveUntil(
               context,
               "/login",
-              (route) => false,
+                  (route) => false,
             );
           },
         );

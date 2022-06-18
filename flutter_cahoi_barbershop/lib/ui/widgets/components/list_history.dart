@@ -7,7 +7,9 @@ import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/history_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/rating_task_view.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ListHistory extends StatefulWidget {
@@ -31,6 +33,7 @@ class _ListHistoryState extends State<ListHistory> {
   Widget build(BuildContext context) {
     return ListView.builder(
       controller: widget.controller,
+      cacheExtent: 5000,
       padding: const EdgeInsets.symmetric(vertical: 20.0),
       physics: const BouncingScrollPhysics(parent: ClampingScrollPhysics()),
       itemCount: widget.tasks.length,
@@ -75,11 +78,11 @@ class _HistoryTileState extends State<HistoryTile> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _buildCoupleText(
-                      first: 'Giờ: ',
+                      first: '${appLang(context)!.time}: ',
                       last: "${widget.task.time?.time}",
                     ),
                     _buildCoupleText(
-                      first: 'Ngày: ',
+                      first: '${appLang(context)!.date}: ',
                       last: "${widget.task.date}",
                     ),
                   ],
@@ -96,9 +99,9 @@ class _HistoryTileState extends State<HistoryTile> {
                         children: [
                           Row(
                             children: [
-                              const Expanded(
+                              Expanded(
                                 child: Text(
-                                  'Đ.g kĩ năng: ',
+                                  '${appLang(context)!.communicate}: ',
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -117,9 +120,9 @@ class _HistoryTileState extends State<HistoryTile> {
                           ),
                           Row(
                             children: [
-                              const Expanded(
+                              Expanded(
                                 child: Text(
-                                  'Đ.g Giao tiếp: ',
+                                  '${appLang(context)!.skill}:',
                                   overflow: TextOverflow.clip,
                                 ),
                               ),
@@ -141,7 +144,7 @@ class _HistoryTileState extends State<HistoryTile> {
                             last: "${widget.task.stylist!.user?.name}",
                           ),
                           _buildCoupleText(
-                            first: "Cơ sở: ",
+                            first: "${appLang(context)!.facility}: ",
                             last: "${widget.task.stylist?.facility?.address}",
                           )
                         ],
@@ -172,8 +175,6 @@ class _HistoryTileState extends State<HistoryTile> {
                                               Container(),
                                           height: double.infinity,
                                           width: double.infinity,
-                                          cacheHeight: 500,
-                                          cacheWidth: 500,
                                         ),
                                       ),
                                     ),
@@ -190,8 +191,7 @@ class _HistoryTileState extends State<HistoryTile> {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    "Vì bạn chưa đến nên chưa có ảnh, "
-                                    "nhớ tới đúng giờ nhé!",
+                                    appLang(context)!.remind_task,
                                     style: TextStyle(
                                       color: Colors.grey.shade500,
                                     ),
@@ -202,16 +202,15 @@ class _HistoryTileState extends State<HistoryTile> {
                           ),
               ),
               SizedBox(
-                height: 100,
+                height: 65,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
-                      Expanded(
+                      Flexible(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisSize: MainAxisSize.max,
                           children: [
                             Expanded(
                               child: Visibility(
@@ -233,13 +232,22 @@ class _HistoryTileState extends State<HistoryTile> {
                               width: 20,
                             ),
                             Expanded(
-                              child: ElevatedButton.icon(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  Icons.info_outline,
-                                ),
-                                label: const Text(
-                                  "Chi tiết",
+                              child: Visibility(
+                                visible: widget.task.status == 1,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      RatingTaskView.name,
+                                      arguments: widget.task,
+                                    );
+                                  },
+                                  icon: const Icon(
+                                    Icons.star_half_rounded,
+                                  ),
+                                  label: Text(
+                                    appLang(context)!.review,
+                                  ),
                                 ),
                               ),
                             ),
@@ -252,10 +260,10 @@ class _HistoryTileState extends State<HistoryTile> {
                           onPressed: () {
                             AwesomeDialog(
                               context: context,
-                              title: "Hủy lịch",
-                              body: const Text(
-                                "Bạn có chắc chắn muốn hủy lịch không",
-                                style: TextStyle(
+                              title: appLang(context)!.cancel_calendar,
+                              body: Text(
+                                appLang(context)!.question_cancel_calender,
+                                style: const TextStyle(
                                   fontFamily: fontBold,
                                 ),
                               ),
@@ -266,21 +274,9 @@ class _HistoryTileState extends State<HistoryTile> {
                               dialogType: DialogType.QUESTION,
                             ).show();
                           },
-                          child: const Text(
-                            'Hủy lịch',
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Visibility(
-                        visible: widget.task.status != 0,
-                        child: TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'Tôi muốn xóa ảnh!',
-                            style: TextStyle(
+                          child: Text(
+                            appLang(context)!.cancel_calendar,
+                            style: const TextStyle(
                               decoration: TextDecoration.underline,
                             ),
                           ),
@@ -325,7 +321,9 @@ class _HistoryTileState extends State<HistoryTile> {
           color: widget.task.status == 1 ? Colors.green : Colors.yellow,
         ),
         Text(
-          widget.task.status == 1 ? 'Đã xong' : "Đang chờ",
+          widget.task.status == 1
+              ? appLang(context)!.complete
+              : appLang(context)!.waiting,
         )
       ],
     );
@@ -387,7 +385,7 @@ class _HistoryTileState extends State<HistoryTile> {
                 fontSize: 16,
               ),
               decoration: InputDecoration(
-                hintText: "Bạn có đang nghĩ gì...?",
+                hintText: appLang(context)!.hint_status,
                 hintStyle: TextStyle(
                   fontSize: 14,
                   color: Colors.grey.withOpacity(0.5),
@@ -407,6 +405,7 @@ class _HistoryTileState extends State<HistoryTile> {
                       borderRadius: borderRadius12,
                       child: Image.network(
                         "$localHost/${task.image![index].link}",
+                        fit: BoxFit.cover,
                         errorBuilder: (context, _, __) => Container(),
                       ),
                     ),
@@ -426,13 +425,13 @@ class _HistoryTileState extends State<HistoryTile> {
                         .sharePost(task: task, caption: captionController.text);
                     if (res) {
                       AwesomeDialog(
-                              context: context,
-                              dialogType: DialogType.SUCCES,
-                              btnOkOnPress: () {
-                                Navigator.pop(context);
-                              },
-                              title: "Successful!")
-                          .show();
+                        context: context,
+                        dialogType: DialogType.SUCCES,
+                        btnOkOnPress: () {
+                          Navigator.pop(context);
+                        },
+                        title: appLang(context)!.successful,
+                      ).show();
                     } else {
                       AwesomeDialog(
                               context: context,
@@ -442,9 +441,9 @@ class _HistoryTileState extends State<HistoryTile> {
                           .show();
                     }
                   },
-                  child: const Text(
-                    "Chia sẻ ngay",
-                    style: TextStyle(
+                  child: Text(
+                    appLang(context)!.share_now,
+                    style: const TextStyle(
                       fontFamily: fontBold,
                     ),
                   ),

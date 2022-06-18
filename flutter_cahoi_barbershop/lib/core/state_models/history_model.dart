@@ -1,3 +1,4 @@
+import 'package:flutter_cahoi_barbershop/core/models/rating.dart';
 import 'package:flutter_cahoi_barbershop/core/models/task.dart';
 import 'package:flutter_cahoi_barbershop/core/services/post_service.dart';
 import 'package:flutter_cahoi_barbershop/core/services/task_service.dart';
@@ -41,12 +42,22 @@ class HistoryModel extends BaseModel {
   Future cancelTask({required int id}) async {
     var res = await _taskService.cancelTask(id: id);
 
-    if(res){
+    if (res) {
       tasks.removeWhere((element) => element.id == id);
       Fluttertoast.showToast(msg: "Thành công!");
       notifyListeners();
-    }else{
+    } else {
       Fluttertoast.showToast(msg: "Đã có sự có sảy ra!");
     }
+  }
+
+  Future<Rating?> checkRatingTask({int? taskId}) async {
+    if (taskId == null) return null;
+    return await _taskService.getRatingTask(taskId: taskId);
+  }
+
+  Future<bool> saveRating({required Map<String, dynamic> data}) async {
+    var res = await _taskService.saveRating(data: data);
+    return res != null;
   }
 }

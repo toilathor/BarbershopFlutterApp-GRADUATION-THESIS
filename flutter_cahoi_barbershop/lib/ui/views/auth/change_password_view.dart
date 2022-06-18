@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/auth_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/button_login.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/text_regex.dart';
@@ -59,14 +60,10 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                       validator: (_) {
                         RegExp regex = RegExp(
                             r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$');
-                        if (currentPassword.isEmpty) {
-                          return 'Please enter password';
+                        if (!regex.hasMatch(currentPassword)) {
+                          return appLang(context)!.warning_pass_invalid;
                         } else {
-                          if (!regex.hasMatch(currentPassword)) {
-                            return 'Enter valid password';
-                          } else {
-                            return '';
-                          }
+                          return '';
                         }
                       },
                       onChange: (value) {
@@ -101,9 +98,9 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     );
   }
 
-  Widget _buildHeader() => const Text(
-        'Create New Password',
-        style: TextStyle(
+  Widget _buildHeader() => Text(
+        appLang(context)!.create_new_pass,
+        style: const TextStyle(
           fontSize: 36,
           fontFamily: fontBold,
           color: headerColor1,
@@ -141,13 +138,13 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
             maxLength: 250,
             autocorrect: true,
             decoration: InputDecoration(
-              hintText: "Password",
+              hintText: appLang(context)!.password,
               counterText: "",
               hintStyle: TextStyle(
                 fontSize: 24,
                 color: Colors.grey.withOpacity(0.5),
               ),
-              labelText: "Please enter a new password",
+              labelText: appLang(context)!.warning_enter_password,
               floatingLabelBehavior: FloatingLabelBehavior.always,
               labelStyle: TextStyle(
                 color: Colors.black.withOpacity(0.5),
@@ -178,7 +175,11 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                     },
                     style: const ButtonStyle(
                         splashFactory: NoSplash.splashFactory),
-                    child: Text(isHidePassword ? 'Show' : 'Hide'),
+                    child: Text(
+                      isHidePassword
+                          ? appLang(context)!.show
+                          : appLang(context)!.hide,
+                    ),
                   ),
                 ],
               ),
@@ -192,10 +193,11 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
       Positioned(
         bottom: size.height * 0.02,
         child: BaseButton(
-            height: size.height * 0.06,
-            width: size.width * 0.9,
-            onPressed: isAllReady ? onChangePassword : null,
-            title: 'Change Password'),
+          height: size.height * 0.06,
+          width: size.width * 0.9,
+          onPressed: isAllReady ? onChangePassword : null,
+          title: appLang(context)!.complete,
+        ),
       );
 
   Widget _buildRegex({
@@ -205,20 +207,23 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
   }) =>
       Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          TextRegex(
-            title: "• contains 1 uppercase character",
-            validated: isUppercase,
-          ),
-          TextRegex(
-            title: "• contains 1 numeric character",
-            validated: isNumeric,
-          ),
-          TextRegex(
-            title: "• length must be greater than or equal to 8 characters",
-            validated: isLength,
-          ),
-        ]),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextRegex(
+              title: appLang(context)!.warning_upcase,
+              validated: isUppercase,
+            ),
+            TextRegex(
+              title: appLang(context)!.warning_numeric,
+              validated: isNumeric,
+            ),
+            TextRegex(
+              title: appLang(context)!.warning_length,
+              validated: isLength,
+            ),
+          ],
+        ),
       );
 
 // Future _resetPass({required LoginModel model}) async {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/auth_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/button_login.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/loading_dialog.dart';
@@ -72,7 +73,9 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                     } else if (!res) {
                       ///nếu đã tồn tại thì nhập pass, ngược lại thì đằng kí
                       LoadingDialog.dismiss(context);
-                      Fluttertoast.showToast(msg: 'User not found!');
+                      Fluttertoast.cancel();
+                      Fluttertoast.showToast(
+                          msg: appLang(context)!.user_not_find);
                     } else {
                       LoadingDialog.dismiss(context);
                     }
@@ -86,9 +89,9 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
     );
   }
 
-  Widget _buildHeader() => const Text(
-        'Forgot Password?',
-        style: TextStyle(
+  Widget _buildHeader() => Text(
+        appLang(context)!.forgot_pass,
+        style: const TextStyle(
           fontSize: 36,
           fontFamily: fontBold,
           color: headerColor1,
@@ -99,10 +102,11 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   Widget _buildButtonResetPass({required Function() onSentOTP}) => Positioned(
         bottom: size.height * 0.02,
         child: BaseButton(
-            height: size.height * 0.06,
-            width: size.width * 0.9,
-            onPressed: isValidatePhoneNumber ? onSentOTP : null,
-            title: 'Reset Password'),
+          height: size.height * 0.06,
+          width: size.width * 0.9,
+          onPressed: isValidatePhoneNumber ? onSentOTP : null,
+          title: appLang(context)!.reset_password,
+        ),
       );
 
   Widget _buildPhoneField({required Function() onFieldSubmitted}) => Form(
@@ -122,10 +126,10 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
               return null;
             } else if (phoneEditingController.text.isEmpty) {
               isValidatePhoneNumber = false;
-              return "Please enter mobile number";
+              return appLang(context)!.warning_enter_phoneNum;
             } else {
               isValidatePhoneNumber = false;
-              return "Please enter valid mobile number";
+              return appLang(context)!.warning_pass_invalid;
             }
           },
           cursorColor: Colors.black,
@@ -147,14 +151,14 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
           maxLength: 250,
           autocorrect: true,
           decoration: InputDecoration(
-            labelText: "Please enter a phone number",
+            labelText: appLang(context)!.warning_enter_phoneNum,
             floatingLabelBehavior: FloatingLabelBehavior.always,
             labelStyle: TextStyle(
               color: Colors.black.withOpacity(0.5),
               fontWeight: FontWeight.bold,
               fontSize: 24,
             ),
-            hintText: "Phone number",
+            hintText: appLang(context)!.phone_number,
             counterText: "",
             hintStyle: TextStyle(
               fontSize: 36,

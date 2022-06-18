@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/auth_model.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/auth/change_password_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/auth/register_view.dart';
@@ -61,11 +62,11 @@ class _EnterPinViewState extends State<EnterPinView> {
           child: Column(
             children: [
               const SizedBox(height: 30),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Xác minh số điện thoại',
-                  style: TextStyle(
+                  appLang(context)!.verify_phone_num,
+                  style: const TextStyle(
                     fontSize: 36,
                     fontFamily: fontBold,
                     color: headerColor1,
@@ -78,7 +79,7 @@ class _EnterPinViewState extends State<EnterPinView> {
                 padding: const EdgeInsets.all(8.0),
                 child: RichText(
                   text: TextSpan(
-                    text: "Mã xác thực đã được gửi tới ",
+                    text: appLang(context)!.code_send_to,
                     children: [
                       TextSpan(
                         text: widget.phoneNumber,
@@ -124,7 +125,7 @@ class _EnterPinViewState extends State<EnterPinView> {
                     animationType: AnimationType.fade,
                     validator: (v) {
                       if (v!.length < 6) {
-                        return "Nhập đủ 6 số";
+                        return appLang(context)!.enter_6_num;
                       } else {
                         return null;
                       }
@@ -215,11 +216,11 @@ class _EnterPinViewState extends State<EnterPinView> {
                 child: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
-                    text: "Không nhận được mã xác thực? ",
+                    text: appLang(context)!.do_not_receive,
                     style: const TextStyle(color: Colors.black54, fontSize: 15),
                     children: [
                       TextSpan(
-                          text: " Gửi lại",
+                          text: appLang(context)!.resend,
                           style: TextStyle(
                               color: model.timeOut == 0
                                   ? const Color(0xFF91D3B3)

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/fake-data/data.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/discover/show_photo_view.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -16,16 +17,16 @@ class _DiscoverPageViewState extends State<DiscoverPageView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Khám phá".toUpperCase()),
+        title: Text(appLang(context)!.bottombar_discovery),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             padding: const EdgeInsets.all(12.0),
-            child: const Text(
-              'Khám phá những kiểu tóc phổ biến nhất với CAHOI BARBERSHOP',
-              style: TextStyle(
+            child: Text(
+              appLang(context)!.discovery_header,
+              style: const TextStyle(
                 fontFamily: fontBold,
                 fontSize: 20,
               ),
