@@ -31,7 +31,8 @@ class TaskService {
     return null;
   }
 
-  Future<List<Task>> searchTask(String? searchString, {
+  Future<List<Task>> searchTask(
+    String? searchString, {
     required int page,
     int addDay = 0,
     bool? status,
@@ -142,5 +143,15 @@ class TaskService {
     }
 
     return false;
+  }
+
+  Future<dynamic> changeSumSpent() async {
+    var res = await _api.changeSumSpent();
+
+    if (res != null) {
+      return res.data;
+    }
+
+    return null;
   }
 }

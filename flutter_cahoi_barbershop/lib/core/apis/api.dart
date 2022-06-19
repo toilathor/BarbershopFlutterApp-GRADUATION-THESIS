@@ -1,4 +1,5 @@
 import 'package:date_format/date_format.dart' as date_format;
+// ignore: implementation_imports
 import 'package:dio/src/form_data.dart';
 import 'package:flutter_cahoi_barbershop/core/models/response.dart' as api_res;
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
@@ -247,6 +248,15 @@ class Api extends ApiBase {
   }) async {
     try {
       var res = await dio.delete('/task/delete-voucher', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> changeSumSpent() async {
+    try {
+      var res = await dio.get('/bill/spent-last-6-months');
       return castRes(res);
     } catch (e) {
       return null;

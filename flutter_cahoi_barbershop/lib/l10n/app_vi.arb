@@ -146,5 +146,7 @@
   "your_rank": "Hạng của bạn ",
   "discount_rank": "Triết khấu hạng",
   "voucher_reminder": "*Nhớ mang theo voucher nếu bạn sở hữu và đưa nó cho nhân viên cắt tóc",
-  "closed": "*Đã hết giờ làm việc của ngày hôm nay, các cơ sở đã đóng cửa"
+  "closed": "*Đã hết giờ làm việc của ngày hôm nay, các cơ sở đã đóng cửa",
+  "spent": "Đã chi",
+  "desc_spent": "Trong 6 tháng gần nhất bạn đã chi tiêu tổng cộng là"
 }

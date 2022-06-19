@@ -4,6 +4,8 @@ enum Role { none, customer, stylist, manager, superAdmin }
 
 enum AdminTab { hr, business, product, analysis }
 
+enum EmployeeTab { task, story }
+
 List<String> filDay = [
   'Hôm nay',
   'Ngày mai',

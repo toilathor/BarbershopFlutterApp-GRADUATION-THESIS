@@ -5,6 +5,7 @@ import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/server_config.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
+import 'package:flutter_cahoi_barbershop/ui/views/pages/story_page_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/logout_dialog.dart';
 import 'package:flutter_cahoi_barbershop/ui_employee/task_tab.dart';
 
@@ -18,7 +19,7 @@ class EmployeeHomeView extends StatefulWidget {
 class _EmployeeHomeViewState extends State<EmployeeHomeView> {
   Size size = Size.zero;
 
-  AdminTab currentTab = AdminTab.hr;
+  EmployeeTab currentTab = EmployeeTab.task;
 
   @override
   Widget build(BuildContext context) {
@@ -73,9 +74,25 @@ class _EmployeeHomeViewState extends State<EmployeeHomeView> {
                 children: [
                   ListTile(
                     onTap: () {
+                      setState(() {
+                        currentTab = EmployeeTab.task;
+                      });
                       Navigator.pop(context);
                     },
-                    leading: Icon(Icons.cut),
+                    leading: const Icon(Icons.cut),
+                    title: const Text(
+                      'Nhiệm vụ',
+                    ),
+                  ),
+                  const Divider(),
+                  ListTile(
+                    onTap: () {
+                      setState(() {
+                        currentTab = EmployeeTab.story;
+                      });
+                      Navigator.pop(context);
+                    },
+                    leading: const Icon(Icons.history_edu),
                     title: const Text(
                       'Nhiệm vụ',
                     ),
@@ -103,5 +120,12 @@ class _EmployeeHomeViewState extends State<EmployeeHomeView> {
     );
   }
 
-  Widget _getTab() => const TaskTab();
+  Widget _getTab() {
+    switch (currentTab) {
+      case EmployeeTab.task:
+        return const TaskTab();
+      case EmployeeTab.story:
+        return const StoryPageView();
+    }
+  }
 }

@@ -34,8 +34,10 @@ class _ListHistoryState extends State<ListHistory> {
     return ListView.builder(
       controller: widget.controller,
       cacheExtent: 5000,
-      padding: const EdgeInsets.symmetric(vertical: 20.0),
-      physics: const BouncingScrollPhysics(parent: ClampingScrollPhysics()),
+      padding: const EdgeInsets.all(20.0),
+      physics: const BouncingScrollPhysics(
+        parent: ClampingScrollPhysics(),
+      ),
       itemCount: widget.tasks.length,
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {

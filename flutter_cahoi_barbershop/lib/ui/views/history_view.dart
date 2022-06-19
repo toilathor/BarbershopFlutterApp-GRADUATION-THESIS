@@ -7,6 +7,7 @@ import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/box_info.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/components/list_history.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class HistoryView extends StatefulWidget {
   const HistoryView({Key? key}) : super(key: key);
@@ -20,6 +21,8 @@ class _HistoryViewState extends State<HistoryView> {
   final user = locator<AuthenticationService>().user;
   ScrollController scrollController = ScrollController();
 
+  final _globalKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
@@ -27,6 +30,9 @@ class _HistoryViewState extends State<HistoryView> {
     return BaseView<HistoryModel>(
       onModelReady: (model) async {
         await model.changeTasksHistory();
+
+        await model.changeSumSpent();
+
         scrollController.addListener(() async {
           if (scrollController.position.pixels ==
                   scrollController.position.maxScrollExtent &&
@@ -36,83 +42,87 @@ class _HistoryViewState extends State<HistoryView> {
         });
       },
       builder: (context, model, child) {
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: primaryColor,
-            // title: ClipRRect(
-            //   borderRadius: borderRadiusCircle,
-            //   child: AspectRatio(
-            //     aspectRatio: 1,
-            //     child: Image.network(
-            //       user.avatar != null
-            //           ? "$localHost${user.avatar}"
-            //           : avatarDefault,
-            //       errorBuilder: (context, error, stackTrace) =>
-            //           const Center(
-            //         child: Icon(
-            //           Icons.error,
-            //         ),
-            //       ),
-            //       fit: BoxFit.cover,
-            //       height: size.height * 0.06,
-            //     ),
-            //   ),
-            // ),
-            title: Text(appLang(context)!.navi_home_history),
-          ),
-          body: SafeArea(
-            child: SingleChildScrollView(
-              child: Container(
-                padding: const EdgeInsets.only(top: 30, right: 10, left: 10),
-                // height: size.height,
-                width: size.width,
-                child: Column(
-                  children: [
-                    BoxInfo(
-                      height: size.height * 0.1,
-                      title: appLang(context)!.full_name,
-                      content: "${user.name}",
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    BoxInfo(
-                      height: size.height * 0.1,
-                      title: "Email",
-                      content: "${user.email}",
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    BoxInfo(
-                      height: size.height * 0.1,
-                      title: appLang(context)!.phone_number,
-                      content: "${user.phoneNumber}",
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      height: size.height * 0.6,
-                      child: model.tasks.isEmpty
-                          ? Center(
-                              child: Text(
-                                appLang(context)!.warning_history,
-                              ),
-                            )
-                          : ListHistory(
-                              controller: scrollController,
-                              tasks: model.tasks,
-                              onCancelTask: (int taskId) async {
-                                await model.cancelTask(id: taskId);
-                              },
-                            ),
-                    ),
-                  ],
+        return ShowCaseWidget(
+          builder: Builder(builder: (context) {
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: primaryColor,
+                title: Text(appLang(context)!.navi_home_history),
+              ),
+              floatingActionButton: Showcase(
+                key: _globalKey,
+                description:
+                    '${appLang(context)!.desc_spent}: ${model.sumSpent ?? 0}K',
+                child: FloatingActionButton.extended(
+                  onPressed: () {
+                    ShowCaseWidget.of(context)!.startShowCase([_globalKey]);
+                  },
+                  label: Text(
+                    "${appLang(context)!.spent}: ${model.sumSpent ?? 0}K",
+                  ),
                 ),
               ),
-            ),
-          ),
+              body: SingleChildScrollView(
+                child: SizedBox(
+                  width: size.width,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          children: [
+                            BoxInfo(
+                              height: size.height * 0.1,
+                              title: appLang(context)!.full_name,
+                              content: "${user.name}",
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            BoxInfo(
+                              height: size.height * 0.1,
+                              title: "Email",
+                              content: "${user.email}",
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            BoxInfo(
+                              height: size.height * 0.1,
+                              title: appLang(context)!.phone_number,
+                              content: "${user.phoneNumber}",
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: size.height * 0.6,
+                        margin: const EdgeInsets.only(
+                          bottom: 70,
+                        ),
+                        child: model.tasks.isEmpty
+                            ? Center(
+                                child: Text(
+                                  appLang(context)!.warning_history,
+                                ),
+                              )
+                            : ListHistory(
+                                controller: scrollController,
+                                tasks: model.tasks,
+                                onCancelTask: (int taskId) async {
+                                  await model.cancelTask(id: taskId);
+                                },
+                              ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }),
         );
       },
     );

@@ -13,6 +13,7 @@ class HistoryModel extends BaseModel {
   List<Task> tasks = [];
   int currentPage = 1;
   bool isLoading = false;
+  dynamic sumSpent;
 
   Future changeTasksHistory() async {
     if (currentPage == 0) {
@@ -59,5 +60,10 @@ class HistoryModel extends BaseModel {
   Future<bool> saveRating({required Map<String, dynamic> data}) async {
     var res = await _taskService.saveRating(data: data);
     return res != null;
+  }
+
+  Future changeSumSpent() async {
+    sumSpent = await _taskService.changeSumSpent();
+    notifyListeners();
   }
 }

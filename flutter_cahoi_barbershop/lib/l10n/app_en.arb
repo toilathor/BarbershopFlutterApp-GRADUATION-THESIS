@@ -125,5 +125,7 @@
   "your_rank": "Your rank ",
   "discount_rank": "Discount rank",
   "voucher_reminder": "*Remember to bring your voucher if you own one and give it to the barber",
-  "closed": "*Today's business hours are over, facilities are closed"
+  "closed": "*Today's business hours are over, facilities are closed",
+  "spent": "Spentd",
+  "desc_spent": "In the last 6 months, you have spent a total of"
 }
