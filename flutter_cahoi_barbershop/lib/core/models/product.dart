@@ -26,13 +26,13 @@ class Product {
 }
 
 Product _$ProductFromJson(Map<String, dynamic> json) => Product(
-  id: json['id'] as int,
+      id: json['id'] as int,
       name: json['name'] as String,
       price: json['price'] as dynamic,
       duration: json['duration'],
       sortDescription: json['sort_description'] as String,
       fullDescription: json['description'] as String,
-      typeProductId: json['type_product_id'] as int,
+      typeProductId: int.parse("${json['type_product_id']}"),
       image: json['image'] as String,
       status: json['status'] as int,
     );

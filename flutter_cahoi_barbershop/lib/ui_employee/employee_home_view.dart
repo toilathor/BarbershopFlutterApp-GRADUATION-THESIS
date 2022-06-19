@@ -3,6 +3,7 @@ import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/server_config.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/pages/story_page_view.dart';
@@ -93,8 +94,8 @@ class _EmployeeHomeViewState extends State<EmployeeHomeView> {
                       Navigator.pop(context);
                     },
                     leading: const Icon(Icons.history_edu),
-                    title: const Text(
-                      'Nhiệm vụ',
+                    title: Text(
+                      appLang(context)!.bottombar_story,
                     ),
                   ),
                   const Divider(),

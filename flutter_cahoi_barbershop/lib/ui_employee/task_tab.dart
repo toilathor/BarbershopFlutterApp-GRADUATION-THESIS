@@ -50,7 +50,7 @@ class _TaskTabState extends State<TaskTab> {
           if (scrollController.position.pixels ==
                   scrollController.position.maxScrollExtent &&
               !model.isLoading) {
-            loadData(model);
+            await loadData(model);
           }
         });
         LoadingDialog.dismiss(context);

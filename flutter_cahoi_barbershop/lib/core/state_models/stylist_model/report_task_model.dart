@@ -25,10 +25,12 @@ class ReportTaskModel extends BaseModel {
     isLoading = true;
     notifyListeners();
 
-    var res = await _taskService.searchTask(searchString,
-        page: currentPage,
-        addDay: addDay,
-        status: type == 0 ? null : (type == 1));
+    var res = await _taskService.searchTask(
+      searchString,
+      page: currentPage,
+      addDay: addDay,
+      status: type == 0 ? null : (type == 1),
+    );
 
     tasks += res;
 

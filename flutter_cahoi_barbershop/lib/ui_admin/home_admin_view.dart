@@ -7,8 +7,9 @@ import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/server_config.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/logout_dialog.dart';
-import 'package:flutter_cahoi_barbershop/ui_admin/views/analysis_tab.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/language_widget.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/business_tab.dart';
+import 'package:flutter_cahoi_barbershop/ui_admin/views/collect_money_tab.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/hr_tab.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/product/product_tab.dart';
 
@@ -22,7 +23,12 @@ class HomeAdminView extends StatefulWidget {
 class _HomeAdminViewState extends State<HomeAdminView> {
   Size size = Size.zero;
 
-  AdminTab currentTab = AdminTab.hr;
+  AdminTab currentTab = AdminTab.collect_money;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,10 +100,11 @@ class _HomeAdminViewState extends State<HomeAdminView> {
                   ),
                   const Divider(),
                   _drawerTile(
-                    tab: AdminTab.analysis,
-                    title: appLang(context)!.analysis,
-                    icon: const Icon(Icons.bar_chart),
+                    tab: AdminTab.collect_money,
+                    title: appLang(context)!.collect_money,
+                    icon: const Icon(Icons.attach_money_rounded),
                   ),
+                  const Divider(),
                   ListTile(
                     onTap: () async {
                       LogoutDialog.show(context);
@@ -112,7 +119,11 @@ class _HomeAdminViewState extends State<HomeAdminView> {
                   ),
                 ],
               ),
-            )
+            ),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: LanguageWidget(),
+            ),
           ],
         ),
       ),
@@ -130,10 +141,8 @@ class _HomeAdminViewState extends State<HomeAdminView> {
         return const BusinessTab();
       case AdminTab.product:
         return const ProductTab();
-      case AdminTab.analysis:
-        return const AnalysisTab();
-      default:
-        return const HRTab();
+      case AdminTab.collect_money:
+        return const CollectMoneyTab();
     }
   }
 

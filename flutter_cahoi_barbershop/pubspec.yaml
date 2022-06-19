@@ -86,6 +86,7 @@ dependencies:
   logger: ^1.1.0
   animated_toggle_switch: ^0.5.2
   showcaseview: ^1.1.5
+  pie_chart: ^5.3.1
 
 dev_dependencies:
   flutter_test:

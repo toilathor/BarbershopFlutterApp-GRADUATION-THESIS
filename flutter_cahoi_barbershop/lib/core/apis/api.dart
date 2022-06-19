@@ -491,4 +491,34 @@ class Api extends ApiBase {
       return null;
     }
   }
+
+  /// Revenue
+  Future<api_res.Response?> getRevenueMonth({
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      var res = await dio.get('/revenue', queryParameters: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> paid({required Map<String, int> data}) async {
+    try {
+      var res = await dio.post('/revenue/paid', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> fetchTotalMonth() async {
+    try {
+      var res = await dio.get('/revenue/fetch');
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
 }
