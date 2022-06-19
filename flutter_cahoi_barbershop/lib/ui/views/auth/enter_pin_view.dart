@@ -180,7 +180,7 @@ class _EnterPinViewState extends State<EnterPinView> {
                       });
                     },
                     beforeTextPaste: (text) {
-                      debugPrint("Allowing to paste $text");
+                      logger.d("Allowing to paste $text");
                       return true;
                     },
                   ),

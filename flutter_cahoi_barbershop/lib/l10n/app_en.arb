@@ -123,5 +123,7 @@
   "rules_desc": "Top 10 in the month will receive a discount in the next service use 10 ~ 50% of the total bill\nOffer valid for 30 days from the first day of the month",
   "top": "Top",
   "your_rank": "Your rank ",
-  "discount_rank": "Discount rank"
+  "discount_rank": "Discount rank",
+  "voucher_reminder": "*Remember to bring your voucher if you own one and give it to the barber",
+  "closed": "*Today's business hours are over, facilities are closed"
 }

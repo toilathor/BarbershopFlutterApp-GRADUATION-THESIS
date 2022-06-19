@@ -144,5 +144,7 @@
   "rules_desc": "Top 10 trong tháng sẽ nhận ưu đãi giảm giá trong lần sử dụng dịch vụ tiếp theo 10 ~ 50 % tổng hóa đơn\nThời hạn sử dụng ưu đãi là 30 ngày kể từ ngày đầu tiên của tháng",
   "top": "Xếp hạng",
   "your_rank": "Hạng của bạn ",
-  "discount_rank": "Triết khấu hạng"
+  "discount_rank": "Triết khấu hạng",
+  "voucher_reminder": "*Nhớ mang theo voucher nếu bạn sở hữu và đưa nó cho nhân viên cắt tóc",
+  "closed": "*Đã hết giờ làm việc của ngày hôm nay, các cơ sở đã đóng cửa"
 }

@@ -99,7 +99,7 @@ class _AccountPageViewState extends State<AccountPageView> {
                 children: [
                   user.phoneNumber != null
                       ? _buildTileSetting(
-                    icon: const Icon(
+                          icon: const Icon(
                             Icons.password_sharp,
                             color: Colors.purple,
                           ),
@@ -195,12 +195,23 @@ class _AccountPageViewState extends State<AccountPageView> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                appLang(context)!.language,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.language,
+                    color: Colors.blueAccent,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      appLang(context)!.language,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               SizedBox(
                 height: 35,

@@ -220,7 +220,49 @@ class Api extends ApiBase {
     }
   }
 
+  Future<api_res.Response?> getDiscounts({
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      var res = await dio.get('/discount/code', queryParameters: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> addDiscountTask({
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      var res = await dio.post('/task/add-voucher', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> removeDiscountTask({
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      var res = await dio.delete('/task/delete-voucher', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
   ///User
+  Future<api_res.Response?> fetch() async {
+    try {
+      var res = await dio.get('/user/fetch');
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<api_res.Response?> searchUser(Map<String, dynamic> data) async {
     try {
       var res = await dio.get(
@@ -434,15 +476,6 @@ class Api extends ApiBase {
   Future<api_res.Response?> signCalender() async {
     try {
       var res = await dio.get('/');
-      return castRes(res);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  Future<api_res.Response?> cleanOldTask() async {
-    try {
-      var res = await dio.get('/task/clean');
       return castRes(res);
     } catch (e) {
       return null;

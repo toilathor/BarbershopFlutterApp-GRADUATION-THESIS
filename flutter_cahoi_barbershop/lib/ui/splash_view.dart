@@ -7,6 +7,7 @@ import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/services/booking_service.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/router_login.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/server_config.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/store_secure.dart';
@@ -39,7 +40,7 @@ class _SplashViewState extends State<SplashView> {
       String? date = await locator<StoreSecure>().getExpiresIn();
       String? token = await locator<StoreSecure>().getToken();
       if (date != null && DateTime.parse(date).isAfter(now) && token != null) {
-        debugPrint('Login!');
+        logger.d('Login!');
 
         locator<Api>().setToken(token);
 
@@ -47,7 +48,7 @@ class _SplashViewState extends State<SplashView> {
 
         Timer(
           const Duration(seconds: 2),
-              () {
+          () {
             if (user != null) {
               Role role = Role.values[user.roles?.first.id ?? 1];
 
@@ -59,20 +60,20 @@ class _SplashViewState extends State<SplashView> {
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 '/login',
-                    (route) => false,
+                (route) => false,
               );
             }
           },
         );
       } else {
-        debugPrint('Expires');
+        logger.i('Expires');
         Timer(
           const Duration(seconds: 2),
-              () {
+          () {
             Navigator.pushNamedAndRemoveUntil(
               context,
               "/login",
-                  (route) => false,
+              (route) => false,
             );
           },
         );

@@ -217,13 +217,17 @@ class _HistoryTileState extends State<HistoryTile> {
                                 visible: widget.task.status == 1,
                                 child: ElevatedButton.icon(
                                   onPressed: () {
-                                    _shareImage(task: widget.task);
+                                    Navigator.pushNamed(
+                                      context,
+                                      RatingTaskView.name,
+                                      arguments: widget.task,
+                                    );
                                   },
                                   icon: const Icon(
-                                    Icons.share,
+                                    Icons.star_half_rounded,
                                   ),
-                                  label: const Text(
-                                    "Chia sẻ",
+                                  label: Text(
+                                    appLang(context)!.review,
                                   ),
                                 ),
                               ),
@@ -236,17 +240,13 @@ class _HistoryTileState extends State<HistoryTile> {
                                 visible: widget.task.status == 1,
                                 child: ElevatedButton.icon(
                                   onPressed: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      RatingTaskView.name,
-                                      arguments: widget.task,
-                                    );
+                                    _shareImage(task: widget.task);
                                   },
                                   icon: const Icon(
-                                    Icons.star_half_rounded,
+                                    Icons.share,
                                   ),
                                   label: Text(
-                                    appLang(context)!.review,
+                                    appLang(context)!.share_now,
                                   ),
                                 ),
                               ),

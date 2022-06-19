@@ -77,8 +77,10 @@ class _TaskTabState extends State<TaskTab> {
               ),
             ),
             Container(
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20.0),
+              margin: const EdgeInsets.symmetric(
+                horizontal: 8.0,
+                vertical: 20.0,
+              ),
               height: 50,
               width: size.width,
               child: _buildFilter(
@@ -110,7 +112,7 @@ class _TaskTabState extends State<TaskTab> {
                         model.tasks[index],
                         onReload: () async {
                           model.resetData();
-                          await model.changeTasks('');
+                          await loadData(model);
                         },
                       ),
                     ),
@@ -142,11 +144,9 @@ class _TaskTabState extends State<TaskTab> {
                   ),
                 );
 
-                if (res != null && res) {
-                  Timer(const Duration(microseconds: 500), () {
-                    onReload();
-                  });
-                }
+                Timer(const Duration(microseconds: 500), () {
+                  onReload();
+                });
               } else {
                 Navigator.pushNamed(
                   context,
@@ -163,13 +163,16 @@ class _TaskTabState extends State<TaskTab> {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  ClipRRect(
-                    borderRadius: borderRadiusCircle,
-                    child: Image.network(
-                      task.customer?.avatar != null
-                          ? "$localHost${task.customer?.avatar}"
-                          : avatarDefault,
-                      fit: BoxFit.cover,
+                  AspectRatio(
+                    aspectRatio: 1,
+                    child: ClipRRect(
+                      borderRadius: borderRadiusCircle,
+                      child: Image.network(
+                        task.customer?.avatar != null
+                            ? "$localHost${task.customer?.avatar}"
+                            : avatarDefault,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   const SizedBox(

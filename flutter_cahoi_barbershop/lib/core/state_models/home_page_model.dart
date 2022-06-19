@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/clip_youtube.dart';
 import 'package:flutter_cahoi_barbershop/core/services/youtube_service.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 
 class HomePageModel extends ChangeNotifier {
   final _youtubeApi = locator<YoutubeService>();
@@ -30,7 +31,7 @@ class HomePageModel extends ChangeNotifier {
 
       notifyListeners();
     } catch (e) {
-      debugPrint(e.toString());
+      logger.e(e.toString());
     }
   }
 

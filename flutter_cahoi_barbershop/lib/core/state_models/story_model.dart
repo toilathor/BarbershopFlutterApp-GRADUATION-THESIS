@@ -27,6 +27,7 @@ class StoryModel extends BaseModel {
     }
 
     isLoading = true;
+
     notifyListeners();
 
     DataPost? res;

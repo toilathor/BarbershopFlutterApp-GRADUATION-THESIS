@@ -37,4 +37,8 @@ class UserService {
     }
     return false;
   }
+
+  Future fetch() async {
+    await _api.fetch();
+  }
 }

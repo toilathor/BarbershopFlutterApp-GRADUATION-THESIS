@@ -3,9 +3,7 @@ import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/history_model.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
-import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
-import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/box_info.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/components/list_history.dart';
@@ -41,30 +39,26 @@ class _HistoryViewState extends State<HistoryView> {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: primaryColor,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: borderRadiusCircle,
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: Image.network(
-                      user.avatar != null
-                          ? "$localHost${user.avatar}"
-                          : avatarDefault,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Center(
-                        child: Icon(
-                          Icons.error,
-                        ),
-                      ),
-                      fit: BoxFit.cover,
-                      height: size.height * 0.06,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            // title: ClipRRect(
+            //   borderRadius: borderRadiusCircle,
+            //   child: AspectRatio(
+            //     aspectRatio: 1,
+            //     child: Image.network(
+            //       user.avatar != null
+            //           ? "$localHost${user.avatar}"
+            //           : avatarDefault,
+            //       errorBuilder: (context, error, stackTrace) =>
+            //           const Center(
+            //         child: Icon(
+            //           Icons.error,
+            //         ),
+            //       ),
+            //       fit: BoxFit.cover,
+            //       height: size.height * 0.06,
+            //     ),
+            //   ),
+            // ),
+            title: Text(appLang(context)!.navi_home_history),
           ),
           body: SafeArea(
             child: SingleChildScrollView(

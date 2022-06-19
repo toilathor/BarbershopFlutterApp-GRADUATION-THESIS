@@ -14,6 +14,7 @@ class Post2 {
     this.likeCount,
     this.publicAt,
     this.task,
+    this.isAwarded,
   });
 
   Post2.fromJson(dynamic json) {
@@ -22,11 +23,13 @@ class Post2 {
     likeCount = json['like_count'];
     publicAt = json['public_at'];
     task = json['task'] != null ? Task.fromJson(json['task']) : null;
+    isAwarded = json['is_warded'];
   }
 
   int? id;
   String? captions;
   int? likeCount;
+  int? isAwarded;
   String? publicAt;
   Task? task;
 
@@ -34,6 +37,7 @@ class Post2 {
     int? id,
     String? captions,
     int? likeCount,
+    int? isAwarded,
     String? publicAt,
     Task? task,
   }) =>
@@ -42,6 +46,7 @@ class Post2 {
         captions: captions ?? this.captions,
         likeCount: likeCount ?? this.likeCount,
         publicAt: publicAt ?? this.publicAt,
+        isAwarded: isAwarded ?? this.isAwarded,
         task: task ?? this.task,
       );
 }
