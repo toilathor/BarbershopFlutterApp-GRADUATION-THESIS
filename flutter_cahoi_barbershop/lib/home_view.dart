@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cahoi_barbershop/core/services/task_service.dart';
+import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
+import 'package:flutter_cahoi_barbershop/core/services/user_service.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
@@ -29,7 +30,8 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await locator<TaskService>().cleanTask();
+      await locator<UserService>().fetch();
+      await locator<AuthenticationService>().getMe();
     });
     super.initState();
   }

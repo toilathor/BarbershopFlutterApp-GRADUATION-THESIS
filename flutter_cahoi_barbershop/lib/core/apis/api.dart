@@ -1,4 +1,5 @@
 import 'package:date_format/date_format.dart' as date_format;
+// ignore: implementation_imports
 import 'package:dio/src/form_data.dart';
 import 'package:flutter_cahoi_barbershop/core/models/response.dart' as api_res;
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
@@ -220,13 +221,73 @@ class Api extends ApiBase {
     }
   }
 
+  Future<api_res.Response?> getDiscounts({
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      var res = await dio.get('/discount/code', queryParameters: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> addDiscountTask({
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      var res = await dio.post('/task/add-voucher', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> removeDiscountTask({
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      var res = await dio.delete('/task/delete-voucher', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> changeSumSpent() async {
+    try {
+      var res = await dio.get('/bill/spent-last-6-months');
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
   ///User
+  Future<api_res.Response?> fetch() async {
+    try {
+      var res = await dio.get('/user/fetch');
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<api_res.Response?> searchUser(Map<String, dynamic> data) async {
     try {
       var res = await dio.get(
         '/user/search',
         queryParameters: data,
       );
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> changeAvatar({required FormData data}) async {
+    try {
+      var res = await dio.post('/user/change-avatar', data: data);
       return castRes(res);
     } catch (e) {
       return null;
@@ -431,9 +492,30 @@ class Api extends ApiBase {
     }
   }
 
-  Future<api_res.Response?> cleanOldTask() async {
+  /// Revenue
+  Future<api_res.Response?> getRevenueMonth({
+    required Map<String, dynamic> data,
+  }) async {
     try {
-      var res = await dio.get('/task/clean');
+      var res = await dio.get('/revenue', queryParameters: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> paid({required Map<String, int> data}) async {
+    try {
+      var res = await dio.post('/revenue/paid', data: data);
+      return castRes(res);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<api_res.Response?> fetchTotalMonth() async {
+    try {
+      var res = await dio.get('/revenue/fetch');
       return castRes(res);
     } catch (e) {
       return null;

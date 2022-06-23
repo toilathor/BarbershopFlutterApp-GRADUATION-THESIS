@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 
 class Avatar extends StatefulWidget {
   final double height;
@@ -29,7 +30,7 @@ class _AvatarState extends State<Avatar> {
             widget.src,
           ),
           onError: (exception, stackTrace) {
-            debugPrint(exception.toString());
+            logger.e(exception.toString());
           },
           fit: BoxFit.cover,
         ),

@@ -30,8 +30,14 @@ class BottomSheetEditPost {
                   children: [
                     ClipRRect(
                       borderRadius: borderRadiusCircle,
-                      child: Image.network(
-                        '${user.avatar}',
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: Image.network(
+                          user.avatar != null
+                              ? "$localHost${user.avatar}"
+                              : avatarDefault,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     const SizedBox(

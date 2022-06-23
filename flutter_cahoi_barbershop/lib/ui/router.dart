@@ -14,6 +14,7 @@ import 'package:flutter_cahoi_barbershop/ui_admin/views/edit_user_view.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/product/add_product.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/product/edit_product.dart';
 import 'package:flutter_cahoi_barbershop/ui_admin/views/product/show_product_view.dart';
+import 'package:flutter_cahoi_barbershop/ui_employee/add_voucher_view.dart';
 import 'package:flutter_cahoi_barbershop/ui_employee/employee_home_view.dart';
 import 'package:flutter_cahoi_barbershop/ui_employee/report_task_view.dart';
 import 'package:flutter_cahoi_barbershop/ui_employee/show_task_view.dart';
@@ -45,6 +46,7 @@ class Router {
     AddProductView.name: (BuildContext ctx) => const AddProductView(),
     EditProductView.name: (BuildContext ctx) => const EditProductView(),
     ShowProductView.name: (BuildContext ctx) => const ShowProductView(),
+    AddVoucherView.name: (BuildContext ctx) => const AddVoucherView(),
 
     ///Test
   };

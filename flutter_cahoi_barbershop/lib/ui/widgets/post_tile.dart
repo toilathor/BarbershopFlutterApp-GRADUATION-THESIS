@@ -90,11 +90,16 @@ class _PostTileState extends State<PostTile> with TickerProviderStateMixin {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    ClipRect(
+                    ClipRRect(
+                      borderRadius: borderRadiusCircle,
                       child: Image.network(
-                        '${widget.post.task?.customer?.avatar}',
+                        widget.post.task?.customer?.avatar != null
+                            ? '$localHost${widget.post.task?.customer?.avatar}'
+                            : avatarDefault,
                         height: 50,
-                        errorBuilder: (context, _, ___) => Container(),
+                        width: 50,
+                        fit: BoxFit.cover,
+                        // errorBuilder: (context, _, ___) => Container(),
                       ),
                     ),
                     const SizedBox(
@@ -183,8 +188,10 @@ class _PostTileState extends State<PostTile> with TickerProviderStateMixin {
           Visibility(
             visible: widget.post.captions != null,
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8.0,
+                vertical: 4.0,
+              ),
               child: Text(
                 '${widget.post.captions}',
                 style: const TextStyle(
@@ -280,7 +287,7 @@ class _PostTileState extends State<PostTile> with TickerProviderStateMixin {
                     left: 0,
                     right: 0,
                     child: Visibility(
-                      // visible: widget.top != null,
+                      visible: widget.top != null,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 20,

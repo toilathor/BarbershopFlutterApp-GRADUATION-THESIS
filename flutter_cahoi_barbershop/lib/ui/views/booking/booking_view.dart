@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/facility.dart';
 import 'package:flutter_cahoi_barbershop/core/models/product.dart';
 import 'package:flutter_cahoi_barbershop/core/models/stylist.dart';
+import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/booking_model.dart';
+import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/colors.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
@@ -12,6 +14,7 @@ import 'package:flutter_cahoi_barbershop/ui/views/booking/select_facility_view.d
 import 'package:flutter_cahoi_barbershop/ui/views/booking/select_product_view.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/widgets/select_stylist.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/booking/widgets/time_slots.dart';
+import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/loading_dialog.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/elevated_button_icon.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/my_date_picker_timeline.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/text_tag.dart';
@@ -157,8 +160,10 @@ class _BookingViewState extends State<BookingView>
               title: appLang(context)!.complete,
               onPressed: model.checkCompleted()
                   ? () async {
+                LoadingDialog.show(context);
                       var res =
                           await model.complete(notes: notesController.text);
+                      LoadingDialog.dismiss(context);
                       if (res) {
                         AwesomeDialog(
                           context: context,
@@ -170,12 +175,12 @@ class _BookingViewState extends State<BookingView>
                         ).show();
                       } else {
                         AwesomeDialog(
-                          context: context,
-                          title: appLang(context)!.has_error,
-                          dialogType: DialogType.ERROR,
-                          btnOkOnPress: () {},
-                        ).show();
-                      }
+                    context: context,
+                    title: appLang(context)!.has_error,
+                    dialogType: DialogType.ERROR,
+                    btnOkOnPress: () {},
+                  ).show();
+                }
                     }
                   : null,
             ),
@@ -323,106 +328,143 @@ class _BookingViewState extends State<BookingView>
         ),
       );
 
-  Step _buildStepSelectDateAndStylist(BookingModel model) => Step(
-    isActive: model.currentStep == StepBooking.selectStylistAndDate,
-        title: Text(
-          appLang(context)!.select_stylist,
-          style: const TextStyle(
-            color: textColorLight2,
-            fontSize: 24,
-            fontWeight: FontWeight.w500,
-            fontFamily: fontBold,
-          ),
+  Step _buildStepSelectDateAndStylist(BookingModel model) {
+    final user = locator<AuthenticationService>().user;
+
+    return Step(
+      isActive: model.currentStep == StepBooking.selectStylistAndDate,
+      title: Text(
+        appLang(context)!.select_stylist,
+        style: const TextStyle(
+          color: textColorLight2,
+          fontSize: 24,
+          fontWeight: FontWeight.w500,
+          fontFamily: fontBold,
         ),
-        state: model.checkCompleted() ? StepState.complete : StepState.editing,
-        content: Container(
-          margin: const EdgeInsets.only(bottom: 20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              MyDatePickerTimeline(
-                DateTime.now(),
-                initialSelectedDate: model.selectedDate,
-                daysCount: 7,
-                height: size.height * 0.117,
-                width: size.width * 0.17,
-                selectedTextColor: Colors.white,
-                selectionColor: secondaryColor,
-                dateTextStyle: const TextStyle(
-                  fontSize: 12,
-                ),
-                dayTextStyle: const TextStyle(
-                  fontSize: 12,
-                ),
-                onDateChange: (selectedDate) {
-                  model.changeSelectedDate(selectedDate);
-                },
+      ),
+      state: model.checkCompleted() ? StepState.complete : StepState.editing,
+      content: Container(
+        margin: const EdgeInsets.only(bottom: 20.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            MyDatePickerTimeline(
+              DateTime.now(),
+              initialSelectedDate: model.selectedDate,
+              daysCount: user.rank!.id == 2 ? 6 : 5,
+              height: size.height * 0.117,
+              width: size.width * 0.17,
+              selectedTextColor: Colors.white,
+              selectionColor: secondaryColor,
+              dateTextStyle: const TextStyle(
+                fontSize: 12,
               ),
-              Container(
-                padding: const EdgeInsets.all(8.0),
-                margin: const EdgeInsets.symmetric(vertical: 8.0),
-                width: size.width,
-                height: 100,
-                child: _buildDescriptionStylist(
-                  stylist: model.selectedStylist,
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
+              dayTextStyle: const TextStyle(
+                fontSize: 12,
               ),
-              SelectStylist(
-                onSelected: (stylist) {
-                  model.changeSelectedStylist(stylist);
-                },
-                current: model.selectedStylist,
-                stylists: model.stylists ?? [],
+              onDateChange: (selectedDate) {
+                model.changeSelectedDate(selectedDate);
+              },
+            ),
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              margin: const EdgeInsets.symmetric(vertical: 8.0),
+              width: size.width,
+              height: 100,
+              child: _buildDescriptionStylist(
+                stylist: model.selectedStylist,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  width: size.width,
-                  height: size.height * 0.15,
-                  child: TimeSlots(
-                    currentTimeSlot: model.currentTimeSlot,
-                    onPressed: (timeSlot) {
-                      model.changeCurrentTimeSlot(timeSlot: timeSlot);
-                    },
-                    timeSlots: model.timeSlotsDefault,
-                    selectedDate: model.selectedDate,
-                  ),
-                ),
+              decoration: BoxDecoration(
+                border: Border.all(),
+                borderRadius: BorderRadius.circular(8.0),
               ),
-              SizedBox(
+            ),
+            SelectStylist(
+              onSelected: (stylist) {
+                model.changeSelectedStylist(stylist);
+              },
+              current: model.selectedStylist,
+              stylists: model.stylists ?? [],
+            ),
+            Visibility(
+              visible: _checkClosed(model),
+              child: SizedBox(
                 width: size.width,
                 child: Text(
-                  appLang(context)!.note,
+                  appLang(context)!.closed,
                   style: const TextStyle(
-                    fontSize: 16,
-                    fontFamily: fontBold,
-                  ),
+                      fontSize: 16,
+                      color: Colors.red,
+                      shadows: [
+                        Shadow(
+                          color: Colors.red,
+                          blurRadius: 10,
+                          offset: Offset(0.0, 0.0),
+                        ),
+                      ]),
                 ),
               ),
-              TextField(
-                maxLines: 3,
-                maxLength: 250,
-                controller: notesController,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: size.width,
+                height: size.height * 0.15,
+                child: TimeSlots(
+                  currentTimeSlot: model.currentTimeSlot,
+                  onPressed: (timeSlot) {
+                    model.changeCurrentTimeSlot(timeSlot: timeSlot);
+                  },
+                  timeSlots: model.timeSlotsDefault,
+                  selectedDate: model.selectedDate,
+                ),
+              ),
+            ),
+            SizedBox(
+              width: size.width,
+              child: Text(
+                appLang(context)!.note,
                 style: const TextStyle(
-                  color: Colors.black,
                   fontSize: 16,
-                ),
-                decoration: InputDecoration(
-                  hintText: appLang(context)!.example_note_booking,
-                  hintStyle: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.withOpacity(0.5),
-                  ),
+                  fontFamily: fontBold,
                 ),
               ),
-            ],
-          ),
+            ),
+            TextField(
+              maxLines: 3,
+              maxLength: 250,
+              controller: notesController,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+              ),
+              decoration: InputDecoration(
+                hintText: appLang(context)!.example_note_booking,
+                hintStyle: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey.withOpacity(0.5),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: size.width,
+              child: Text(
+                appLang(context)!.voucher_reminder,
+                style:
+                    const TextStyle(fontSize: 16, color: Colors.red, shadows: [
+                  Shadow(
+                    color: Colors.red,
+                    blurRadius: 10,
+                    offset: Offset(0.0, 0.0),
+                  ),
+                ]),
+              ),
+            ),
+          ],
         ),
-      );
+      ),
+    );
+  }
 
   Widget _buildDescriptionStylist({
     required StylistRate? stylist,
@@ -488,6 +530,15 @@ class _BookingViewState extends State<BookingView>
 
   List<Widget> _buildSelectedProduct(
       {required List<Product> selectedProducts}) {
+    final user = locator<AuthenticationService>().user;
+    int discountRank = 0;
+
+    if (user.rank!.id == 1) {
+      discountRank = 10;
+    } else if (user.rank!.id == 2) {
+      discountRank = 15;
+    }
+
     List<Widget> items = [];
     double price = 0;
     for (int i = 0; i < selectedProducts.length; i++) {
@@ -503,47 +554,101 @@ class _BookingViewState extends State<BookingView>
       );
     }
 
-    ///Add item total
-    items.add(Container(
-      height: 40,
-      padding: const EdgeInsets.all(4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "${appLang(context)!.total}: ",
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: primaryColor,
-              fontSize: 20,
-              fontFamily: fontBold,
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100.0),
-              color: Colors.yellow,
-            ),
-            child: Text(
-              "${price}K",
+    ///Add discount
+    items.add(
+      Container(
+        height: 40,
+        padding: const EdgeInsets.all(4.0),
+        margin: const EdgeInsets.all(4.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "${appLang(context)!.discount_rank} ${user.rank?.rankName}",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 color: primaryColor,
+                fontSize: 16,
               ),
             ),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100.0),
+                color: Colors.red.shade200,
+              ),
+              child: Text(
+                "-$discountRank%",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: primaryColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+          border: Border.all(
+            color: Colors.black26,
           ),
-        ],
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
-        border: Border.all(
-          color: Colors.black26,
         ),
       ),
-    ));
+    );
+
+    ///Add item total
+    items.add(
+      Container(
+        height: 40,
+        padding: const EdgeInsets.all(4.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "${appLang(context)!.total}: ",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: primaryColor,
+                fontSize: 20,
+                fontFamily: fontBold,
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100.0),
+                color: Colors.yellow,
+              ),
+              child: Text(
+                "${price - (price * discountRank / 100)}K",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: primaryColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+          border: Border.all(
+            color: Colors.black26,
+          ),
+        ),
+      ),
+    );
     return items;
+  }
+
+  bool _checkClosed(BookingModel model) {
+    final now = DateTime.now();
+    if (now.day == model.selectedDate.day && now.hour >= 18) {
+      return true;
+    }
+    return false;
   }
 }

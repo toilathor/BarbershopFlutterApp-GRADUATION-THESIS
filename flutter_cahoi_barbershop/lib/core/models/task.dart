@@ -1,22 +1,22 @@
-import 'package:flutter_cahoi_barbershop/core/models/bill.dart';
+import 'package:flutter_cahoi_barbershop/core/models/discount.dart';
 import 'package:flutter_cahoi_barbershop/core/models/image_db.dart';
 import 'package:flutter_cahoi_barbershop/core/models/product.dart';
 import 'package:flutter_cahoi_barbershop/core/models/stylist.dart';
 import 'package:flutter_cahoi_barbershop/core/models/time_slot.dart';
 import 'package:flutter_cahoi_barbershop/core/models/user.dart';
 
-/// id : 80
+/// id : 192
 /// status : 1
-/// notes : "cắt đẹp cho anh"
-/// date : "2022-05-14"
-/// customer_id : 102
-/// stylist_id : 53
-/// time_slot_id : 2
-/// image : [{"id":39,"link":"/upload/task/Task-0801652541209.jpg","task_id":80}]
-/// products : [{"id":23,"name":"Vel consequuntur velit ratione doloribus.","duration":170,"price":9,"sort_description":"Ex est mollitia porro tenetur voluptate qui sit.","description":"Ab qui sint qui ratione est. Ut voluptas vitae non ratione occaecati. Eum autem pariatur aut sit iste ea est voluptatum.","type_product_id":4,"pivot":{"task_id":80,"product_id":23}}]
-/// time : {"id":2,"time":"08:30:00"}
-/// stylist : {"id":53,"user_id":103,"facility_id":5,"facility":{"id":5,"address":"1062 Kovacek Rest","description":null,"longitude":105.469448,"latitude":20.384227,"image":null}}
-/// bill : {"id":1,"total":7.11,"task_id":80,"discount_id":null}
+/// notes : ""
+/// date : "2022-06-19"
+/// customer_id : 31
+/// stylist_id : 2
+/// time_slot_id : 1
+/// customer : {"id":31,"name":"Mr. Timmy Terry","email":null,"phone_number":"+84973271230","provider_id":null,"type_provider":null,"email_verified_at":null,"status":1,"points":0,"remember_token":null,"avatar":null,"rank_id":1}
+/// products : [{"id":1,"name":"ShineCombo cắt gội 10 bước","duration":45,"price":120,"sort_description":"Đặc sắc nổi tiếng","description":"Combo “đặc sản” của 30Shine, bạn sẽ cùng chúng tôi trải nghiệm chuyến hành trình tỏa sáng đầy thú vị - nơi mỗi người đàn ông không chỉ cắt tóc mà còn tìm thấy nhiều hơn như thế","image":"/upload/products/Cắt_gội_massage/ShineCombo_cắt_gội_10_bước.jpg","status":1}]
+/// image : [{"id":759,"link":"/upload/task/Task-01921655552310.jpg","task_id":192},{"id":760,"link":"/upload/task/Task-11921655552310.jpg","task_id":192}]
+/// discount : [{"id":1,"code":"0","name":"Autem aut sed non.","description":"Eligendi expedita itaque ullam dicta. Tempore doloribus labore voluptates suscipit. Reprehenderit beatae dolor eum.","is_public":1,"reduction":0.1,"pivot":{"task_id":192,"discount_id":1}}]
+/// time : {"id":1,"time":"08:00:00"}
 
 class Task {
   Task({
@@ -27,12 +27,12 @@ class Task {
     this.customerId,
     this.stylistId,
     this.timeSlotId,
-    this.image,
+    this.customer,
     this.products,
+    this.image,
+    this.discount,
     this.time,
     this.stylist,
-    this.bill,
-    this.customer,
   });
 
   Task.fromJson(dynamic json) {
@@ -43,23 +43,29 @@ class Task {
     customerId = json['customer_id'];
     stylistId = json['stylist_id'];
     timeSlotId = json['time_slot_id'];
-    if (json['image'] != null) {
-      image = [];
-      json['image'].forEach((v) {
-        image?.add(ImageDB.fromJson(v));
-      });
-    }
+    customer =
+        json['customer'] != null ? MUser.fromJson(json['customer']) : null;
     if (json['products'] != null) {
       products = [];
       json['products'].forEach((v) {
         products?.add(Product.fromJson(v));
       });
     }
+    if (json['image'] != null) {
+      image = [];
+      json['image'].forEach((v) {
+        image?.add(ImageDB.fromJson(v));
+      });
+    }
+    if (json['discount'] != null) {
+      discount = [];
+      json['discount'].forEach((v) {
+        discount?.add(Discount.fromJson(v));
+      });
+    }
     time = json['time'] != null ? TimeSlot.fromJson(json['time']) : null;
-    stylist = json['stylist']!= null ? Stylist.fromJson(json['stylist']) : null;
-    bill = json['bill'] != null ? Bill.fromJson(json['bill']) : null;
-    customer =
-        json['customer'] != null ? MUser.fromJson(json['customer']) : null;
+    stylist =
+        json['stylist'] != null ? Stylist.fromJson(json['stylist']) : null;
   }
 
   int? id;
@@ -69,12 +75,12 @@ class Task {
   int? customerId;
   int? stylistId;
   int? timeSlotId;
-  List<ImageDB>? image;
+  MUser? customer;
   List<Product>? products;
+  List<ImageDB>? image;
+  List<Discount>? discount;
   TimeSlot? time;
   Stylist? stylist;
-  Bill? bill;
-  MUser? customer;
 
   Task copyWith({
     int? id,
@@ -84,12 +90,12 @@ class Task {
     int? customerId,
     int? stylistId,
     int? timeSlotId,
-    List<ImageDB>? image,
+    MUser? customer,
     List<Product>? products,
+    List<ImageDB>? image,
+    List<Discount>? discount,
     TimeSlot? time,
     Stylist? stylist,
-    Bill? bill,
-    MUser? customer,
   }) =>
       Task(
         id: id ?? this.id,
@@ -99,11 +105,11 @@ class Task {
         customerId: customerId ?? this.customerId,
         stylistId: stylistId ?? this.stylistId,
         timeSlotId: timeSlotId ?? this.timeSlotId,
-        image: image ?? this.image,
+        customer: customer ?? this.customer,
         products: products ?? this.products,
+        image: image ?? this.image,
+        discount: discount ?? this.discount,
         time: time ?? this.time,
         stylist: stylist ?? this.stylist,
-        bill: bill ?? this.bill,
-        customer: customer ?? this.customer,
       );
 }

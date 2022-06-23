@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/screen_arguments.dart';
 import 'package:flutter_cahoi_barbershop/core/models/task.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/stylist_model/report_task_model.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/server_config.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
@@ -49,7 +50,7 @@ class _TaskTabState extends State<TaskTab> {
           if (scrollController.position.pixels ==
                   scrollController.position.maxScrollExtent &&
               !model.isLoading) {
-            loadData(model);
+            await loadData(model);
           }
         });
         LoadingDialog.dismiss(context);
@@ -76,8 +77,10 @@ class _TaskTabState extends State<TaskTab> {
               ),
             ),
             Container(
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20.0),
+              margin: const EdgeInsets.symmetric(
+                horizontal: 8.0,
+                vertical: 20.0,
+              ),
               height: 50,
               width: size.width,
               child: _buildFilter(
@@ -109,7 +112,7 @@ class _TaskTabState extends State<TaskTab> {
                         model.tasks[index],
                         onReload: () async {
                           model.resetData();
-                          await model.changeTasks('');
+                          await loadData(model);
                         },
                       ),
                     ),
@@ -141,11 +144,9 @@ class _TaskTabState extends State<TaskTab> {
                   ),
                 );
 
-                if (res != null && res) {
-                  Timer(const Duration(microseconds: 500), () {
-                    onReload();
-                  });
-                }
+                Timer(const Duration(microseconds: 500), () {
+                  onReload();
+                });
               } else {
                 Navigator.pushNamed(
                   context,
@@ -162,9 +163,17 @@ class _TaskTabState extends State<TaskTab> {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  ClipRRect(
-                    borderRadius: borderRadiusCircle,
-                    child: Image.network("${task.customer?.avatar}"),
+                  AspectRatio(
+                    aspectRatio: 1,
+                    child: ClipRRect(
+                      borderRadius: borderRadiusCircle,
+                      child: Image.network(
+                        task.customer?.avatar != null
+                            ? "$localHost${task.customer?.avatar}"
+                            : avatarDefault,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                   const SizedBox(
                     width: 8,

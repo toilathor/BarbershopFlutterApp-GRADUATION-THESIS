@@ -34,8 +34,10 @@ class _ListHistoryState extends State<ListHistory> {
     return ListView.builder(
       controller: widget.controller,
       cacheExtent: 5000,
-      padding: const EdgeInsets.symmetric(vertical: 20.0),
-      physics: const BouncingScrollPhysics(parent: ClampingScrollPhysics()),
+      padding: const EdgeInsets.all(20.0),
+      physics: const BouncingScrollPhysics(
+        parent: ClampingScrollPhysics(),
+      ),
       itemCount: widget.tasks.length,
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
@@ -217,13 +219,17 @@ class _HistoryTileState extends State<HistoryTile> {
                                 visible: widget.task.status == 1,
                                 child: ElevatedButton.icon(
                                   onPressed: () {
-                                    _shareImage(task: widget.task);
+                                    Navigator.pushNamed(
+                                      context,
+                                      RatingTaskView.name,
+                                      arguments: widget.task,
+                                    );
                                   },
                                   icon: const Icon(
-                                    Icons.share,
+                                    Icons.star_half_rounded,
                                   ),
-                                  label: const Text(
-                                    "Chia sẻ",
+                                  label: Text(
+                                    appLang(context)!.review,
                                   ),
                                 ),
                               ),
@@ -236,17 +242,13 @@ class _HistoryTileState extends State<HistoryTile> {
                                 visible: widget.task.status == 1,
                                 child: ElevatedButton.icon(
                                   onPressed: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      RatingTaskView.name,
-                                      arguments: widget.task,
-                                    );
+                                    _shareImage(task: widget.task);
                                   },
                                   icon: const Icon(
-                                    Icons.star_half_rounded,
+                                    Icons.share,
                                   ),
                                   label: Text(
-                                    appLang(context)!.review,
+                                    appLang(context)!.share_now,
                                   ),
                                 ),
                               ),
@@ -359,8 +361,14 @@ class _HistoryTileState extends State<HistoryTile> {
                 children: [
                   ClipRRect(
                     borderRadius: borderRadiusCircle,
-                    child: Image.network(
-                      '${user.avatar}',
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: Image.network(
+                        user.avatar != null
+                            ? "$localHost${user.avatar}"
+                            : avatarDefault,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   const SizedBox(

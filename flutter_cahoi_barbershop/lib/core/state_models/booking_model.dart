@@ -216,8 +216,8 @@ class BookingModel extends BaseModel {
       var stylistTemp = stylists!.first;
 
       for (var e in stylists!) {
-        if ((e.communication + e.skill) >
-            (stylistTemp.communication + stylistTemp.skill)) {
+        if (((e.communication ?? 5) + (e.skill ?? 5)) >
+            ((stylistTemp.communication ?? 5) + (stylistTemp.skill ?? 5))) {
           stylistTemp = e;
         }
       }

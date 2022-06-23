@@ -113,8 +113,14 @@ class _EditUserViewState extends State<EditUserView> {
                                   height: size.height * 0.15,
                                   child: ClipRRect(
                                     borderRadius: borderRadiusCircle,
-                                    child: Image.network(
-                                      "${user.avatar}",
+                                    child: AspectRatio(
+                                      aspectRatio: 1,
+                                      child: Image.network(
+                                        user.avatar != null
+                                            ? "$localHost${user.avatar}"
+                                            : avatarDefault,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                 ),

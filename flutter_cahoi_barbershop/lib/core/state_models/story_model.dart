@@ -1,12 +1,18 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_cahoi_barbershop/core/models/data_post.dart';
 import 'package:flutter_cahoi_barbershop/core/models/post2.dart';
+import 'package:flutter_cahoi_barbershop/core/services/auth_service.dart';
 import 'package:flutter_cahoi_barbershop/core/services/post_service.dart';
+import 'package:flutter_cahoi_barbershop/core/services/user_service.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/base.dart';
 import 'package:flutter_cahoi_barbershop/service_locator.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 
 class StoryModel extends BaseModel {
   final _postService = locator<PostService>();
+  final _userService = locator<UserService>();
+  final _authService = locator<AuthenticationService>();
 
   List<Post2> posts = [];
   List<Post2> postsLastMonth = [];
@@ -21,6 +27,7 @@ class StoryModel extends BaseModel {
     }
 
     isLoading = true;
+
     notifyListeners();
 
     DataPost? res;
@@ -68,7 +75,7 @@ class StoryModel extends BaseModel {
   Future<bool> likePost(int postId) async {
     var res = await _postService.likePost(postId: postId);
     int indexPost =
-        posts.indexOf(posts.firstWhere((element) => element.id == postId));
+    posts.indexOf(posts.firstWhere((element) => element.id == postId));
     int indexLikedPost = likedPost.indexOf(
       likedPost.firstWhere((element) => element == postId, orElse: () => -1),
     );
@@ -90,6 +97,26 @@ class StoryModel extends BaseModel {
       notifyListeners();
       return false;
     }
+  }
+
+  Future<bool> changeAvatar(PickedFile image) async {
+    FormData formData = FormData.fromMap({
+      "image": await MultipartFile.fromFile(
+        image.path,
+      )
+    });
+
+    var res = await _userService.changeAvatar(data: formData);
+
+    if (res != null) {
+      await _authService.getMe();
+
+      notifyListeners();
+
+      return true;
+    }
+
+    return true;
   }
 
   Future deletePost({required int postId}) async {

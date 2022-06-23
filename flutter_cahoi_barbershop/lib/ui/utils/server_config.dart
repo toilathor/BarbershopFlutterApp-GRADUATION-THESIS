@@ -2,7 +2,9 @@ enum TypeSocial { none, facebook, google }
 
 enum Role { none, customer, stylist, manager, superAdmin }
 
-enum AdminTab { hr, business, product, analysis }
+enum AdminTab { hr, business, product, collect_money }
+
+enum EmployeeTab { task, story }
 
 List<String> filDay = [
   'Hôm nay',

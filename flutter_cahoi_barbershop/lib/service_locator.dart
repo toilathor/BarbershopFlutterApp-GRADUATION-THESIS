@@ -4,11 +4,13 @@ import 'package:flutter_cahoi_barbershop/core/services/booking_service.dart';
 import 'package:flutter_cahoi_barbershop/core/services/locale_service.dart';
 import 'package:flutter_cahoi_barbershop/core/services/post_service.dart';
 import 'package:flutter_cahoi_barbershop/core/services/product_service.dart';
+import 'package:flutter_cahoi_barbershop/core/services/revenue_service.dart';
 import 'package:flutter_cahoi_barbershop/core/services/role_service.dart';
 import 'package:flutter_cahoi_barbershop/core/services/shared_preferences_service.dart';
 import 'package:flutter_cahoi_barbershop/core/services/task_service.dart';
 import 'package:flutter_cahoi_barbershop/core/services/user_service.dart';
 import 'package:flutter_cahoi_barbershop/core/services/youtube_service.dart';
+import 'package:flutter_cahoi_barbershop/core/state_models/admin_model/collect_money_model.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/admin_model/hr_model.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/admin_model/product_model.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/auth_model.dart';
@@ -35,6 +37,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => PostService());
   locator.registerLazySingleton(() => ProductService());
   locator.registerLazySingleton(() => LocaleService());
+  locator.registerLazySingleton(() => RevenueService());
 
   //Api
   locator.registerLazySingleton(() => Api());
@@ -48,4 +51,5 @@ void setupLocator() {
   locator.registerFactory(() => ProductModel());
   locator.registerFactory(() => StoryModel());
   locator.registerFactory(() => ReportTaskModel());
+  locator.registerFactory(() => CollectMoneyModel());
 }

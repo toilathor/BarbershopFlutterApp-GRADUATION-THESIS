@@ -109,7 +109,9 @@ class _HomePageViewState extends State<HomePageView> {
                       children: [
                         Avatar(
                           height: size.width * 0.18,
-                          src: user.avatar ?? "",
+                          src: user.avatar != null
+                              ? "$localHost${user.avatar}"
+                              : avatarDefault,
                         ),
                         Expanded(
                           child: Container(
@@ -135,15 +137,19 @@ class _HomePageViewState extends State<HomePageView> {
                                 const SizedBox(
                                   height: 8,
                                 ),
-                                Visibility(
-                                  visible: user.rank!.rankName != "None",
-                                  child: Text(
-                                    "${user.rank?.rankName}",
-                                    style: const TextStyle(
-                                      color: Colors.white54,
-                                    ),
-                                  ),
-                                )
+                                Text(
+                                  "${appLang(context)!.your_rank} ${user.rank?.rankName}",
+                                  style: TextStyle(
+                                      color: user.rank?.id == 1
+                                          ? Colors.white
+                                          : Colors.yellow,
+                                      shadows: const [
+                                        Shadow(
+                                            color: Colors.white,
+                                            offset: Offset(0, 0),
+                                            blurRadius: 10),
+                                      ]),
+                                ),
                               ],
                             ),
                           ),

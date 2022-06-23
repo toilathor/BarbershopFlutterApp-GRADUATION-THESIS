@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cahoi_barbershop/core/models/screen_arguments.dart';
 import 'package:flutter_cahoi_barbershop/core/models/user.dart';
 import 'package:flutter_cahoi_barbershop/core/state_models/admin_model/hr_model.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/constants.dart';
+import 'package:flutter_cahoi_barbershop/ui/utils/helper.dart';
 import 'package:flutter_cahoi_barbershop/ui/utils/style.dart';
 import 'package:flutter_cahoi_barbershop/ui/views/_base.dart';
 import 'package:flutter_cahoi_barbershop/ui/widgets/dialogs/loading_dialog.dart';
@@ -126,7 +128,7 @@ class _HRTabState extends State<HRTab> {
 
               if (res != null && res) {
                 Timer(const Duration(microseconds: 100), () {
-                  print("ok");
+                  logger.d("ok");
                   onReload();
                 });
               }
@@ -138,7 +140,15 @@ class _HRTabState extends State<HRTab> {
                 children: [
                   ClipRRect(
                     borderRadius: borderRadiusCircle,
-                    child: Image.network("${user.avatar}"),
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: Image.network(
+                        user.avatar != null
+                            ? "$localHost${user.avatar}"
+                            : avatarDefault,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                   const SizedBox(
                     width: 8,

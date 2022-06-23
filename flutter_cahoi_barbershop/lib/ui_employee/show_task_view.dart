@@ -19,6 +19,7 @@ class _ShowTaskViewState extends State<ShowTaskView> {
   late Task task;
   late ScreenArguments arguments;
   double total = 0;
+  double sumReduction = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +33,12 @@ class _ShowTaskViewState extends State<ShowTaskView> {
         for (var element in task.products!) {
           total += element.price;
         }
+
+        for (var element in task.discount!) {
+          sumReduction += element.reduction ?? 0;
+        }
+
+        total = total * (1 - sumReduction);
 
         await model.changeTask(taskId: task.id ?? 0);
       },
@@ -70,13 +77,18 @@ class _ShowTaskViewState extends State<ShowTaskView> {
                       Positioned(
                         bottom: 0,
                         height: size.height * 0.15,
-                        child: ClipRRect(
-                          borderRadius:
-                              BorderRadius.circular(size.height * 0.15),
-                          child: Image.network(
-                            "${model.task?.customer?.avatar}",
-                            errorBuilder: (context, error, stackTrace) =>
-                                Container(),
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: ClipRRect(
+                            borderRadius: borderRadiusCircle,
+                            child: Image.network(
+                              model.task?.customer?.avatar != null
+                                  ? "$localHost${model.task?.customer?.avatar}"
+                                  : avatarDefault,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Container(),
+                            ),
                           ),
                         ),
                       ),
@@ -113,11 +125,11 @@ class _ShowTaskViewState extends State<ShowTaskView> {
                   padding: const EdgeInsets.all(12),
                   child: Text(
                     "Ghi chú: ${task.notes ?? "NONE"}",
+                    textAlign: TextAlign.left,
                     style: const TextStyle(
                       fontFamily: fontBold,
                       color: Colors.grey,
                     ),
-                    textAlign: TextAlign.end,
                   ),
                 ),
                 const Divider(),
@@ -137,10 +149,32 @@ class _ShowTaskViewState extends State<ShowTaskView> {
                       .map(
                         (e) => _buildTileBill(
                           title: e.name,
-                          content: "\$${e.price}",
+                          content: "${e.price}K",
                         ),
                       )
                       .toList(),
+                ),
+                const Divider(),
+                const Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Text(
+                    "Triết khấu",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontFamily: fontBold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+                Column(
+                  children: task.discount!.map(
+                    (e) {
+                      return _buildTileBill(
+                        title: "Triết khấu rank (${e.code})",
+                        content: "- ${(e.reduction ?? 0) * 100} %",
+                      );
+                    },
+                  ).toList(),
                 ),
                 const Divider(),
                 Container(
@@ -162,7 +196,7 @@ class _ShowTaskViewState extends State<ShowTaskView> {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          "\$$total",
+                          "$total K",
                           style: const TextStyle(
                             fontFamily: fontBold,
                             fontSize: 30,

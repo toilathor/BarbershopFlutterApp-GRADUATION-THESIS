@@ -2,8 +2,8 @@ import 'package:date_format/date_format.dart';
 
 const hostLine = "0973271208";
 // const localHost = 'http://192.168.1.2:8000';
-const localHost = 'http://192.168.1.12:8000';
-// const localHost = 'http://192.168.37.206:8000';
+// const localHost = 'http://192.168.1.15:8000';
+const localHost = 'http://192.168.1.2:8000';
 const baseLinkAPIYT = 'https://www.googleapis.com/youtube/v3';
 
 final fDate = [yyyy, '-', mm, '-', dd];
@@ -20,3 +20,5 @@ const apiKeyMap = 'AIzaSyDVr-0LtOAAbSRRbgQHNuQcWtxw0MeUlvs';
 
 const fontLight = 'sf-ui-display-light';
 const fontBold = 'sf-ui-display-bold';
+
+const avatarDefault = "https://bit.ly/3kGo0rS";
