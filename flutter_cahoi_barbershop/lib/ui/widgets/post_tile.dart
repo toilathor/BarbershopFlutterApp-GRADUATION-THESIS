@@ -90,12 +90,14 @@ class _PostTileState extends State<PostTile> with TickerProviderStateMixin {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    ClipRect(
+                    ClipRRect(
+                      borderRadius: borderRadiusCircle,
                       child: Image.network(
                         widget.post.task?.customer?.avatar != null
                             ? '$localHost${widget.post.task?.customer?.avatar}'
                             : avatarDefault,
                         height: 50,
+                        width: 50,
                         fit: BoxFit.cover,
                         // errorBuilder: (context, _, ___) => Container(),
                       ),
