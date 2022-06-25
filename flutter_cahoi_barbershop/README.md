@@ -16,5 +16,7 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 
 ## Start Server
+- Start xampp
+- change host in lib/ui/utils/constants.dart
 - Open folder F:\xampp\htdocs\DO-AN-TOT-NGHIEP-SERVER\cahoi-barbershop
 - php artisan serve --host 192.168.1.xxx:8000
